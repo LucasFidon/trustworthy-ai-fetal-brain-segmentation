@@ -8,7 +8,6 @@ from src.utils.definitions import NIFTYREG_PATH
 
 
 SIGMA = 0  # sigma for smoothing the segmentation prior
-# IMG_RES = 0.8  # in mm (isotropic)
 
 
 def probabilistic_segmentation_prior(image_nii, mask_nii,
@@ -92,6 +91,7 @@ def _convert_to_one_hot_and_smooth_seg_prior(segmentation_nii, smooth_sigma=SIGM
     seg_np = segmentation_nii.get_fdata().astype(np.uint8)
     # Convert the segmentation into one-hot representation
     hard_prior_seg_one_hot = np.eye(seg_np.max() + 1)[seg_np].astype(np.float32)  # numpy magic
+    #TODO: what about filtering with a cubic B-spline filter instead?
     if smooth_sigma > 0.:  # Gaussian smoothing
         # Put the class dimension first (PyTorch convention)
         hard_prior_seg_one_hot = np.transpose(hard_prior_seg_one_hot, (3, 0, 1, 2))
@@ -105,11 +105,7 @@ def _convert_to_one_hot_and_smooth_seg_prior(segmentation_nii, smooth_sigma=SIGM
         prior = np.transpose(prior, (1, 2, 3, 0))
     else:
         prior = hard_prior_seg_one_hot
-    prior_nii = nib.Nifti1Image(
-        prior,
-        segmentation_nii.affine,
-        # segmentation_nii.header,
-    )
+    prior_nii = nib.Nifti1Image(prior, segmentation_nii.affine)
     return prior_nii
 
 

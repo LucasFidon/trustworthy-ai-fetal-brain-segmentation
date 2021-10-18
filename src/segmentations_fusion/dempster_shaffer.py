@@ -6,13 +6,13 @@ from src.utils.definitions import LABELS
 
 ATLAS_MARGIN = [2] * 9  # bg, wm, vent, cer, ext-csf, cgm, dgm, bs, cc (in voxels)
 
-def merge_deep_and_atlas_seg(deep_score_np, atlas_proba):
-    threshold = 0
-    out_score = np.copy(deep_score_np)
+
+def merge_deep_and_atlas_seg(deep_proba, atlas_seg):
+    out_score = np.copy(deep_proba)
     print('\nApply atlas-based margins to the deep learning-based segmentation. ', ATLAS_MARGIN)
     # We set the proba to zeros outside of "atlas mask + margin"
     for c in range(len(ATLAS_MARGIN)):
-        atlas_seg_c = (atlas_proba[c,...] > threshold)
+        atlas_seg_c = (atlas_seg == c)
         atlas_seg_c = binary_dilation(atlas_seg_c, iterations=ATLAS_MARGIN[c])
         out_score[c, np.logical_not(atlas_seg_c)] = 0
 
@@ -49,13 +49,20 @@ def dempster_add_intensity_prior(deep_proba, image, mask):
     # Compute the prior probability
     m_csf = np.exp(-0.5 * np.square((img_fg - mean_csf) / std_csf)) / std_csf
     m_mix = np.exp(-0.5 * np.square((img_fg - mean_mix) / std_mix)) / std_mix
+
+    labels_seen = []
     for roi_eval in list(LABELS.keys()):
         if roi_eval in ['intra_axial_csf', 'extra_axial_csf']:
             for i in LABELS[roi_eval]:
-                deep_proba[i, mask_prior == 1] *= (m_csf + m_mix)
+                if not i in labels_seen:
+                    deep_proba[i, mask_prior == 1] *= (m_csf + m_mix)
+                    labels_seen.append(i)
         else: # Note that we want to include the background label here
             for i in LABELS[roi_eval]:
-                deep_proba[i, mask_prior == 1] *= m_mix
+                if not i in labels_seen:
+                    labels_seen.append(i)
+                    print('class %d' % i)
+                    deep_proba[i, mask_prior == 1] *= m_mix
 
     # Normalize the probability
     deep_proba[:, ...] /= np.sum(deep_proba, axis=0)

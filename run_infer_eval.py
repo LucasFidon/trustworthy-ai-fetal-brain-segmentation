@@ -20,6 +20,8 @@ from src.segmentations_fusion.dempster_shaffer import merge_deep_and_atlas_seg, 
 DATA_DIR = [SB_FRED]
 SAVE_FOLDER = '/data/saved_res_fetal_trust21_v3'
 DO_EVAL = True
+MERGING_MULTI_ATLAS = 'GIF'  # Can be 'GIF' or 'mean'
+# MERGING_MULTI_ATLAS = 'mean'
 
 
 def main(dataset_path_list):
@@ -142,6 +144,7 @@ def main(dataset_path_list):
                     lp=3,  # default 3; we do only the lp first level of the pyramid
                     save_folder=atlas_pred_save_folder_tmp,
                     only_affine=False,
+                    merging_method=MERGING_MULTI_ATLAS,
                 )
 
                 # Save the atlas-based prediction
@@ -157,7 +160,10 @@ def main(dataset_path_list):
                 pred_proba_trustworthy /= 6
 
                 # Apply Dempster's rule with the atlas prior
-                pred_proba_trustworthy = merge_deep_and_atlas_seg(pred_proba_trustworthy, pred_proba_atlas)
+                pred_proba_trustworthy = merge_deep_and_atlas_seg(
+                    deep_proba=pred_proba_trustworthy,
+                    atlas_seg=pred_atlas,
+                )
 
                 # Save the trustworthy (atlas only) prediction
                 pred_trustworthy = np.argmax(pred_proba_trustworthy, axis=0).astype(np.uint8)
