@@ -22,8 +22,6 @@ def probabilistic_segmentation_prior(image_nii, mask_nii,
     The segmentation is used during registration with MSE if seg_nii is not None.
     """
     time_0 = time()
-    # print('Use the atlas volumes in %s' % atlas_folder)
-    print('Use NiftyReg version in %s' % NIFTYREG_PATH)
 
     # Step 0: Create the folder where to save the registration output
     tmp_folder = './tmp'

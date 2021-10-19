@@ -41,7 +41,10 @@ DATA_FOLDER_NADA_GROUP = os.path.join(BASE_FOLDER, 'SRR_and_Seg_Nada_cases_group
 
 # REGISTRATION
 NIFTYREG_PATH = os.path.join(WORKSPACE_FOLDER, 'niftyreg_stable', 'build', 'reg-apps')
-
+GRID_SPACING = 4  # in mm (default is 4 mm = 5 voxels x 0.8 mm.voxels**(-1))
+BE = 0.1  # NiftyReg default 0.001
+LE = 0.3  # NiftyReg default 0.01
+LP = 3  # default 3; we do only the lp first level of the pyramid
 
 # ATLAS FOLDERS
 ATLAS_CONTROL_HARVARD = os.path.join(  # GA: 21 -> 37
@@ -57,6 +60,13 @@ ATLAS_CONTROL_CHINESE = os.path.join(  # GA: 22 -> 35
 ATLAS_SB = os.path.join(
     DATA_FOLDER,
     'spina_bifida_atlas',
+)
+
+
+# TRAINING DATA
+TRAINING_DATA_DIR = os.path.join(
+    "/data",
+    "fetal_brain_srr_parcellation_Jun21_atlas_autocomplete_partially_sup",
 )
 
 
@@ -86,7 +96,9 @@ CORRECTED_ZURICH_DATA_DIR = os.path.join(BASE_FOLDER, 'FetalDataZurichCorrected'
 EXCLUDED_ZURICH_DATA_DIR = os.path.join(BASE_FOLDER, 'FetalDataZurichCorrected', 'TrainingSetExcluded')  # 2 volumes
 FETA_IRTK_DIR = os.path.join(DATA_FOLDER, 'FetalDataFeTAChallengeIRTK_Jun21')  # 40 volumes
 
+
 DATASET_LABELS = {
+    TRAINING_DATA_DIR: ALL_ROI,
     DATA_FOLDER_THOMAS_GROUP1:
         ['white_matter', 'intra_axial_csf', 'cerebellum'],
     DATA_FOLDER_THOMAS_GROUP2:
@@ -99,15 +111,14 @@ DATASET_LABELS = {
         ['white_matter', 'intra_axial_csf', 'cerebellum', 'extra_axial_csf', 'cortical_grey_matter', 'deep_grey_matter', 'brainstem'],
     FETA_IRTK_DIR:
         ['white_matter', 'intra_axial_csf', 'cerebellum', 'extra_axial_csf', 'cortical_grey_matter', 'deep_grey_matter', 'brainstem'],
-    SB_FRED:
-        ALL_ROI,
+    SB_FRED: ALL_ROI,
     CDH_LEUVEN_TESTINGSET:
         ['white_matter', 'intra_axial_csf', 'cerebellum', 'extra_axial_csf'],
-    DATA_FOLDER_CONTROLS2_PARTIAL_FULLYSEG:
-        ALL_ROI,
+    DATA_FOLDER_CONTROLS2_PARTIAL_FULLYSEG: ALL_ROI,
 }
 
 
 # CSV
 INFO_DATA_TSV = os.path.join('/data', 'feta_2.1', 'participants.tsv')
 INFO_DATA_TSV2 = os.path.join('/data', 'Fetal_SRR_and_Seg', 'iid_testing_trustworthyai21.tsv')
+INFO_TRAINING_DATA_TSV = os.path.join('/data', 'Fetal_SRR_and_Seg', 'training_trustworthyai21_noatlas.tsv')

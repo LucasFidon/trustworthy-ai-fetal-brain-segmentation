@@ -2,7 +2,7 @@ import os
 import numpy as np
 import nibabel as nib
 from src.multi_atlas.atlas_propagation import probabilistic_segmentation_prior
-from src.multi_atlas.registration_utils import compute_def_from_cpp
+from src.multi_atlas.utils import compute_def_from_cpp
 from src.multi_atlas.multi_atlas_fusion_weights import log_heat_kernel_GIF
 
 SUPPORTED_MERGING_METHOD = [
@@ -64,29 +64,33 @@ def multi_atlas_segmentation(img_nii, mask_nii, atlas_folder_list,
         # Compute the heat kernel for the GIF-like fusion
         expected_heat_kernel = os.path.join(
             save_folder_atlas, 'heat_kernel.nii.gz')
-        #todo skip computation if the heat kernel already exists
-        expected_warped_atlas_path = os.path.join(
-            save_folder_atlas, 'warped_atlas_img_seg.nii.gz')
-        warped_atlas_nii = nib.load(expected_warped_atlas_path)
-        warped_atlas = warped_atlas_nii.get_fdata().astype(np.float32)
-        warped_atlas_mask = (np.argmax(proba_atlas_prior, axis=-1) > 0).astype(np.uint8)
-        expected_cpp_path = os.path.join(save_folder_atlas, 'cpp.nii.gz')
-        expected_img_path = os.path.join(save_folder_atlas, 'img.nii.gz')
-        def_path = os.path.join(save_folder_atlas, 'def.nii.gz')
-        compute_def_from_cpp(expected_cpp_path, expected_img_path, def_path)
-        deformation = nib.load(def_path).get_fdata().astype(np.float32)
-        log_heat_kernel = log_heat_kernel_GIF(
-            image=img_nii.get_fdata().astype(np.float32),
-            mask=mask_nii.get_fdata().astype(np.uint8),
-            atlas_warped_image=warped_atlas,
-            atlas_warped_mask=warped_atlas_mask,
-            deformation_field=deformation,
-        )
+        if os.path.exists(expected_heat_kernel):
+            # Load the existing heat map (skip computation)
+            log_heat_kernel_nii = nib.load(expected_heat_kernel)
+            log_heat_kernel = log_heat_kernel_nii.get_fdata().astype(np.float32)
+        else:
+            # Compute the heat map
+            expected_warped_atlas_path = os.path.join(
+                save_folder_atlas, 'warped_atlas_img_seg.nii.gz')
+            warped_atlas_nii = nib.load(expected_warped_atlas_path)
+            warped_atlas = warped_atlas_nii.get_fdata().astype(np.float32)
+            warped_atlas_mask = (np.argmax(proba_atlas_prior, axis=-1) > 0).astype(np.uint8)
+            expected_cpp_path = os.path.join(save_folder_atlas, 'cpp.nii.gz')
+            expected_img_path = os.path.join(save_folder_atlas, 'img.nii.gz')
+            def_path = os.path.join(save_folder_atlas, 'def.nii.gz')
+            compute_def_from_cpp(expected_cpp_path, expected_img_path, def_path)
+            deformation = nib.load(def_path).get_fdata().astype(np.float32)
+            log_heat_kernel = log_heat_kernel_GIF(
+                image=img_nii.get_fdata().astype(np.float32),
+                mask=mask_nii.get_fdata().astype(np.uint8),
+                atlas_warped_image=warped_atlas,
+                atlas_warped_mask=warped_atlas_mask,
+                deformation_field=deformation,
+            )
+            # Save the heat kernel
+            log_heat_kernel_nii = nib.Nifti1Image(log_heat_kernel, warped_atlas_nii.affine)
+            nib.save(log_heat_kernel_nii, expected_heat_kernel)
         log_heat_kernel_list.append(log_heat_kernel)
-
-        # Save the heat kernel
-        log_heat_kernel_nii = nib.Nifti1Image(log_heat_kernel, warped_atlas_nii.affine)
-        nib.save(log_heat_kernel_nii, expected_heat_kernel)
 
     # Merge the proba predictions
     if merging_method == 'GIF':

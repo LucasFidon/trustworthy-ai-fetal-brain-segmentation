@@ -186,6 +186,23 @@ def haussdorff_distance(mask_gt, mask_pred, fg_class,
     return haussdorff_dist_value
 
 
+def missing_coverage_distance(mask_gt, mask_pred, fg_class,
+                              percentile=100, spacing_mm=[0.8, 0.8, 0.8]):
+    # HD that penalizes only the false negatives
+    bin_mask_gt = np.squeeze(_binarize(mask_gt, fg_class=fg_class))
+    bin_mask_pred = np.squeeze(_binarize(mask_pred, fg_class=fg_class))
+
+    # Take the union of the ground-truth and the predicted mask
+    bin_mask_union = np.logical_or(bin_mask_gt, bin_mask_pred)
+
+    surface_distances = compute_surface_distances(
+        bin_mask_union, bin_mask_pred, spacing_mm)
+
+    coverage_dist_value = compute_robust_hausdorff(surface_distances, percentile)
+
+    return coverage_dist_value
+
+
 def compute_surface_distances(mask_gt, mask_pred, spacing_mm):
     """
     Compute closest distances from all surface points to the other surface.

@@ -7,6 +7,7 @@ from src.utils.utils import get_feta_info
 from src.evaluation.utils import print_results, compute_evaluation_metrics
 from src.deep_learning.inference_nnunet import load_softmax
 from src.multi_atlas.inference import multi_atlas_segmentation
+from src.multi_atlas.utils import get_atlas_list
 from src.segmentations_fusion.dempster_shaffer import merge_deep_and_atlas_seg, dempster_add_intensity_prior
 
 # DATA_DIR = [FETA_CHALLENGE_DIR]
@@ -28,6 +29,7 @@ def main(dataset_path_list):
     pred_folder = os.path.join(SAVE_FOLDER, 'nnunet_task225')
     if not os.path.exists(pred_folder):
         os.mkdir(pred_folder)
+
     # Initialize the metric dict
     metrics_per_cond = {
      cond: {
@@ -38,7 +40,7 @@ def main(dataset_path_list):
     }
     pred_dict = {}
 
-    # Get FeTA data info
+    # Get data info
     patid_ga, patid_cond = get_feta_info()
 
     # Run the batch inference
@@ -103,46 +105,19 @@ def main(dataset_path_list):
                 softmax = load_softmax(pred_softmax_path, volume_info_path)
 
                 # Propagate the atlas volumes segmentation
-                atlas_list = []
-                for ga_intervals in [-1, 0, 1]:
-                    if cond == 'Spina Bifida' or cond == 'Pathological':
-                        template_path_notop = os.path.join(
-                            ATLAS_SB,
-                            'fetal_SB_atlas_GA%d_notoperated' % (ga + ga_intervals),
-                        )
-                        if os.path.exists(template_path_notop):
-                            atlas_list.append(template_path_notop)
-                        template_path_op = os.path.join(
-                            ATLAS_SB,
-                            'fetal_SB_atlas_GA%d_operated' % (ga + ga_intervals),
-                        )
-                        if os.path.exists(template_path_op):
-                            atlas_list.append(template_path_op)
-                    if cond == 'Neurotypical' or cond == 'Pathological':  # Control / Neurotypical
-                        template_harvard_path = os.path.join(
-                            ATLAS_CONTROL_HARVARD,
-                            'HarvardSTA%d_Study1' % (ga + ga_intervals),
-                        )
-                        if os.path.exists(template_harvard_path):
-                            atlas_list.append(template_harvard_path)
-                        template_chinese_path = os.path.join(
-                            ATLAS_CONTROL_CHINESE,
-                            'Chinese%d_Study1' % (ga + ga_intervals),
-                        )
-                        if os.path.exists(template_chinese_path):
-                            atlas_list.append(template_chinese_path)
+                atlas_list = get_atlas_list(ga=ga, condition=cond, ga_delta_max=1)
                 print('\nStart atlas propagation using the volumes')
                 print(atlas_list)
-                atlas_pred_save_folder_tmp = os.path.join(output_path, 'atlas_pred')
+                atlas_pred_save_folder = os.path.join(output_path, 'atlas_pred')
                 pred_proba_atlas = multi_atlas_segmentation(
                     img_nii,
                     mask_nii,
                     atlas_folder_list=atlas_list,
-                    grid_spacing=4,  # in mm (default is 4 mm = 5 voxels x 0.8 mm.voxels**(-1))
-                    be=0.1,  # NiftyReg default 0.001
-                    le=0.3,  # NiftyReg default 0.01
-                    lp=3,  # default 3; we do only the lp first level of the pyramid
-                    save_folder=atlas_pred_save_folder_tmp,
+                    grid_spacing=GRID_SPACING,
+                    be=BE,
+                    le=LE,
+                    lp=LP,
+                    save_folder=atlas_pred_save_folder,
                     only_affine=False,
                     merging_method=MERGING_MULTI_ATLAS,
                 )

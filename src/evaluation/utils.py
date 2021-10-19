@@ -3,10 +3,11 @@ import numpy as np
 import nibabel as nib
 import pickle
 from src.utils.definitions import *
-from src.evaluation.evaluation_metrics.segmentation_metrics import dice_score, haussdorff_distance
+from src.evaluation.evaluation_metrics.segmentation_metrics import \
+    dice_score, haussdorff_distance, missing_coverage_distance
 
 
-def compute_evaluation_metrics(pred_seg_path, gt_seg_path, dataset_path):
+def compute_evaluation_metrics(pred_seg_path, gt_seg_path, dataset_path, compute_coverage_distance=False):
     def load_np(seg_path):
         seg = nib.load(seg_path).get_fdata().astype(np.uint8)
         return seg
@@ -17,6 +18,7 @@ def compute_evaluation_metrics(pred_seg_path, gt_seg_path, dataset_path):
     # Compute the metrics
     dice_values = {}
     haus_values = {}
+    cove_values = {}
     for roi in DATASET_LABELS[dataset_path]:
         dice_values[roi] = 100 * dice_score(
             pred_seg,
@@ -32,15 +34,30 @@ def compute_evaluation_metrics(pred_seg_path, gt_seg_path, dataset_path):
                 percentile=95,
             )
         )
+        if compute_coverage_distance:
+            cove_values[roi] = min(
+                MAX_HD,
+                missing_coverage_distance(
+                    mask_gt=gt_seg,
+                    mask_pred=pred_seg,
+                    fg_class=LABELS[roi],
+                    percentile=95,
+                )
+            )
     print('\n\033[92mEvaluation for %s\033[0m' % pred_seg_name)
     print('Dice scores:')
     print(dice_values)
     print('Hausdorff95 distances:')
     print(haus_values)
-    return dice_values, haus_values
+    if compute_coverage_distance:
+        print('Missing coverage distances:')
+        print(cove_values)
+        return dice_values, haus_values, cove_values
+    else:
+        return dice_values, haus_values
 
 
-def print_results(metrics, method_names=METHOD_NAMES, save_path=None):
+def print_results(metrics, method_names=METHOD_NAMES, metric_names=METRIC_NAMES, save_path=None):
     print('\nGlobal statistics for the metrics')
     for method in method_names:
         print('\n\033[93m----------')
@@ -48,7 +65,7 @@ def print_results(metrics, method_names=METHOD_NAMES, save_path=None):
         print('----------\033[0m')
         for roi in ALL_ROI:
             print('\033[92m%s\033[0m' % roi)
-            for metric in METRIC_NAMES:
+            for metric in metric_names:
                 key = '%s_%s' % (metric, roi)
                 num_data = len(metrics[method][key])
                 if num_data == 0:
