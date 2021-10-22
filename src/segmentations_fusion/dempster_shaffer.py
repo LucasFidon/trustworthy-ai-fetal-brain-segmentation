@@ -61,7 +61,6 @@ def dempster_add_intensity_prior(deep_proba, image, mask):
             for i in LABELS[roi_eval]:
                 if not i in labels_seen:
                     labels_seen.append(i)
-                    print('class %d' % i)
                     deep_proba[i, mask_prior == 1] *= m_mix
 
     # Normalize the probability

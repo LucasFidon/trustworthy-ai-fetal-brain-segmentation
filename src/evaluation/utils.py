@@ -78,7 +78,7 @@ def print_results(metrics, method_names=METHOD_NAMES, metric_names=METRIC_NAMES,
                 q3 = np.percentile(metrics[method][key], 75)
                 p95 = np.percentile(metrics[method][key], 95)
                 q1 = np.percentile(metrics[method][key], 25)
-                p5 = np.percentile(metrics[method][key], 25)
+                p5 = np.percentile(metrics[method][key], 5)
                 print(key)
                 if metric == 'dice':
                     print('mean=%.1f std=%.1f median=%.1f q1=%.1f p5=%.1f' % (mean, std, median, q1, p5))
