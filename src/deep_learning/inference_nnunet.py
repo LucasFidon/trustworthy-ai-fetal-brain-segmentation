@@ -47,6 +47,7 @@ def load_softmax(softmax_path, pkl_path):
 def main(args):
     # Load the data and mask the background
     img_nii = nib.load(args.input)
+    img_nii.set_data_dtype(np.float32)  # Force data type to be float32
     img_np = img_nii.get_fdata().astype(np.float32)
     mask_np = nib.load(args.mask).get_fdata().astype(np.uint8)
     # Skull stripping
