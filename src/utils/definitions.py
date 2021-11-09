@@ -69,6 +69,41 @@ TRAINING_DATA_DIR = os.path.join(
     "fetal_brain_srr_parcellation_Jun21_atlas_autocomplete_partially_sup",
 )
 
+FOLD_0 = [
+    "Anon6021676120121019_Study1",
+    "Anon6075767420140925_Study1",
+    "Anon6094282620150505_Study1",
+    "Anon6094282620150612_Study1",
+    "Anon6310433520131223_Study1",
+    "AutoUploadSubject00021_Study1",
+    "AutoUploadSubject00029_Study1",
+    "AutoUploadSubject00040_Study1",
+    "AutoUploadSubject00049_Study1",
+    "AutoUploadSubject00068_Study1",
+    "AutoUploadSubject00088_Study1",
+    "AutoUploadSubject00093_Study1",
+    "AutoUploadSubject00120_Study1",
+    "AutoUploadSubject00137_Study1",
+    "AutoUploadSubject00139_Study1",
+    "AutoUploadSubject00141_Study1",
+    "AutoUploadSubject00167_Study1",
+    "AutoUploadSubject00215_Study1",
+    "UZL00056_Study2",
+    "UZL00059_Study1",
+    "UZL00059_Study5",
+    "UZL00066_Study2",
+    "UZL00072_Study2",
+    "UZL00085_Study1",
+    "UZL00111_Study1",
+    "UZL00114_Study1",
+    "UZL00131_Study1",
+    "UZL10_Study15",
+    "UZL10_Study1",
+    "UZL7_Study12",
+    "UZL7_Study1",
+    "UZL9_Study1",
+]
+
 
 # TESTING DATA
 DATA_FOLDER_THOMAS_GROUP1 = os.path.join(  # 23 volumes
@@ -94,7 +129,7 @@ SB_FRED = os.path.join(  # 46 SB cases
 )
 CORRECTED_ZURICH_DATA_DIR = os.path.join(BASE_FOLDER, 'FetalDataZurichCorrected', 'TrainingSet')  # 38 volumes
 EXCLUDED_ZURICH_DATA_DIR = os.path.join(BASE_FOLDER, 'FetalDataZurichCorrected', 'TrainingSetExcluded')  # 2 volumes
-FETA_IRTK_DIR = os.path.join(DATA_FOLDER, 'FetalDataFeTAChallengeIRTK_Jun21')  # 40 volumes
+FETA_IRTK_DIR = os.path.join(DATA_FOLDER, 'FetalDataFeTAChallengeIRTK_Jun21_corrected')  # 40 volumes
 
 
 DATASET_LABELS = {
@@ -112,8 +147,7 @@ DATASET_LABELS = {
     FETA_IRTK_DIR:
         ['white_matter', 'intra_axial_csf', 'cerebellum', 'extra_axial_csf', 'cortical_grey_matter', 'deep_grey_matter', 'brainstem'],
     SB_FRED: ALL_ROI,
-    CDH_LEUVEN_TESTINGSET:
-        ['white_matter', 'intra_axial_csf', 'cerebellum', 'extra_axial_csf'],
+    CDH_LEUVEN_TESTINGSET: ALL_ROI,
     DATA_FOLDER_CONTROLS2_PARTIAL_FULLYSEG: ALL_ROI,
 }
 

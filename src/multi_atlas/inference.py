@@ -20,7 +20,8 @@ def _weights_from_log_heat_kernels(log_heat_kernels):
     return w
 
 def multi_atlas_segmentation(img_nii, mask_nii, atlas_folder_list,
-        grid_spacing, be, le, lp, save_folder, only_affine, merging_method='GIF'):
+        grid_spacing, be, le, lp, save_folder, only_affine,
+        merging_method='GIF', reuse_existing_pred=False):
 
     assert merging_method in SUPPORTED_MERGING_METHOD, \
         "Merging method %s not supported. Only %s supported." % (merging_method, str(SUPPORTED_MERGING_METHOD))
@@ -36,7 +37,7 @@ def multi_atlas_segmentation(img_nii, mask_nii, atlas_folder_list,
         atlas_name = os.path.split(folder)[1]
         save_folder_atlas = os.path.join(save_folder, atlas_name)
         expected_output = os.path.join(save_folder_atlas, 'warped_atlas_seg_onehot.nii.gz')
-        if os.path.exists(expected_output):
+        if os.path.exists(expected_output) and reuse_existing_pred:
             print('\n%s already exists.\nSkip registration.' % expected_output)
             proba_atlas_prior_nii = nib.load(expected_output)
             proba_atlas_prior = proba_atlas_prior_nii.get_fdata().astype(np.float32)

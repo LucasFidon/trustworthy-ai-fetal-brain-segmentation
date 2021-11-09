@@ -2,6 +2,7 @@ import os
 import numpy as np
 import nibabel as nib
 from time import time
+import SimpleITK as sitk
 from src.utils.definitions import *
 from src.utils.utils import get_feta_info
 from src.evaluation.utils import print_results, compute_evaluation_metrics
@@ -10,19 +11,37 @@ from src.multi_atlas.inference import multi_atlas_segmentation
 from src.multi_atlas.utils import get_atlas_list
 from src.segmentations_fusion.dempster_shaffer import merge_deep_and_atlas_seg, dempster_add_intensity_prior
 
-# DATA_DIR = [FETA_CHALLENGE_DIR]
-# DATA_DIR = [CORRECTED_ZURICH_DATA_DIR, EXCLUDED_ZURICH_DATA_DIR, FETA_CHALLENGE_DIR]
-# DATA_DIR = [CDH_LEUVEN_TESTINGSET, DATA_FOLDER_CONTROLS2_PARTIAL_FULLYSEG, SB_FRED]
+DATA_DIR = [CORRECTED_ZURICH_DATA_DIR, EXCLUDED_ZURICH_DATA_DIR, FETA_IRTK_DIR]
+# DATA_DIR = [CDH_LEUVEN_TESTINGSET, DATA_FOLDER_CONTROLS2_PARTIAL_FULLYSEG]
 # DATA_DIR = [DATA_FOLDER_THOMAS_GROUP1, DATA_FOLDER_THOMAS_GROUP2]
 # DATA_DIR = [
 #     CDH_LEUVEN_TESTINGSET, DATA_FOLDER_CONTROLS2_PARTIAL_FULLYSEG, SB_FRED,
 #     DATA_FOLDER_THOMAS_GROUP1, DATA_FOLDER_THOMAS_GROUP2,
 # ]
-DATA_DIR = [SB_FRED]
+# DATA_DIR = [SB_FRED]
+
 SAVE_FOLDER = '/data/saved_res_fetal_trust21_v3'
-DO_EVAL = True
+DO_BIAS_FIELD_CORRECTION = True
 MERGING_MULTI_ATLAS = 'GIF'  # Can be 'GIF' or 'mean'
 # MERGING_MULTI_ATLAS = 'mean'
+REUSE_CNN_PRED = False  # Set to False if you want to force recomputing the trustworthy segmentations
+REUSE_ATLAS_PRED = True  # Set to False if you want to force recomputing the registration
+
+
+def apply_bias_field_corrections(img_path, mask_path, save_img_path):
+    input_img = sitk.ReadImage(img_path, sitk.sitkFloat32)
+    mask = sitk.ReadImage(mask_path, sitk.sitkUInt8)
+    corrector = sitk.N4BiasFieldCorrectionImageFilter()
+    corrector.SetBiasFieldFullWidthAtHalfMaximum(0.15)
+    corrector.SetConvergenceThreshold(1e-6)
+    corrector.SetSplineOrder(3)
+    corrector.SetWienerFilterNoise(0.11)
+    t0 = time()
+    print('Estimate the bias field inhomogeneity...')
+    output = corrector.Execute(input_img, mask)
+    t1 = time()
+    print('Bias field inhomogeneity estimated in %.0fsec' % (t1 - t0))
+    sitk.WriteImage(output, save_img_path)
 
 
 def main(dataset_path_list):
@@ -40,13 +59,14 @@ def main(dataset_path_list):
     }
     pred_dict = {}
 
-    # Get data info
+    # Get all data info
     patid_ga, patid_cond = get_feta_info()
 
     # Run the batch inference
     for dataset in dataset_path_list:
         sample_folders = [n for n in os.listdir(dataset) if '.' not in n]
         for f_n in sample_folders:
+            # Get case info
             patid = f_n.replace('feta', '')
             if not patid in list(patid_ga.keys()):
                 print('\n*** Unknown GA. \nSkip %s.' % f_n)
@@ -55,6 +75,9 @@ def main(dataset_path_list):
             #     print('Skip %s' % f_n)
             #     continue
             print('\n--------------')
+            ga = patid_ga[patid]  # GA rounded to the closest week
+            cond = patid_cond[patid]
+
             # Paths of input
             input_path = os.path.join(dataset, f_n, 'srr.nii.gz')
             if not os.path.exists(input_path):
@@ -63,10 +86,16 @@ def main(dataset_path_list):
             if not os.path.exists(mask_path):
                 mask_path = os.path.join(dataset, f_n, 'srr_template_mask.nii.gz')
             output_path = os.path.join(pred_folder, f_n)
+            if not os.path.exists(output_path):
+                os.mkdir(output_path)
 
-            # Info about the case
-            ga = patid_ga[patid]  # GA rounded to the closest week
-            cond = patid_cond[patid]
+            # Preprocessing
+            if DO_BIAS_FIELD_CORRECTION:
+                print('\n*** Use bias field correction for %s' % patid)
+                pre_input_path = os.path.join(output_path, 'srr_preprocessed.nii.gz')
+                if not os.path.exists(pre_input_path):
+                    apply_bias_field_corrections(input_path, mask_path, pre_input_path)
+                input_path = pre_input_path
 
             # Set the predictions paths
             pred_path = os.path.join(output_path, '%s.nii.gz' % f_n)  # pred segmentation using CNN only
@@ -79,16 +108,15 @@ def main(dataset_path_list):
             pred_dict['trustworthy'] = pred_trustworthy_path
             pred_softmax_path = os.path.join(output_path, '%s.npz' % f_n)
             volume_info_path = os.path.join(output_path, '%s.pkl' % f_n)  # info about the volume and preprocessing doen by nnUNet
-            if not os.path.exists(output_path):
-                os.mkdir(output_path)
 
             # Inference
-            # skip_inference = False
-            skip_inference = os.path.exists(pred_path) and os.path.exists(pred_atlas_path) and os.path.exists(pred_trustworthy_path) and os.path.exists(pred_trustworthy_atlas_only_path)
+            skip_inference = False
+            if REUSE_CNN_PRED:
+                skip_inference = os.path.exists(pred_path) and os.path.exists(pred_atlas_path) and os.path.exists(pred_trustworthy_path) and os.path.exists(pred_trustworthy_atlas_only_path)
             if skip_inference:
                 print('Skip inference for %s.\nThe predictions already exists.' % f_n)
             else:
-                print('Start inference for case %s' % f_n)
+                print('\nStart inference for case %s' % f_n)
                 # CNN inference
                 cmd_options = '--input %s --mask %s --output_folder %s --fold all --task Task225_FetalBrain3dTrust --save_npz' % \
                     (input_path, mask_path, output_path)
@@ -120,6 +148,7 @@ def main(dataset_path_list):
                     save_folder=atlas_pred_save_folder,
                     only_affine=False,
                     merging_method=MERGING_MULTI_ATLAS,
+                    reuse_existing_pred=REUSE_ATLAS_PRED,
                 )
 
                 # Save the atlas-based prediction
@@ -163,13 +192,12 @@ def main(dataset_path_list):
                     os.system('rm %s' % volume_info_path)
 
             # Evaluation
-            if DO_EVAL:
-                gt_seg_path = os.path.join(dataset, f_n, 'parcellation.nii.gz')
-                for method in METHOD_NAMES:
-                    dice, haus = compute_evaluation_metrics(pred_dict[method], gt_seg_path, dataset_path=dataset)
-                    for roi in DATASET_LABELS[dataset]:
-                        metrics_per_cond[cond][method]['dice_%s' % roi].append(dice[roi])
-                        metrics_per_cond[cond][method]['hausdorff_%s' % roi].append(haus[roi])
+            gt_seg_path = os.path.join(dataset, f_n, 'parcellation.nii.gz')
+            for method in METHOD_NAMES:
+                dice, haus = compute_evaluation_metrics(pred_dict[method], gt_seg_path, dataset_path=dataset)
+                for roi in DATASET_LABELS[dataset]:
+                    metrics_per_cond[cond][method]['dice_%s' % roi].append(dice[roi])
+                    metrics_per_cond[cond][method]['hausdorff_%s' % roi].append(haus[roi])
 
     # Save and print the metrics aggregated
     for cond in CONDITIONS:
