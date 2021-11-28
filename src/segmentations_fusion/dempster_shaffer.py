@@ -9,9 +9,6 @@ sys.path.append('/workspace/trustworthy-ai-fetal-brain-segmentation')
 from src.utils.definitions import *
 
 
-ATLAS_MARGIN = [2] * 9  # bg, wm, vent, cer, ext-csf, cgm, dgm, bs, cc (in voxels)
-
-
 def merge_deep_and_atlas_seg(deep_proba, atlas_seg):
     out_score = np.copy(deep_proba)
     print('\nApply atlas-based margins to the deep learning-based segmentation. ', ATLAS_MARGIN)

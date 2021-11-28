@@ -12,6 +12,8 @@ ALL_ROI = [
     'cortical_grey_matter', 'deep_grey_matter', 'brainstem', 'corpus_callosum'
 ]
 CONDITIONS = ['Neurotypical', 'Spina Bifida', 'Pathological']
+CENTERS = ['in', 'out']  # in- or -out of distribution
+ATLAS_MARGIN = [2] * 9  # bg, wm, vent, cer, ext-csf, cgm, dgm, bs, cc (in voxels)
 
 
 # EVALUATION
@@ -64,9 +66,33 @@ ATLAS_SB = os.path.join(
 
 
 # TRAINING DATA
-TRAINING_DATA_DIR = os.path.join(
-    "/data",
+TRAINING_DATA_PREPROCESSED_DIR = os.path.join(
+    DATA_FOLDER,
     "fetal_brain_srr_parcellation_Jun21_atlas_autocomplete_partially_sup",
+)
+CDH_DOAA_DEC19 = os.path.join(
+    DATA_FOLDER_MICHAEL_GROUP,
+    "CDH_Doaa_Dec19",
+)
+CONTROLS_DOAA_OCT20 = os.path.join(
+    DATA_FOLDER_MICHAEL_GROUP,
+    "Controls_Doaa_Oct20_MA",
+)
+DOAA_BRAIN_LONGITUDINAL_SRR_AND_SEG = os.path.join(
+    BASE_FOLDER,
+    "Doaa_brain_longitudinal_SRR_and_Seg_MA",
+)
+LEUVEN_MMC = os.path.join(
+    DATA_FOLDER_NADA_GROUP,
+    "Leuven_MMC",
+)
+CDH = os.path.join(
+    DATA_FOLDER_NADA_GROUP,
+    "CDH",
+)
+CONTROLS_WITH_EXT_CSF = os.path.join(
+    DATA_FOLDER_NADA_GROUP,
+    "Controls_with_extcsf_MA",
 )
 
 FOLD_0 = [
@@ -133,7 +159,7 @@ FETA_IRTK_DIR = os.path.join(DATA_FOLDER, 'FetalDataFeTAChallengeIRTK_Jun21_corr
 
 
 DATASET_LABELS = {
-    TRAINING_DATA_DIR: ALL_ROI,
+    TRAINING_DATA_PREPROCESSED_DIR: ALL_ROI,
     DATA_FOLDER_THOMAS_GROUP1:
         ['white_matter', 'intra_axial_csf', 'cerebellum'],
     DATA_FOLDER_THOMAS_GROUP2:
@@ -149,6 +175,20 @@ DATASET_LABELS = {
     SB_FRED: ALL_ROI,
     CDH_LEUVEN_TESTINGSET: ALL_ROI,
     DATA_FOLDER_CONTROLS2_PARTIAL_FULLYSEG: ALL_ROI,
+}
+
+# Dictionary that maps dataset path to in- or out- of distribution
+DATASET_GROUPS = {
+    TRAINING_DATA_PREPROCESSED_DIR: 'in',
+    DATA_FOLDER_THOMAS_GROUP1: 'in',
+    DATA_FOLDER_THOMAS_GROUP2: 'in',
+    CORRECTED_ZURICH_DATA_DIR: 'out',
+    # SURE_EXCLUDED_ZURICH_DATA_DIR: 'out,
+    EXCLUDED_ZURICH_DATA_DIR: 'out',
+    FETA_IRTK_DIR: 'out',
+    SB_FRED: 'in',
+    CDH_LEUVEN_TESTINGSET: 'in',
+    DATA_FOLDER_CONTROLS2_PARTIAL_FULLYSEG: 'in',
 }
 
 

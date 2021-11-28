@@ -58,7 +58,7 @@ def compute_evaluation_metrics(pred_seg_path, gt_seg_path, dataset_path, compute
 
 
 def print_results(metrics, method_names=METHOD_NAMES, metric_names=METRIC_NAMES, save_path=None):
-    print('\nGlobal statistics for the metrics')
+    print('\n*** Global statistics for the metrics')
     for method in method_names:
         print('\n\033[93m----------')
         print(method.upper())
@@ -88,3 +88,24 @@ def print_results(metrics, method_names=METHOD_NAMES, metric_names=METRIC_NAMES,
     if save_path is not None:
         with open(save_path, 'wb') as f:
             pickle.dump(metrics, f, pickle.HIGHEST_PROTOCOL)
+
+
+def print_summary_results(metrics, method_names=METHOD_NAMES, metric_names=METRIC_NAMES):
+    print('\n*** Summary average statistics for the metrics over all ROIs')
+    for method in method_names:
+        print('\n\033[93m----------')
+        print(method.upper())
+        print('----------\033[0m')
+        metric_means = {met:[] for met in metric_names}
+        for roi in ALL_ROI:
+            for metric in metric_names:
+                key = '%s_%s' % (metric, roi)
+                num_data = len(metrics[method][key])
+                if num_data == 0:
+                    print('No data for %s' % key)
+                    continue
+                mean = np.mean(metrics[method][key])
+                metric_means[metric].append(mean)
+        for metric in metric_names:
+            ave_mean = np.mean(metric_means[metric])
+            print('%s: average mean = %.1f' % (metric, ave_mean))

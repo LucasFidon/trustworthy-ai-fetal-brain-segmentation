@@ -93,6 +93,12 @@ def multi_atlas_segmentation(img_nii, mask_nii, atlas_folder_list,
             nib.save(log_heat_kernel_nii, expected_heat_kernel)
         log_heat_kernel_list.append(log_heat_kernel)
 
+        # Cleaning - remove the files that we will not need anymore
+        for f_n in os.listdir(save_folder_atlas):
+            p = os.path.join(save_folder_atlas, f_n)
+            if (p != expected_heat_kernel) and (p != expected_output):
+                os.system('rm %s' % p)
+
     # Merge the proba predictions
     if merging_method == 'GIF':
         proba_seg = np.stack(proba_seg_list, axis=0)  # n_atlas, n_x, n_y, n_z, n_class

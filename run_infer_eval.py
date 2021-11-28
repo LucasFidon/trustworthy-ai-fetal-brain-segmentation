@@ -11,20 +11,23 @@ from src.multi_atlas.inference import multi_atlas_segmentation
 from src.multi_atlas.utils import get_atlas_list
 from src.segmentations_fusion.dempster_shaffer import merge_deep_and_atlas_seg, dempster_add_intensity_prior
 
-DATA_DIR = [CORRECTED_ZURICH_DATA_DIR, EXCLUDED_ZURICH_DATA_DIR, FETA_IRTK_DIR]
+# DATA_DIR = [CORRECTED_ZURICH_DATA_DIR, EXCLUDED_ZURICH_DATA_DIR, FETA_IRTK_DIR]
 # DATA_DIR = [CDH_LEUVEN_TESTINGSET, DATA_FOLDER_CONTROLS2_PARTIAL_FULLYSEG]
 # DATA_DIR = [DATA_FOLDER_THOMAS_GROUP1, DATA_FOLDER_THOMAS_GROUP2]
-# DATA_DIR = [
-#     CDH_LEUVEN_TESTINGSET, DATA_FOLDER_CONTROLS2_PARTIAL_FULLYSEG, SB_FRED,
-#     DATA_FOLDER_THOMAS_GROUP1, DATA_FOLDER_THOMAS_GROUP2,
-# ]
+DATA_DIR = [
+    CDH_LEUVEN_TESTINGSET, DATA_FOLDER_CONTROLS2_PARTIAL_FULLYSEG, SB_FRED,
+    DATA_FOLDER_THOMAS_GROUP1, DATA_FOLDER_THOMAS_GROUP2,
+    CORRECTED_ZURICH_DATA_DIR, EXCLUDED_ZURICH_DATA_DIR, FETA_IRTK_DIR
+]
 # DATA_DIR = [SB_FRED]
 
 SAVE_FOLDER = '/data/saved_res_fetal_trust21_v3'
-DO_BIAS_FIELD_CORRECTION = True
+DO_BIAS_FIELD_CORRECTION = True  # Will be ignored for data from Leuven
 MERGING_MULTI_ATLAS = 'GIF'  # Can be 'GIF' or 'mean'
 # MERGING_MULTI_ATLAS = 'mean'
-REUSE_CNN_PRED = False  # Set to False if you want to force recomputing the trustworthy segmentations
+DELTA_GA = 1
+DO_BILATERAL_FILTERING = False
+REUSE_CNN_PRED = True  # Set to False if you want to force recomputing the trustworthy segmentations
 REUSE_ATLAS_PRED = True  # Set to False if you want to force recomputing the registration
 
 
@@ -50,12 +53,15 @@ def main(dataset_path_list):
         os.mkdir(pred_folder)
 
     # Initialize the metric dict
-    metrics_per_cond = {
-     cond: {
-        method: {'%s_%s' % (metric, roi): [] for roi in ALL_ROI for metric in METRIC_NAMES}
-            for method in METHOD_NAMES
+    metrics = {
+        center: {
+            cond: {
+                method: {'%s_%s' % (metric, roi): [] for roi in ALL_ROI for metric in METRIC_NAMES}
+                for method in METHOD_NAMES
+            }
+            for cond in CONDITIONS
         }
-        for cond in CONDITIONS
+        for center in CENTERS
     }
     pred_dict = {}
 
@@ -65,6 +71,7 @@ def main(dataset_path_list):
     # Run the batch inference
     for dataset in dataset_path_list:
         sample_folders = [n for n in os.listdir(dataset) if '.' not in n]
+        center_val = DATASET_GROUPS[dataset]
         for f_n in sample_folders:
             # Get case info
             patid = f_n.replace('feta', '')
@@ -90,7 +97,7 @@ def main(dataset_path_list):
                 os.mkdir(output_path)
 
             # Preprocessing
-            if DO_BIAS_FIELD_CORRECTION:
+            if DO_BIAS_FIELD_CORRECTION and center_val == 'out':
                 print('\n*** Use bias field correction for %s' % patid)
                 pre_input_path = os.path.join(output_path, 'srr_preprocessed.nii.gz')
                 if not os.path.exists(pre_input_path):
@@ -133,7 +140,7 @@ def main(dataset_path_list):
                 softmax = load_softmax(pred_softmax_path, volume_info_path)
 
                 # Propagate the atlas volumes segmentation
-                atlas_list = get_atlas_list(ga=ga, condition=cond, ga_delta_max=1)
+                atlas_list = get_atlas_list(ga=ga, condition=cond, ga_delta_max=DELTA_GA)
                 print('\nStart atlas propagation using the volumes')
                 print(atlas_list)
                 atlas_pred_save_folder = os.path.join(output_path, 'atlas_pred')
@@ -179,6 +186,7 @@ def main(dataset_path_list):
                     deep_proba=pred_proba_trustworthy,
                     image=img,
                     mask=mask,
+                    denoise=DO_BILATERAL_FILTERING,
                 )
                 # Save the trustworthy prediction
                 pred_trustworthy = np.argmax(pred_proba_trustworthy, axis=0).astype(np.uint8)
@@ -196,14 +204,23 @@ def main(dataset_path_list):
             for method in METHOD_NAMES:
                 dice, haus = compute_evaluation_metrics(pred_dict[method], gt_seg_path, dataset_path=dataset)
                 for roi in DATASET_LABELS[dataset]:
-                    metrics_per_cond[cond][method]['dice_%s' % roi].append(dice[roi])
-                    metrics_per_cond[cond][method]['hausdorff_%s' % roi].append(haus[roi])
+                    metrics[center_val][cond][method]['dice_%s' % roi].append(dice[roi])
+                    metrics[center_val][cond][method]['hausdorff_%s' % roi].append(haus[roi])
 
     # Save and print the metrics aggregated
-    for cond in CONDITIONS:
-        print('\n%s\n-------' % cond)
-        save_metrics_path = os.path.join(pred_folder, 'metrics_%s.pkl' % cond.replace(' ', '_'))
-        print_results(metrics_per_cond[cond], method_names=METHOD_NAMES, save_path=save_metrics_path)
+    for center in CENTERS:
+        print('=======\n%s\n=======' % center)
+        for cond in CONDITIONS:
+            print('\n%s\n-------' % cond)
+            save_metrics_path = os.path.join(
+                pred_folder,
+                'metrics_%s-distribution_%s.pkl' % (center, cond.replace(' ', '_')),
+            )
+            print_results(
+                metrics[center][cond],
+                method_names=METHOD_NAMES,
+                save_path=save_metrics_path,
+            )
 
 
 if __name__ == '__main__':
