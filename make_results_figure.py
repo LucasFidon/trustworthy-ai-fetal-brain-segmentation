@@ -45,8 +45,16 @@ CENTER_TYPES_TO_DISPLAY = {
     'out': 'Out-of-scanner Distribution',
 }
 BOXPLOT_SIZE = [15, 10]  # Size of each subplot
-FONT_SIZE_AXIS = 40
+YAXIS_LIM = {
+    'dice': (-2, 100),
+    'hausdorff': (-1, 35),  # Rk: max is 57.6mm
+}
+FONT_SIZE_AXIS = 55
 SNS_FONT_SCALE = 2.8
+LEGEND_POSITION = {
+    'dice': 'lower left',
+    'hausdorff': 'upper left',
+}
 VERTICAL_LINE_SHIFT = 0.025  # Cooking here.. shift for the vertical line that separates subplots
 
 def load_metrics(metrics_path):
@@ -67,9 +75,7 @@ def create_df(metric, condition, center_type):
 
         # Set the right list of ROIs
         roi_list = ALL_ROI
-        if condition == 'Pathological' and center_type == 'in':
-            roi_list = ['white_matter', 'intra_axial_csf', 'cerebellum']
-        elif center_type == 'out':  # no corpus callosum
+        if center_type == 'out':  # no corpus callosum
             roi_list = [
                 'white_matter', 'intra_axial_csf', 'cerebellum',
                 'extra_axial_csf', 'cortical_grey_matter', 'deep_grey_matter', 'brainstem'
@@ -123,8 +129,7 @@ def main(metric_name):
                 ax[i,j].set(xlabel=None)
 
             # Y axis
-            if metric_name == 'dice':
-                ax[i,j].set(ylim=(-2, 100))
+            ax[i,j].set(ylim=YAXIS_LIM[metric_name])
             if j == 0:
                 ax[i,j].set_ylabel(
                     CONDITION_NAMES_TO_DISPLAY[condition] + '\n' ,
@@ -138,7 +143,7 @@ def main(metric_name):
             if j == 0 and i == 0:
                 sns.move_legend(
                     ax[i,j],
-                    "lower left",
+                    LEGEND_POSITION[metric_name],
                     # bbox_to_anchor=(1, 0.),
                 )
             else:
