@@ -57,13 +57,13 @@ def compute_evaluation_metrics(pred_seg_path, gt_seg_path, dataset_path, compute
         return dice_values, haus_values
 
 
-def print_results(metrics, method_names=METHOD_NAMES, metric_names=METRIC_NAMES, save_path=None):
+def print_results(metrics, method_names=METHOD_NAMES, metric_names=METRIC_NAMES, roi_names=ALL_ROI, save_path=None):
     print('\n*** Global statistics for the metrics')
     for method in method_names:
         print('\n\033[93m----------')
         print(method.upper())
         print('----------\033[0m')
-        for roi in ALL_ROI:
+        for roi in roi_names:
             print('\033[92m%s\033[0m' % roi)
             for metric in metric_names:
                 key = '%s_%s' % (metric, roi)

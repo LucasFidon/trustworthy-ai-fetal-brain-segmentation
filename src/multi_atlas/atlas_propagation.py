@@ -23,7 +23,7 @@ def probabilistic_segmentation_prior(image_nii, mask_nii,
     """
     time_0 = time()
 
-    # Step 0: Create the folder where to save the registration output
+    # Create the folder where to save the registration output
     tmp_folder = './tmp'
     if save_folder_path is None:  # in this case the tmp folder will be deleted
         save_folder_path = tmp_folder
@@ -89,7 +89,6 @@ def _convert_to_one_hot_and_smooth_seg_prior(segmentation_nii, smooth_sigma=SIGM
     seg_np = segmentation_nii.get_fdata().astype(np.uint8)
     # Convert the segmentation into one-hot representation
     hard_prior_seg_one_hot = np.eye(seg_np.max() + 1)[seg_np].astype(np.float32)  # numpy magic
-    #TODO: what about filtering with a cubic B-spline filter instead?
     if smooth_sigma > 0.:  # Gaussian smoothing
         # Put the class dimension first (PyTorch convention)
         hard_prior_seg_one_hot = np.transpose(hard_prior_seg_one_hot, (3, 0, 1, 2))
@@ -122,11 +121,11 @@ def _register_atlas_to_img(image_nii, mask_nii,
         nib.save(volume_nii, save_path)
 
     # Prepare the volumes to register
-    img_seg_path = os.path.join(save_folder, 'img_seg.nii.gz')
+    img_path = os.path.join(save_folder, 'img.nii.gz')
     mask_path = os.path.join(save_folder, 'mask.nii.gz')
-    atlas_img_seg_path = os.path.join(save_folder, 'atlas_img_seg.nii.gz')
+    atlas_img_seg_path = os.path.join(save_folder, 'atlas_img.nii.gz')
     atlas_mask_path = os.path.join(save_folder, 'atlas_mask.nii.gz')
-    save_nifti(image_nii.get_fdata(), image_nii.affine, img_seg_path)
+    save_nifti(image_nii.get_fdata(), image_nii.affine, img_path)
     save_nifti(atlas_nii.get_fdata(), atlas_nii.affine, atlas_img_seg_path)
     save_nifti(
         mask_nii.get_fdata().astype(np.uint8),
@@ -142,15 +141,15 @@ def _register_atlas_to_img(image_nii, mask_nii,
     # Affine registration
     if use_affine or affine_only:
         affine_path = os.path.join(save_folder, 'outputAffine.txt')
-        affine_res_path = os.path.join(save_folder, 'affine_warped_atlas.nii.gz')
+        affine_res_path = os.path.join(save_folder, 'affine_warped_atlas_img.nii.gz')
         affine_reg_cmd = '%s/reg_aladin -ref %s -rmask %s -flo %s -fmask %s -res %s -aff %s -comm -voff' % \
-            (NIFTYREG_PATH, img_seg_path, mask_path, atlas_img_seg_path, atlas_mask_path, affine_res_path, affine_path)
+            (NIFTYREG_PATH, img_path, mask_path, atlas_img_seg_path, atlas_mask_path, affine_res_path, affine_path)
         os.system(affine_reg_cmd)
 
         # Warp the atlas mask
         affine_res_mask_path = os.path.join(save_folder, 'affine_warped_atlas_mask.nii.gz')
         affine_warp_mask_cmd = '%s/reg_resample -ref %s -flo %s -trans %s -res %s -inter 0 -voff' % \
-            (NIFTYREG_PATH, img_seg_path, atlas_mask_path, affine_path, affine_res_mask_path)
+            (NIFTYREG_PATH, img_path, atlas_mask_path, affine_path, affine_res_mask_path)
         os.system(affine_warp_mask_cmd)
 
         if affine_only:
@@ -163,12 +162,12 @@ def _register_atlas_to_img(image_nii, mask_nii,
 
     # Registration
     reg_loss_options = '-lncc 0 6'
-    res_path = os.path.join(save_folder, 'warped_atlas_img_seg.nii.gz')
+    res_path = os.path.join(save_folder, 'warped_atlas_img.nii.gz')
     cpp_path = os.path.join(save_folder, 'cpp.nii.gz')
     reg_options = '-be %f -le %f -sx %s -ln 3 -lp %d %s -voff' % \
         (be, le, grid_spacing, lp, reg_loss_options)
     reg_cmd = '%s/reg_f3d -ref %s -rmask %s -flo %s -fmask %s -res %s -cpp %s %s' % \
-        (NIFTYREG_PATH, img_seg_path, mask_path, affine_res_path, affine_res_mask_path, res_path, cpp_path, reg_options)
+        (NIFTYREG_PATH, img_path, mask_path, affine_res_path, affine_res_mask_path, res_path, cpp_path, reg_options)
     # print('Non linear registration command line:')
     # print(reg_cmd)
     os.system(reg_cmd)

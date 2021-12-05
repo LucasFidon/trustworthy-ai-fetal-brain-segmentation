@@ -9,13 +9,26 @@ sys.path.append('/workspace/trustworthy-ai-fetal-brain-segmentation')
 from src.utils.definitions import *
 
 
-def merge_deep_and_atlas_seg(deep_proba, atlas_seg):
+def merge_deep_and_atlas_seg(deep_proba, atlas_seg, condition):
+    assert condition in CONDITIONS, \
+        'Only conditions %s are supported. Received %s.' % (str(CONDITIONS), condition)
+
+    # Anatomical prior
     out_score = np.copy(deep_proba)
-    print('\nApply atlas-based margins to the deep learning-based segmentation. ', ATLAS_MARGIN)
+    if condition == 'Neurotypical':
+        atlas_margin = ATLAS_MARGINS_CONTROL
+    elif condition == 'Spina Bifida':
+        atlas_margin = ATLAS_MARGINS_SPINA_BIFIDA
+    else:  # other pathology
+        atlas_margin = np.maximum(ATLAS_MARGINS_CONTROL, ATLAS_MARGINS_SPINA_BIFIDA)
+    # Round the margins to the closest integer values
+    atlas_margin = np.rint(atlas_margin).astype(np.int)
+    print('\nApply atlas-based margins to the deep learning-based segmentation. ', atlas_margin)
+
     # We set the proba to zeros outside of "atlas mask + margin"
-    for c in range(len(ATLAS_MARGIN)):
+    for c in range(len(atlas_margin)):
         atlas_seg_c = (atlas_seg == c)
-        atlas_seg_c = binary_dilation(atlas_seg_c, iterations=ATLAS_MARGIN[c])
+        atlas_seg_c = binary_dilation(atlas_seg_c, iterations=atlas_margin[c])
         out_score[c, np.logical_not(atlas_seg_c)] = 0
 
     # Normalize the probability
@@ -90,7 +103,7 @@ def dempster_add_intensity_prior(deep_proba, image, mask, denoise=False):
     mean_mix = means[argsort[0]]
     std_mix = std[argsort[0]]
 
-    img_fg = image[mask_prior == 1]
+    img_fg = image[mask == 1]
 
     # Compute the prior probability
     m_csf = np.exp(-0.5 * np.square((img_fg - mean_csf) / std_csf)) / std_csf
@@ -98,16 +111,16 @@ def dempster_add_intensity_prior(deep_proba, image, mask, denoise=False):
 
     labels_seen = []
     for roi_eval in list(LABELS.keys()):
-        if roi_eval in ['intra_axial_csf', 'extra_axial_csf']:
+        if roi_eval in ['intra_axial_csf', 'extra_axial_csf', 'background']:
             for i in LABELS[roi_eval]:
                 if not i in labels_seen:
-                    deep_proba[i, mask_prior == 1] *= (m_csf + m_mix)
+                    deep_proba[i, mask == 1] *= (m_csf + m_mix)
                     labels_seen.append(i)
-        else: # Note that we want to include the background label here
+        else:
             for i in LABELS[roi_eval]:
                 if not i in labels_seen:
                     labels_seen.append(i)
-                    deep_proba[i, mask_prior == 1] *= m_mix
+                    deep_proba[i, mask == 1] *= m_mix
 
     # Normalize the probability
     deep_proba[:, ...] /= np.sum(deep_proba, axis=0)

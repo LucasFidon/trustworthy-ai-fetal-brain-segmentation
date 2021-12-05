@@ -25,10 +25,10 @@ SAVE_FOLDER = '/data/saved_res_fetal_trust21_v3'
 DO_BIAS_FIELD_CORRECTION = True  # Will be ignored for data from Leuven
 MERGING_MULTI_ATLAS = 'GIF'  # Can be 'GIF' or 'mean'
 # MERGING_MULTI_ATLAS = 'mean'
-DELTA_GA = 1
 DO_BILATERAL_FILTERING = False
 REUSE_CNN_PRED = True  # Set to False if you want to force recomputing the trustworthy segmentations
 REUSE_ATLAS_PRED = True  # Set to False if you want to force recomputing the registration
+FORCE_RECOMPUTE_HEAT_MAP = False  # This might lead to recomputing the registrations
 
 
 def apply_bias_field_corrections(img_path, mask_path, save_img_path):
@@ -118,7 +118,7 @@ def main(dataset_path_list):
 
             # Inference
             skip_inference = False
-            if REUSE_CNN_PRED:
+            if REUSE_CNN_PRED and REUSE_ATLAS_PRED and not FORCE_RECOMPUTE_HEAT_MAP:
                 skip_inference = os.path.exists(pred_path) and os.path.exists(pred_atlas_path) and os.path.exists(pred_trustworthy_path) and os.path.exists(pred_trustworthy_atlas_only_path)
             if skip_inference:
                 print('Skip inference for %s.\nThe predictions already exists.' % f_n)
@@ -140,7 +140,14 @@ def main(dataset_path_list):
                 softmax = load_softmax(pred_softmax_path, volume_info_path)
 
                 # Propagate the atlas volumes segmentation
-                atlas_list = get_atlas_list(ga=ga, condition=cond, ga_delta_max=DELTA_GA)
+                if cond == 'Pathological':
+                    atlas_list = get_atlas_list(ga=ga, condition='Neurotypical', ga_delta_max=DELTA_GA_CONTROL)
+                    atlas_list += get_atlas_list(ga=ga, condition='Spina Bifida', ga_delta_max=DELTA_GA_SPINA_BIFIDA)
+                elif cond == 'Neurotypical':
+                    atlas_list = get_atlas_list(ga=ga, condition='Neurotypical', ga_delta_max=DELTA_GA_CONTROL)
+                else:
+                    assert cond == 'Spina Bifida', 'Unknown condition %s' % cond
+                    atlas_list = get_atlas_list(ga=ga, condition='Spina Bifida', ga_delta_max=DELTA_GA_SPINA_BIFIDA)
                 print('\nStart atlas propagation using the volumes')
                 print(atlas_list)
                 atlas_pred_save_folder = os.path.join(output_path, 'atlas_pred')
@@ -156,6 +163,7 @@ def main(dataset_path_list):
                     only_affine=False,
                     merging_method=MERGING_MULTI_ATLAS,
                     reuse_existing_pred=REUSE_ATLAS_PRED,
+                    force_recompute_heat_kernels=FORCE_RECOMPUTE_HEAT_MAP,
                 )
 
                 # Save the atlas-based prediction
@@ -174,6 +182,7 @@ def main(dataset_path_list):
                 pred_proba_trustworthy = merge_deep_and_atlas_seg(
                     deep_proba=pred_proba_trustworthy,
                     atlas_seg=pred_atlas,
+                    condition=cond,  # Used to know which margins to use
                 )
 
                 # Save the trustworthy (atlas only) prediction
@@ -204,6 +213,8 @@ def main(dataset_path_list):
             for method in METHOD_NAMES:
                 dice, haus = compute_evaluation_metrics(pred_dict[method], gt_seg_path, dataset_path=dataset)
                 for roi in DATASET_LABELS[dataset]:
+                    if not roi in ALL_ROI:
+                        continue
                     metrics[center_val][cond][method]['dice_%s' % roi].append(dice[roi])
                     metrics[center_val][cond][method]['hausdorff_%s' % roi].append(haus[roi])
 

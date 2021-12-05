@@ -1,10 +1,12 @@
 import os
+import numpy as np
 
 
 REPO_PATH = '/workspace/trustworthy-ai-fetal-brain-segmentation'
 
 
 # GENERAL EVALUATION OPTIONS
+IMG_RES = 0.8  # in mm; isotropic
 NUM_CLASS = 9  # number of classes predicted by the model
 METHOD_NAMES = ['cnn', 'atlas', 'trustworthy_atlas_only', 'trustworthy']
 ALL_ROI = [
@@ -13,6 +15,8 @@ ALL_ROI = [
 ]
 CONDITIONS = ['Neurotypical', 'Spina Bifida', 'Pathological']
 CENTERS = ['in', 'out']  # in- or -out of distribution
+
+# DEMPSTER
 ATLAS_MARGIN = [2] * 9  # bg, wm, vent, cer, ext-csf, cgm, dgm, bs, cc (in voxels)
 
 
@@ -29,7 +33,20 @@ LABELS = {
     'background': [0],
 }
 METRIC_NAMES = ['dice', 'hausdorff']
-MAX_HD = (144. / 2.) * 0.8  # distance from thr center to the border (57.6 mm)
+MAX_HD = (144. / 2.) * IMG_RES  # distance from thr center to the border (57.6 mm)
+
+
+# REGISTRATION HYPER-PARAMETERS
+GRID_SPACING = 4  # in mm (default is 4 mm = 5 voxels x 0.8 mm.voxels**(-1))
+BE = 0.1  # NiftyReg default 0.001
+LE = 0.3  # NiftyReg default 0.01
+LP = 3  # default 3; we do only the lp first level of the pyramid
+DELTA_GA_CONTROL = 1
+DELTA_GA_SPINA_BIFIDA = 3
+ATLAS_MARGINS_CONTROL_MM = np.array([1.6, 1.6, 1.1, 1.6, 0.8, 1.4, 2.4, 2.9, 1.1])
+ATLAS_MARGINS_CONTROL = ATLAS_MARGINS_CONTROL_MM / IMG_RES
+ATLAS_MARGINS_SPINA_BIFIDA_MM = np.array([1.6, 2.0, 1.0, 2.7, 2.3, 2.0, 1.8, 3.4, 1.7])
+ATLAS_MARGINS_SPINA_BIFIDA = ATLAS_MARGINS_SPINA_BIFIDA_MM / IMG_RES
 
 
 # PARENT FOLDERS
@@ -40,13 +57,8 @@ BASE_FOLDER = os.path.join(DATA_FOLDER, 'Fetal_SRR_and_Seg')
 DATA_FOLDER_MICHAEL_GROUP = os.path.join(BASE_FOLDER, 'SRR_and_Seg_Michael_cases_group')
 DATA_FOLDER_NADA_GROUP = os.path.join(BASE_FOLDER, 'SRR_and_Seg_Nada_cases_group')
 
-
-# REGISTRATION
 NIFTYREG_PATH = os.path.join(WORKSPACE_FOLDER, 'niftyreg_stable', 'build', 'reg-apps')
-GRID_SPACING = 4  # in mm (default is 4 mm = 5 voxels x 0.8 mm.voxels**(-1))
-BE = 0.1  # NiftyReg default 0.001
-LE = 0.3  # NiftyReg default 0.01
-LP = 3  # default 3; we do only the lp first level of the pyramid
+
 
 # ATLAS FOLDERS
 ATLAS_CONTROL_HARVARD = os.path.join(  # GA: 21 -> 37
@@ -159,22 +171,21 @@ FETA_IRTK_DIR = os.path.join(DATA_FOLDER, 'FetalDataFeTAChallengeIRTK_Jun21_corr
 
 
 DATASET_LABELS = {
-    TRAINING_DATA_PREPROCESSED_DIR: ALL_ROI,
-    DATA_FOLDER_THOMAS_GROUP1:
-        ['white_matter', 'intra_axial_csf', 'cerebellum'],
+    TRAINING_DATA_PREPROCESSED_DIR: ['background'] + ALL_ROI,
+    DATA_FOLDER_THOMAS_GROUP1: ['background'] + ALL_ROI,
     DATA_FOLDER_THOMAS_GROUP2:
-        ['white_matter', 'intra_axial_csf', 'cerebellum'],
+        ['background', 'white_matter', 'intra_axial_csf', 'cerebellum'],
     CORRECTED_ZURICH_DATA_DIR:
-        ['white_matter', 'intra_axial_csf', 'cerebellum', 'extra_axial_csf', 'cortical_grey_matter', 'deep_grey_matter', 'brainstem'],
+        ['background', 'white_matter', 'intra_axial_csf', 'cerebellum', 'extra_axial_csf', 'cortical_grey_matter', 'deep_grey_matter', 'brainstem'],
     # SURE_EXCLUDED_ZURICH_DATA_DIR:
     #     ['white_matter', 'csf', 'cerebellum', 'external_csf', 'cortical_gm', 'deep_gm', 'brainstem'],
     EXCLUDED_ZURICH_DATA_DIR:
-        ['white_matter', 'intra_axial_csf', 'cerebellum', 'extra_axial_csf', 'cortical_grey_matter', 'deep_grey_matter', 'brainstem'],
+        ['background', 'white_matter', 'intra_axial_csf', 'cerebellum', 'extra_axial_csf', 'cortical_grey_matter', 'deep_grey_matter', 'brainstem'],
     FETA_IRTK_DIR:
-        ['white_matter', 'intra_axial_csf', 'cerebellum', 'extra_axial_csf', 'cortical_grey_matter', 'deep_grey_matter', 'brainstem'],
-    SB_FRED: ALL_ROI,
-    CDH_LEUVEN_TESTINGSET: ALL_ROI,
-    DATA_FOLDER_CONTROLS2_PARTIAL_FULLYSEG: ALL_ROI,
+        ['background', 'white_matter', 'intra_axial_csf', 'cerebellum', 'extra_axial_csf', 'cortical_grey_matter', 'deep_grey_matter', 'brainstem'],
+    SB_FRED: ['background'] + ALL_ROI,
+    CDH_LEUVEN_TESTINGSET: ['background'] + ALL_ROI,
+    DATA_FOLDER_CONTROLS2_PARTIAL_FULLYSEG:['background'] + ALL_ROI,
 }
 
 # Dictionary that maps dataset path to in- or out- of distribution
