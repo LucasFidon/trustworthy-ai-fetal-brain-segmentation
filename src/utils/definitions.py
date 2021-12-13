@@ -8,7 +8,8 @@ REPO_PATH = '/workspace/trustworthy-ai-fetal-brain-segmentation'
 # GENERAL EVALUATION OPTIONS
 IMG_RES = 0.8  # in mm; isotropic
 NUM_CLASS = 9  # number of classes predicted by the model
-METHOD_NAMES = ['cnn', 'atlas', 'trustworthy_atlas_only', 'trustworthy']
+# METHOD_NAMES = ['cnn', 'atlas', 'trustworthy_atlas_only', 'trustworthy']
+METHOD_NAMES = ['cnn', 'atlas', 'trustworthy']
 ALL_ROI = [
     'white_matter', 'intra_axial_csf', 'cerebellum', 'extra_axial_csf',
     'cortical_grey_matter', 'deep_grey_matter', 'brainstem', 'corpus_callosum'

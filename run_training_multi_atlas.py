@@ -7,17 +7,25 @@ from src.utils.utils import get_feta_info
 from src.evaluation.utils import print_results, compute_evaluation_metrics, print_summary_results
 from src.multi_atlas.inference import multi_atlas_segmentation
 from src.multi_atlas.utils import get_atlas_list
+from src.segmentations_fusion.dempster_shaffer import dempster_add_intensity_prior
 
 SAVE_FOLDER = '/data/saved_res_fetal_multiatlas21_v1'
-ATLAS_FUSION_METHODS = ['GIF', 'mean']
 ATLAS_METRIC_NAMES = METRIC_NAMES + ['missing_coverage', 'number_registrations']
 
 # OPTIONS
-ATLAS_SELECTION = ['ALL', 'CONDITION']
-ATLAS_FUSION = ['GIF', 'mean']
+ROI = ALL_ROI + ['background']
+ATLAS_FUSION_METHODS = ['GIF']
+# ATLAS_FUSION_METHODS = ['GIF', 'mean']
+# ATLAS_SELECTION = ['ALL', 'CONDITION']
+ATLAS_SELECTION = ['CONDITION']
 GA_DELTA_MAX = 4  # max 4
-ATLAS_MARGINS = []  #todo
+REUSE_REGISTRATION = True  # to force recomputing the registration
+FORCE_COMPUTE_HEAT_MAP = False
+APPLY_INTENSITY_PRIOR = False
+NEW_FINAL_SEG = True  # to force recomputing the final seg from all the warped seg
 #todo more pre-processing on the atlas segmentation? bilateral filtering, nb components, closing operation
+# applying the intensity prior to the multi-atlas segmentation; but we might have problem with high intensity on the background sometimes
+# or we have to erode the brain mask first
 # but maybe this is already reflected in the registration parameters..
 
 
@@ -61,7 +69,7 @@ def main(pred_folder):
                 for cond in CONDITIONS:
                     metrics_per_cond[cond][method_n] = {
                         '%s_%s' % (metric, roi): []
-                        for roi in ALL_ROI for metric in ATLAS_METRIC_NAMES
+                        for roi in ROI for metric in ATLAS_METRIC_NAMES
                     }
     pred_dict = {}
 
@@ -76,6 +84,9 @@ def main(pred_folder):
         if not patid in list(patid_ga.keys()):
             print('\n*** Unknown GA. \nSkip %s.' % sample_f)
             continue
+        # if patid != 'UZL00056_Study2':
+        #     print('Skip')
+        #     continue
         print('\n--------------')
         print('Start inference for case %s' % sample_f)
         # Paths of input
@@ -95,13 +106,6 @@ def main(pred_folder):
         mask_nii = nib.load(mask_path)
 
         # Compute the automatic segmentations
-        atlas_list = get_atlas_list(
-            ga=ga,
-            condition='Pathological',  # To use all the atlases
-            ga_delta_max=GA_DELTA_MAX,
-        )
-        print('\nStart atlas propagation using the volumes')
-        print(atlas_list)
         atlas_pred_save_folder = os.path.join(output_path, 'atlas_pred')
         for fusion_method in ATLAS_FUSION_METHODS:
             for selection_method in ATLAS_SELECTION:
@@ -113,9 +117,6 @@ def main(pred_folder):
                         '%s_atlas_%s.nii.gz' % (patid, method_n),
                     )
                     pred_dict[method_n] = pred_atlas_path
-                    # if os.path.exists(pred_atlas_path):
-                    #     print('Skip. %s already exists.' % pred_atlas_path)
-                    #     continue
 
                     # Multi-atlas segmentation
                     atlas_list = get_atlas_list(
@@ -123,7 +124,7 @@ def main(pred_folder):
                         condition=cond if (selection_method == 'CONDITION') else 'Pathological',
                         ga_delta_max=ga_delta,
                     )
-                    if not os.path.exists(pred_atlas_path):
+                    if not os.path.exists(pred_atlas_path) or not REUSE_REGISTRATION or FORCE_COMPUTE_HEAT_MAP or NEW_FINAL_SEG:
                         pred_proba_atlas = multi_atlas_segmentation(
                             img_nii,
                             mask_nii,
@@ -135,9 +136,22 @@ def main(pred_folder):
                             save_folder=atlas_pred_save_folder,
                             only_affine=False,
                             merging_method=fusion_method,
-                            reuse_existing_pred=True,
+                            reuse_existing_pred=REUSE_REGISTRATION,
+                            force_recompute_heat_kernels=FORCE_COMPUTE_HEAT_MAP,
                         )
-                        pred_atlas = np.argmax(pred_proba_atlas, axis=3).astype(np.uint8)
+                        # Change channel order to match PyTorch convention
+                        pred_proba_atlas = np.transpose(pred_proba_atlas, (3, 0, 1, 2))
+
+                        if APPLY_INTENSITY_PRIOR:
+                            pred_proba_atlas = dempster_add_intensity_prior(
+                                deep_proba=pred_proba_atlas,
+                                image=img_nii.get_fdata().astype(np.float32),
+                                mask=mask_nii.get_fdata().astype(np.uint8),
+                                denoise=False,
+                            )
+
+                        # Save the segmentation
+                        pred_atlas = np.argmax(pred_proba_atlas, axis=0).astype(np.uint8)
                         pred_atlas_nii = nib.Nifti1Image(pred_atlas, img_nii.affine)
                         nib.save(pred_atlas_nii, pred_atlas_path)
 
@@ -148,29 +162,11 @@ def main(pred_folder):
                         dataset_path=TRAINING_DATA_PREPROCESSED_DIR,  # only used to know what ROIs to evaluate...
                         compute_coverage_distance=True,
                     )
-                    for roi in ALL_ROI:
+                    for roi in ROI:
                         metrics_per_cond[cond][method_n]['dice_%s' % roi].append(dice[roi])
                         metrics_per_cond[cond][method_n]['hausdorff_%s' % roi].append(haus[roi])
                         metrics_per_cond[cond][method_n]['missing_coverage_%s' % roi].append(cove[roi])
                         metrics_per_cond[cond][method_n]['number_registrations_%s' % roi].append(len(atlas_list))
-
-
-        # # Evaluation
-        # gt_seg_path = os.path.join(sample_f, 'parcellation.nii.gz')
-        # for fusion_method in ATLAS_FUSION_METHODS:
-        #     for selection_method in ATLAS_SELECTION:
-        #         for ga_delta in range(0, GA_DELTA_MAX+1):
-        #             method = '%s_%s_GAdelta%d' % (fusion_method, selection_method, ga_delta)
-        #             dice, haus, cove = compute_evaluation_metrics(
-        #                 pred_dict[method],
-        #                 gt_seg_path,
-        #                 dataset_path=TRAINING_DATA_PREPROCESSED_DIR,  # only used to know what ROIs to evaluate...
-        #                 compute_coverage_distance=True,
-        #             )
-        #             for roi in ALL_ROI:
-        #                 metrics_per_cond[cond][method]['dice_%s' % roi].append(dice[roi])
-        #                 metrics_per_cond[cond][method]['hausdorff_%s' % roi].append(haus[roi])
-        #                 metrics_per_cond[cond][method]['missing_coverage_%s' % roi].append(cove[roi])
 
     # Save and print the metrics aggregated
     for cond in CONDITIONS:
@@ -183,6 +179,7 @@ def main(pred_folder):
             method_names=method_names,
             metric_names=ATLAS_METRIC_NAMES,
             save_path=save_metrics_path,
+            roi_names=ROI,
         )
 
     # Print the average mean metrics across ROI

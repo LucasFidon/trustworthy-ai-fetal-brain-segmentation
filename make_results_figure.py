@@ -46,8 +46,21 @@ CENTER_TYPES_TO_DISPLAY = {
 }
 BOXPLOT_SIZE = [15, 10]  # Size of each subplot
 YAXIS_LIM = {
-    'dice': (-2, 100),
-    'hausdorff': (-1, 35),  # Rk: max is 57.6mm
+    'dice': {
+        'Neurotypical': (48, 100),
+        'Spina Bifida': (-2, 100),
+        'Pathological': (-2, 100),
+    },
+    'hausdorff': {  # Rk: max is 57.6mm
+        'Neurotypical': (-0.3, 12.3),
+        'Spina Bifida': (-1, 36),
+        'Pathological': (-0.5, 18),
+    },
+}
+YTICKS_HD = {
+    'Neurotypical': [i*2 for i in range(0, 7)],
+    'Spina Bifida': [i*5 for i in range(0, 8)],
+    'Pathological': [i*2.5 for i in range(0, 8)],
 }
 FONT_SIZE_AXIS = 55
 SNS_FONT_SCALE = 2.8
@@ -85,11 +98,18 @@ def create_df(metric, condition, center_type):
         for roi in roi_list:
             metric_name = '%s_%s' % (metric, roi)
             num_cases = len(m[metric_name])
-            print('**** %s: %d cases' % (roi, num_cases))
+            # print('**** %s: %d cases' % (roi, num_cases))
             for i in range(num_cases):
                 line_base = [i, METHOD_NAME_TO_DISPLAY[method]]
                 metric_name = '%s_%s' % (metric, roi)
-                line = line_base + [ROI_NAMES_TO_DISPLAY[roi], m[metric_name][i]]
+                val = m[metric_name][i]
+                if metric == 'hausdorff':  # clip high values for the hausdorff distance
+                    max_val = YAXIS_LIM[metric][condition][1] \
+                        - 0.01 * (YAXIS_LIM[metric][condition][1] - YAXIS_LIM[metric][condition][0])
+                    if val > max_val:
+                        # print('Clip value %f to %f' % (val, max_val))
+                        val = max_val
+                line = line_base + [ROI_NAMES_TO_DISPLAY[roi], val]
                 raw_data.append(line)
 
     df = pd.DataFrame(raw_data, columns=columns)
@@ -108,7 +128,7 @@ def main(metric_name):
     for i, condition in enumerate(CONDITIONS):
         for j, center_type in enumerate(CENTERS):
             df = create_df(metric_name, condition, center_type)
-            sns.boxplot(
+            g = sns.boxplot(
                 data=df,
                 hue='Methods',
                 y=metric_name,
@@ -116,6 +136,8 @@ def main(metric_name):
                 ax=ax[i,j],
                 # palette='Set3',
                 palette='colorblind',
+                fliersize=10,
+                linewidth=3,
             )
 
             # X axis
@@ -129,7 +151,7 @@ def main(metric_name):
                 ax[i,j].set(xlabel=None)
 
             # Y axis
-            ax[i,j].set(ylim=YAXIS_LIM[metric_name])
+            ax[i,j].set(ylim=YAXIS_LIM[metric_name][condition])
             if j == 0:
                 ax[i,j].set_ylabel(
                     CONDITION_NAMES_TO_DISPLAY[condition] + '\n' ,
@@ -138,6 +160,13 @@ def main(metric_name):
                 )
             else:
                 ax[i,j].set(ylabel=None)
+
+            # Y ticks
+            if metric_name == 'hausdorff':
+                g.set(yticks=YTICKS_HD[condition])
+                yticklabels = [str(i) for i in YTICKS_HD[condition]]
+                yticklabels[-1] += '+'
+                g.set(yticklabels=yticklabels)
 
             # Legend
             if j == 0 and i == 0:
