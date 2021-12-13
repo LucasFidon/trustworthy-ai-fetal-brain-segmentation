@@ -3,6 +3,7 @@ import numpy as np
 import nibabel as nib
 from time import time
 import SimpleITK as sitk
+import pandas as pd
 from src.utils.definitions import *
 from src.utils.utils import get_feta_info
 from src.evaluation.utils import print_results, compute_evaluation_metrics
@@ -30,6 +31,8 @@ REUSE_CNN_PRED = True  # Set to False if you want to force recomputing the trust
 REUSE_ATLAS_PRED = True  # Set to False if you want to force recomputing the registration
 FORCE_RECOMPUTE_HEAT_MAP = False  # This might lead to recomputing the registrations
 
+METRICS_COLUMN = ['Study', 'GA', 'Condition', 'Center type', 'Methods', 'ROI', 'dice', 'hausdorff']
+
 
 def apply_bias_field_corrections(img_path, mask_path, save_img_path):
     input_img = sitk.ReadImage(img_path, sitk.sitkFloat32)
@@ -52,7 +55,9 @@ def main(dataset_path_list):
     if not os.path.exists(pred_folder):
         os.mkdir(pred_folder)
 
+    metric_data = []
     # Initialize the metric dict
+    #Todo: remove the metrics dict
     metrics = {
         center: {
             cond: {
@@ -121,7 +126,7 @@ def main(dataset_path_list):
             if REUSE_CNN_PRED and REUSE_ATLAS_PRED and not FORCE_RECOMPUTE_HEAT_MAP:
                 skip_inference = os.path.exists(pred_path) and os.path.exists(pred_atlas_path) and os.path.exists(pred_trustworthy_path) and os.path.exists(pred_trustworthy_atlas_only_path)
             if skip_inference:
-                print('Skip inference for %s.\nThe predictions already exists.' % f_n)
+                print('Skip inference for %s.\nThe predictions already exist.' % f_n)
             else:
                 print('\nStart inference for case %s' % f_n)
                 # CNN inference
@@ -217,8 +222,13 @@ def main(dataset_path_list):
                         continue
                     metrics[center_val][cond][method]['dice_%s' % roi].append(dice[roi])
                     metrics[center_val][cond][method]['hausdorff_%s' % roi].append(haus[roi])
+                    line = [patid, ga, cond, center_val, method, roi, dice[roi], haus[roi]]
+                    metric_data.append(line)
 
     # Save and print the metrics aggregated
+    df = pd.DataFrame(metric_data, columns=METRICS_COLUMN)
+    csv_path = os.path.join(pred_folder, 'metrics.csv')
+    df.to_csv(csv_path, index=False)
     for center in CENTERS:
         print('=======\n%s\n=======' % center)
         for cond in CONDITIONS:
