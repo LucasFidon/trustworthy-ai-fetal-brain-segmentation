@@ -47,8 +47,8 @@ def multi_atlas_segmentation(img_nii, mask_nii, atlas_folder_list,
         to_not_remove = [  # paths to filter during the cleaning at the end
             expected_output,
             predicted_segmentation,
-            expected_warped_atlas_path,
-            expected_disp_path,
+            # expected_warped_atlas_path,
+            # expected_disp_path,
             expected_heat_kernel
         ]
 

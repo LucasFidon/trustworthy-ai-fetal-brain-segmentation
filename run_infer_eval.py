@@ -12,15 +12,15 @@ from src.multi_atlas.inference import multi_atlas_segmentation
 from src.multi_atlas.utils import get_atlas_list
 from src.segmentations_fusion.dempster_shaffer import merge_deep_and_atlas_seg, dempster_add_intensity_prior
 
-# DATA_DIR = [CORRECTED_ZURICH_DATA_DIR, EXCLUDED_ZURICH_DATA_DIR, FETA_IRTK_DIR]
-# DATA_DIR = [CDH_LEUVEN_TESTINGSET, DATA_FOLDER_CONTROLS2_PARTIAL_FULLYSEG]
-# DATA_DIR = [DATA_FOLDER_THOMAS_GROUP1, DATA_FOLDER_THOMAS_GROUP2]
 DATA_DIR = [
+    DOAA_BRAIN_LONGITUDINAL_SRR_AND_SEG2,
+    UCLH_MMC_2,
+    ZURICH_TEST_DATA_DIR,
+    SB_VIENNA,
     CDH_LEUVEN_TESTINGSET, DATA_FOLDER_CONTROLS2_PARTIAL_FULLYSEG, SB_FRED,
     DATA_FOLDER_THOMAS_GROUP1, DATA_FOLDER_THOMAS_GROUP2,
-    CORRECTED_ZURICH_DATA_DIR, EXCLUDED_ZURICH_DATA_DIR, FETA_IRTK_DIR
+    CORRECTED_ZURICH_DATA_DIR, EXCLUDED_ZURICH_DATA_DIR, FETA_IRTK_DIR,
 ]
-# DATA_DIR = [SB_FRED]
 
 SAVE_FOLDER = '/data/saved_res_fetal_trust21_v3'
 DO_BIAS_FIELD_CORRECTION = True  # Will be ignored for data from Leuven
@@ -71,12 +71,11 @@ def main(dataset_path_list):
     pred_dict = {}
 
     # Get all data info
-    patid_ga, patid_cond = get_feta_info()
+    patid_ga, patid_cond, patid_center, _ = get_feta_info()
 
     # Run the batch inference
     for dataset in dataset_path_list:
         sample_folders = [n for n in os.listdir(dataset) if '.' not in n]
-        center_val = DATASET_GROUPS[dataset]
         for f_n in sample_folders:
             # Get case info
             patid = f_n.replace('feta', '')
@@ -87,8 +86,17 @@ def main(dataset_path_list):
             #     print('Skip %s' % f_n)
             #     continue
             print('\n--------------')
-            ga = patid_ga[patid]  # GA rounded to the closest week
+            ga_ori = patid_ga[patid]
+            # GA is rounded to the closest week and clipped to the range of GA of the atlases
+            ga = int(round(ga_ori))
+            if ga > MAX_GA:
+                print('Found ga=%d for %s. Change it to %d (max value accepted)' % (ga, patid, MAX_GA))
+                ga = MAX_GA
+            if ga < MIN_GA:
+                print('Found ga=%d for %s. Change it to %d (min value accepted)' % (ga, patid, MIN_GA))
+                ga = MIN_GA
             cond = patid_cond[patid]
+            center_val = patid_center[patid]
 
             # Paths of input
             input_path = os.path.join(dataset, f_n, 'srr.nii.gz')
@@ -102,7 +110,7 @@ def main(dataset_path_list):
                 os.mkdir(output_path)
 
             # Preprocessing
-            if DO_BIAS_FIELD_CORRECTION and center_val == 'out':
+            if DO_BIAS_FIELD_CORRECTION and dataset in [FETA_IRTK_DIR, CORRECTED_ZURICH_DATA_DIR, EXCLUDED_ZURICH_DATA_DIR, ZURICH_TEST_DATA_DIR]:
                 print('\n*** Use bias field correction for %s' % patid)
                 pre_input_path = os.path.join(output_path, 'srr_preprocessed.nii.gz')
                 if not os.path.exists(pre_input_path):
@@ -222,7 +230,7 @@ def main(dataset_path_list):
                         continue
                     metrics[center_val][cond][method]['dice_%s' % roi].append(dice[roi])
                     metrics[center_val][cond][method]['hausdorff_%s' % roi].append(haus[roi])
-                    line = [patid, ga, cond, center_val, method, roi, dice[roi], haus[roi]]
+                    line = [patid, ga_ori, cond, center_val, method, roi, dice[roi], haus[roi]]
                     metric_data.append(line)
 
     # Save and print the metrics aggregated

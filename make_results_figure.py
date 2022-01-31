@@ -128,6 +128,11 @@ def main(metric_name):
     for i, condition in enumerate(CONDITIONS):
         for j, center_type in enumerate(CENTERS):
             df = create_df(metric_name, condition, center_type)
+            if center_type == 'out':
+                # no CC
+                order = [ROI_NAMES_TO_DISPLAY[roi] for roi in ALL_ROI[:-1]]
+            else:
+                order = [ROI_NAMES_TO_DISPLAY[roi] for roi in ALL_ROI]
             g = sns.boxplot(
                 data=df,
                 hue='Methods',
@@ -138,6 +143,8 @@ def main(metric_name):
                 palette='colorblind',
                 fliersize=10,
                 linewidth=3,
+                hue_order=['AI', 'Fallback', 'Trustworthy AI'],
+                order=order,
             )
 
             # X axis

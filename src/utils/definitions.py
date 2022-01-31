@@ -48,6 +48,8 @@ ATLAS_MARGINS_CONTROL_MM = np.array([1.6, 1.6, 1.1, 1.6, 0.8, 1.4, 2.4, 2.9, 1.1
 ATLAS_MARGINS_CONTROL = ATLAS_MARGINS_CONTROL_MM / IMG_RES
 ATLAS_MARGINS_SPINA_BIFIDA_MM = np.array([1.6, 2.0, 1.0, 2.7, 2.3, 2.0, 1.8, 3.4, 1.7])
 ATLAS_MARGINS_SPINA_BIFIDA = ATLAS_MARGINS_SPINA_BIFIDA_MM / IMG_RES
+MIN_GA = 21
+MAX_GA = 38
 
 
 # PARENT FOLDERS
@@ -168,43 +170,38 @@ SB_FRED = os.path.join(  # 46 SB cases
 )
 CORRECTED_ZURICH_DATA_DIR = os.path.join(BASE_FOLDER, 'FetalDataZurichCorrected', 'TrainingSet')  # 38 volumes
 EXCLUDED_ZURICH_DATA_DIR = os.path.join(BASE_FOLDER, 'FetalDataZurichCorrected', 'TrainingSetExcluded')  # 2 volumes
+ZURICH_TEST_DATA_DIR = os.path.join(BASE_FOLDER, 'FetalDataZurichCorrected', 'TestingSet')  # 10 volumes
 FETA_IRTK_DIR = os.path.join(DATA_FOLDER, 'FetalDataFeTAChallengeIRTK_Jun21_corrected')  # 40 volumes
-
+SB_VIENNA = os.path.join(DATA_FOLDER_NADA_GROUP, 'vienna_MMC_unoperated')  # 11 cases
+UCLH_MMC_2 = os.path.join(DATA_FOLDER_NADA_GROUP, 'UCLH_MMC_2')  # 47 cases
+DOAA_BRAIN_LONGITUDINAL_SRR_AND_SEG2 = os.path.join(  # 50 CDH volumes
+    BASE_FOLDER,
+    "Doaa_brain_longitudinal_SRR_and_Seg_2",
+)
 
 DATASET_LABELS = {
     TRAINING_DATA_PREPROCESSED_DIR: ['background'] + ALL_ROI,
     DATA_FOLDER_THOMAS_GROUP1: ['background'] + ALL_ROI,
-    DATA_FOLDER_THOMAS_GROUP2:
-        ['background', 'white_matter', 'intra_axial_csf', 'cerebellum'],
+    DATA_FOLDER_THOMAS_GROUP2: ['background'] + ALL_ROI,
     CORRECTED_ZURICH_DATA_DIR:
         ['background', 'white_matter', 'intra_axial_csf', 'cerebellum', 'extra_axial_csf', 'cortical_grey_matter', 'deep_grey_matter', 'brainstem'],
-    # SURE_EXCLUDED_ZURICH_DATA_DIR:
-    #     ['white_matter', 'csf', 'cerebellum', 'external_csf', 'cortical_gm', 'deep_gm', 'brainstem'],
     EXCLUDED_ZURICH_DATA_DIR:
+        ['background', 'white_matter', 'intra_axial_csf', 'cerebellum', 'extra_axial_csf', 'cortical_grey_matter', 'deep_grey_matter', 'brainstem'],
+    ZURICH_TEST_DATA_DIR:
         ['background', 'white_matter', 'intra_axial_csf', 'cerebellum', 'extra_axial_csf', 'cortical_grey_matter', 'deep_grey_matter', 'brainstem'],
     FETA_IRTK_DIR:
         ['background', 'white_matter', 'intra_axial_csf', 'cerebellum', 'extra_axial_csf', 'cortical_grey_matter', 'deep_grey_matter', 'brainstem'],
     SB_FRED: ['background'] + ALL_ROI,
     CDH_LEUVEN_TESTINGSET: ['background'] + ALL_ROI,
-    DATA_FOLDER_CONTROLS2_PARTIAL_FULLYSEG:['background'] + ALL_ROI,
-}
-
-# Dictionary that maps dataset path to in- or out- of distribution
-DATASET_GROUPS = {
-    TRAINING_DATA_PREPROCESSED_DIR: 'in',
-    DATA_FOLDER_THOMAS_GROUP1: 'in',
-    DATA_FOLDER_THOMAS_GROUP2: 'in',
-    CORRECTED_ZURICH_DATA_DIR: 'out',
-    # SURE_EXCLUDED_ZURICH_DATA_DIR: 'out,
-    EXCLUDED_ZURICH_DATA_DIR: 'out',
-    FETA_IRTK_DIR: 'out',
-    SB_FRED: 'in',
-    CDH_LEUVEN_TESTINGSET: 'in',
-    DATA_FOLDER_CONTROLS2_PARTIAL_FULLYSEG: 'in',
+    DATA_FOLDER_CONTROLS2_PARTIAL_FULLYSEG: ['background'] + ALL_ROI,
+    SB_VIENNA: ['background'] + ALL_ROI,
+    UCLH_MMC_2: ['background'] + ALL_ROI,
+    DOAA_BRAIN_LONGITUDINAL_SRR_AND_SEG2: ['background'] + ALL_ROI,
 }
 
 
 # CSV
-INFO_DATA_TSV = os.path.join('/data', 'feta_2.1', 'participants.tsv')
+INFO_DATA_TSV = os.path.join('/data', 'feta_2.1', 'participants.tsv')  # FeTA challenge data info
 INFO_DATA_TSV2 = os.path.join('/data', 'Fetal_SRR_and_Seg', 'iid_testing_trustworthyai21.tsv')
+INFO_DATA_TSV3 = os.path.join('/data', 'Fetal_SRR_and_Seg', 'ood_testing_trustworthyai21.tsv')
 INFO_TRAINING_DATA_TSV = os.path.join('/data', 'Fetal_SRR_and_Seg', 'training_trustworthyai21_noatlas.tsv')

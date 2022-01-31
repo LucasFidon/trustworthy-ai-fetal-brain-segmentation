@@ -5,9 +5,13 @@ import seaborn as sns
 from src.utils.definitions import *
 
 CSV_RES = '/data/saved_res_fetal_trust21_v3/nnunet_task225/metrics.csv'
-PLOT_SIZE = [12, 8]
+USE_ABN = False
+PLOT_SIZE = [14, 8]
 SNS_FONT_SCALE = 3.0
-GA = [23, 32]
+if USE_ABN:
+    GA = [19, 36]
+else:
+    GA = [19, 35]
 ROI_NAMES_TO_DISPLAY = {
     'white_matter': 'White Matter',
     'intra_axial_csf': 'Intra-axial CSF',
@@ -25,7 +29,7 @@ METHOD_NAME_TO_DISPLAY = {
 }
 METRIC_NAME_TO_DISPLAY = {
     'dice': 'Dice Score (in %)',
-    'hausdorff': 'Hausdorff dist. (in mm)',
+    'hausdorff': 'Hausdorff Dist. (in mm)',
 }
 
 def main(metric):
@@ -34,10 +38,12 @@ def main(metric):
 
     df = pd.read_csv(CSV_RES)
 
-    # Filter consition
-    df = df[df['Condition'] != 'Pathological']
+    # Filter condition
+    if not USE_ABN:
+        df = df[df['Condition'] != 'Pathological']
 
     # Filter GA
+    df['GA'] = df['GA'].round(decimals=0)
     df = df[df['GA'] >= GA[0]]
     df = df[df['GA'] <= GA[1]]
 
@@ -63,15 +69,19 @@ def main(metric):
             x='GA',
             hue='Methods',
             style='Methods',
-            markers=True,
+            markers=False,
             dashes=False,
             ax=ax[i,j],
+            hue_order=['AI', 'Fallback', 'Trustworthy AI'],
+            palette='colorblind',
         )
         # Title
         ax[i,j].set_title(ROI_NAMES_TO_DISPLAY[roi], fontweight='bold')
         # X-axis title
+        ax[i,j].set_xlim(GA)
+        ax[i,j].set_xticks(range(GA[0], GA[1]+1))
         if i == 3:
-            ax[i,j].set_xlabel('Gestational Ages', fontweight='bold')
+            ax[i,j].set_xlabel('Gestational Ages (in weeks)', fontweight='bold')
         else:
             ax[i,j].set(xlabel=None)
         if j == 0:
@@ -84,7 +94,10 @@ def main(metric):
 
     fig.suptitle('Mean and 95%% CI for the %s' % METRIC_NAME_TO_DISPLAY[metric])
     fig.tight_layout()
-    save_name = '%s_Control_and_SB_GA.png' % metric
+    if USE_ABN:
+        save_name = '%s_GA.png' % metric
+    else:
+        save_name = '%s_Control_and_SB_GA.png' % metric
     fig.savefig(save_name, bbox_inches='tight')
     print('Figure saved in', save_name)
 
