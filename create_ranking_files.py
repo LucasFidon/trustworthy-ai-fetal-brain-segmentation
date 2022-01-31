@@ -6,6 +6,8 @@ from src.utils.definitions import *
 from run_infer_eval import SAVE_FOLDER
 
 SAVE_FOLDER_RANKING = '/data/ranking_fetal_brain'
+RANKING_CSV = os.path.join(SAVE_FOLDER_RANKING, 'ranking.csv')
+DECODE_CSV = os.path.join(SAVE_FOLDER_RANKING, 'decode.csv')
 
 def get_feta_info():
     patid_to_ga = {}
@@ -65,8 +67,6 @@ def main():
     studies_id['Pathological'] = studies_id['Pathological'][:10]
 
     # Pseudonymised and copy files
-    csv_ranking = os.path.join(SAVE_FOLDER_RANKING, 'ranking.csv')
-    csv_decode = os.path.join(SAVE_FOLDER_RANKING, 'decode.csv')
     if not os.path.exists(SAVE_FOLDER_RANKING):
         os.mkdir(SAVE_FOLDER_RANKING)
     rows_ranking = []
@@ -111,7 +111,7 @@ def main():
                 # os.system('rsync -vah --progress %s %s' % (pred_seg, save_seg))
 
     # Save the CSV files
-    with open(csv_ranking, 'w') as f:
+    with open(RANKING_CSV, 'w') as f:
         writer = csv.writer(f, delimiter=',', quotechar='"',
                             quoting=csv.QUOTE_MINIMAL)
         row1 = ['']
@@ -127,7 +127,7 @@ def main():
         for row in rows_ranking:
             writer.writerow(row)
 
-    with open(csv_decode, 'w') as f:
+    with open(DECODE_CSV, 'w') as f:
         writer = csv.writer(f, delimiter=',', quotechar='"',
                             quoting=csv.QUOTE_MINIMAL)
         writer.writerow(['Study ID', 'Auto seg 1', 'Auto seg 2', 'Auto seg 3'])
