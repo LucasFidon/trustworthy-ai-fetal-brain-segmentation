@@ -93,58 +93,6 @@ LEGEND_POSITION = {
 }
 VERTICAL_LINE_SHIFT = 0.025  # Cooking here.. shift for the vertical line that separates subplots
 
-# def load_metrics(metrics_path):
-#     with open(metrics_path, 'rb') as f:
-#         metrics = pickle.load(f)
-#     return metrics
-#
-# def create_df_old(metric, condition, center_type, average_roi=False):
-#     raw_data = []
-#
-#     # Create the columns
-#     columns = ['Study', 'Methods', 'ROI', metric]
-#
-#     # Create the raw data
-#     metrics = load_metrics(PKL_FILES[center_type][condition])
-#     for method in METHODS_TO_PLOT:
-#         m = metrics[method]
-#
-#         # Set the right list of ROIs
-#         roi_list = ALL_ROI
-#         if center_type == 'out' or average_roi:  # no corpus callosum
-#             roi_list = [
-#                 'white_matter', 'intra_axial_csf', 'cerebellum',
-#                 'extra_axial_csf', 'cortical_grey_matter', 'deep_grey_matter', 'brainstem'
-#             ]
-#
-#         # Get the metric values
-#         if average_roi:
-#             met_list = [m['%s_%s' % (metric, roi)] for roi in roi_list]
-#             met = np.mean(met_list, axis=0)
-#             num_cases = met.size
-#             for i in range(num_cases):
-#                 line = [i, METHOD_NAME_TO_DISPLAY[method], 'Average', met[i]]
-#                 raw_data.append(line)
-#         else:
-#             for roi in roi_list:
-#                 metric_name = '%s_%s' % (metric, roi)
-#                 num_cases = len(m[metric_name])
-#                 # print('**** %s: %d cases' % (roi, num_cases))
-#                 for i in range(num_cases):
-#                     line_base = [i, METHOD_NAME_TO_DISPLAY[method]]
-#                     metric_name = '%s_%s' % (metric, roi)
-#                     val = m[metric_name][i]
-#                     if metric == 'hausdorff':  # clip high values for the hausdorff distance
-#                         max_val = YAXIS_LIM[metric][condition][1] \
-#                             - 0.01 * (YAXIS_LIM[metric][condition][1] - YAXIS_LIM[metric][condition][0])
-#                         if val > max_val:
-#                             # print('Clip value %f to %f' % (val, max_val))
-#                             val = max_val
-#                     line = line_base + [ROI_NAMES_TO_DISPLAY[roi], val]
-#                     raw_data.append(line)
-#
-#     df = pd.DataFrame(raw_data, columns=columns)
-#     return df
 
 def create_df(metric, condition, center_type, average_roi=False):
     df = pd.read_csv(CSV_RES)
