@@ -144,7 +144,7 @@ def main():
 
     fig.suptitle(
         'Histograms of Number of 3D MRIs per Gestational Age (in weeks)',
-        fontsize=FONT_SIZE_AXIS+5,
+        fontsize=FONT_SIZE_AXIS+40,
     )
     # Adjust the margins between the subplots
     fig.subplots_adjust(wspace=0.08, hspace=0.15)

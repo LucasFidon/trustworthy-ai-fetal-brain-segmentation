@@ -48,7 +48,7 @@ def read_decode_csv():
 def read_ranking():
     _, patid_to_cond, _ = get_feta_info()
     patid_to_decode =  read_decode_csv()
-    columns = ['Condition', 'ROI', 'Methods', 'Scores']
+    columns = ['Study', 'Condition', 'ROI', 'Methods', 'Scores']
     raw_data = []
 
     obj = openpyxl.load_workbook(RANKING_CSV)
@@ -83,7 +83,7 @@ def read_ranking():
             else:
                 method = 'AI'
             r = scores[i]
-            line = [cond, ROI_NAMES_TO_DISPLAY[roi], method, r]
+            line = [patid, cond, ROI_NAMES_TO_DISPLAY[roi], method, r]
             raw_data.append(line)
 
     df = pd.DataFrame(raw_data, columns=columns)
@@ -140,6 +140,9 @@ def main():
 
 def main_aggregated():
     df = read_ranking()
+    # Average scores across ROIs
+    df = df.groupby(['Study', 'Condition', 'Methods'])['Scores'].mean().reset_index()
+
     sns.set(font_scale=SNS_FONT_SCALE)
     sns.set_style("whitegrid")
     nrows = 1
@@ -165,14 +168,22 @@ def main_aggregated():
                 # order=[ROI_NAMES_TO_DISPLAY[roi] for roi in ALL_ROI[:-1]],
             )
         ax[i].set_xlabel(
-                CONDITION_NAMES_TO_DISPLAY[condition] + '\n' ,
+                '\n' + CONDITION_NAMES_TO_DISPLAY[condition],
                 fontsize=40,
                 fontweight='bold',
             )
         ax[i].set(ylim=YAXIS_LIM)
         g.set(yticks=YTICKS)
+        if i == 0:
+            ax[i].set_ylabel(
+                'Mean-ROI score' + '\n',
+                fontsize=40,
+                fontweight='bold',
+            )
+        else:
+            ax[i].set(ylabel=None)
     fig.suptitle(
-        'Trustworthiness scores aggregated across all ROIs for out-of-distribution 3D MRIs',
+        'Mean-ROI trustworthiness score for out-of-distribution 3D MRIs',
         fontsize=50,
     )
     # Remove extra empty space

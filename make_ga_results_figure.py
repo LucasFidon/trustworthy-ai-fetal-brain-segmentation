@@ -88,6 +88,9 @@ def main(metric, aggregated=False):
         ax.set_xticks(range(GA[0], GA[1]+1))
         ax.set_xlabel('Gestational Ages (in weeks)', fontweight='bold')
         ax.set_ylabel('Mean-ROI ' + METRIC_NAME_TO_DISPLAY[metric], fontweight='bold')
+        fig.suptitle(
+            'Mean and 95%% CI for the %s' % METRIC_NAME_TO_DISPLAY[metric],
+        )
     else:
         for k, roi in enumerate(ALL_ROI):
             i = k % nrows
@@ -121,8 +124,11 @@ def main(metric, aggregated=False):
             # Legend
             if i != 3 or j !=0:
                 ax[i,j].get_legend().remove()
+        fig.suptitle(
+            'Mean and 95%% CI for the %s' % METRIC_NAME_TO_DISPLAY[metric],
+            fontsize=90,
+        )
 
-    fig.suptitle('Mean and 95%% CI for the %s' % METRIC_NAME_TO_DISPLAY[metric])
     fig.tight_layout()
     post = '_aggregated' if aggregated else ''
     if USE_ABN:

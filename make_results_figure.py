@@ -137,8 +137,6 @@ def main(metric_name, aggregated=False):
     for i, condition in enumerate(CONDITIONS):
         for j, center_type in enumerate(CENTERS):
             df = create_df(metric_name, condition, center_type, average_roi=aggregated)
-            # import pdb
-            # pdb.set_trace()
 
             # Create the boxplot
             if aggregated:
@@ -248,7 +246,7 @@ def main(metric_name, aggregated=False):
 
     # Add title
     pre = 'Mean-ROI ' if aggregated else ''
-    fig.suptitle(pre + METRIC_NAMES_TO_DISPLAY[metric], fontsize=80)
+    fig.suptitle(pre + METRIC_NAMES_TO_DISPLAY[metric], fontsize=110)
 
     # Remove extra empty space
     fig.tight_layout()
