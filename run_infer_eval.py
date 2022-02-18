@@ -13,6 +13,8 @@ from src.multi_atlas.utils import get_atlas_list
 from src.segmentations_fusion.dempster_shaffer import merge_deep_and_atlas_seg, dempster_add_intensity_prior
 
 DATA_DIR = [
+    CONTROLS_KCL,
+    SB_FRED2,
     DOAA_BRAIN_LONGITUDINAL_SRR_AND_SEG2,
     UCLH_MMC_2,
     ZURICH_TEST_DATA_DIR,
@@ -25,11 +27,11 @@ DATA_DIR = [
 SAVE_FOLDER = '/data/saved_res_fetal_trust21_v3'
 DO_BIAS_FIELD_CORRECTION = True  # Will be ignored for data from Leuven
 MERGING_MULTI_ATLAS = 'GIF'  # Can be 'GIF' or 'mean'
-# MERGING_MULTI_ATLAS = 'mean'
 DO_BILATERAL_FILTERING = False
 REUSE_CNN_PRED = True  # Set to False if you want to force recomputing the trustworthy segmentations
 REUSE_ATLAS_PRED = True  # Set to False if you want to force recomputing the registration
 FORCE_RECOMPUTE_HEAT_MAP = False  # This might lead to recomputing the registrations
+INFERENCE_ONLY = False
 
 METRICS_COLUMN = ['Study', 'GA', 'Condition', 'Center type', 'Methods', 'ROI', 'dice', 'hausdorff']
 
@@ -57,17 +59,17 @@ def main(dataset_path_list):
 
     metric_data = []
     # Initialize the metric dict
-    #Todo: remove the metrics dict
-    metrics = {
-        center: {
-            cond: {
-                method: {'%s_%s' % (metric, roi): [] for roi in ALL_ROI for metric in METRIC_NAMES}
-                for method in METHOD_NAMES
-            }
-            for cond in CONDITIONS
-        }
-        for center in CENTERS
-    }
+    #Todo: remove the metrics dict; use only the metric_data
+    # metrics = {
+    #     center: {
+    #         cond: {
+    #             method: {'%s_%s' % (metric, roi): [] for roi in ALL_ROI for metric in METRIC_NAMES}
+    #             for method in METHOD_NAMES
+    #         }
+    #         for cond in CONDITIONS
+    #     }
+    #     for center in CENTERS
+    # }
     pred_dict = {}
 
     # Get all data info
@@ -82,9 +84,6 @@ def main(dataset_path_list):
             if not patid in list(patid_ga.keys()):
                 print('\n*** Unknown GA. \nSkip %s.' % f_n)
                 continue
-            # if patid != 'sub-052':
-            #     print('Skip %s' % f_n)
-            #     continue
             print('\n--------------')
             ga_ori = patid_ga[patid]
             # GA is rounded to the closest week and clipped to the range of GA of the atlases
@@ -222,34 +221,37 @@ def main(dataset_path_list):
                     os.system('rm %s' % volume_info_path)
 
             # Evaluation
+            if INFERENCE_ONLY:
+                continue
             gt_seg_path = os.path.join(dataset, f_n, 'parcellation.nii.gz')
             for method in METHOD_NAMES:
                 dice, haus = compute_evaluation_metrics(pred_dict[method], gt_seg_path, dataset_path=dataset)
                 for roi in DATASET_LABELS[dataset]:
                     if not roi in ALL_ROI:
                         continue
-                    metrics[center_val][cond][method]['dice_%s' % roi].append(dice[roi])
-                    metrics[center_val][cond][method]['hausdorff_%s' % roi].append(haus[roi])
+                    # metrics[center_val][cond][method]['dice_%s' % roi].append(dice[roi])
+                    # metrics[center_val][cond][method]['hausdorff_%s' % roi].append(haus[roi])
                     line = [patid, ga_ori, cond, center_val, method, roi, dice[roi], haus[roi]]
                     metric_data.append(line)
 
     # Save and print the metrics aggregated
-    df = pd.DataFrame(metric_data, columns=METRICS_COLUMN)
-    csv_path = os.path.join(pred_folder, 'metrics.csv')
-    df.to_csv(csv_path, index=False)
-    for center in CENTERS:
-        print('=======\n%s\n=======' % center)
-        for cond in CONDITIONS:
-            print('\n%s\n-------' % cond)
-            save_metrics_path = os.path.join(
-                pred_folder,
-                'metrics_%s-distribution_%s.pkl' % (center, cond.replace(' ', '_')),
-            )
-            print_results(
-                metrics[center][cond],
-                method_names=METHOD_NAMES,
-                save_path=save_metrics_path,
-            )
+    if not INFERENCE_ONLY:
+        df = pd.DataFrame(metric_data, columns=METRICS_COLUMN)
+        csv_path = os.path.join(pred_folder, 'metrics.csv')
+        df.to_csv(csv_path, index=False)
+    # for center in CENTERS:
+    #     print('=======\n%s\n=======' % center)
+    #     for cond in CONDITIONS:
+    #         print('\n%s\n-------' % cond)
+    #         save_metrics_path = os.path.join(
+    #             pred_folder,
+    #             'metrics_%s-distribution_%s.pkl' % (center, cond.replace(' ', '_')),
+    #         )
+    #         print_results(
+    #             metrics[center][cond],
+    #             method_names=METHOD_NAMES,
+    #             save_path=save_metrics_path,
+    #         )
 
 
 if __name__ == '__main__':

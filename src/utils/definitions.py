@@ -168,6 +168,15 @@ SB_FRED = os.path.join(  # 46 SB cases
     'SRR_and_Seg_Frederic_cases_group',
     'SB_Fred_corrected_partial',
 )
+SB_FRED2 = os.path.join(
+    BASE_FOLDER,
+    'Fred_additional_cases_Sept2021',
+)
+CONTROLS_KCL = os.path.join(
+    BASE_FOLDER,
+    'SRR_and_Seg_KCL',
+    'Control'
+)
 CORRECTED_ZURICH_DATA_DIR = os.path.join(BASE_FOLDER, 'FetalDataZurichCorrected', 'TrainingSet')  # 38 volumes
 EXCLUDED_ZURICH_DATA_DIR = os.path.join(BASE_FOLDER, 'FetalDataZurichCorrected', 'TrainingSetExcluded')  # 2 volumes
 ZURICH_TEST_DATA_DIR = os.path.join(BASE_FOLDER, 'FetalDataZurichCorrected', 'TestingSet')  # 10 volumes
@@ -192,11 +201,13 @@ DATASET_LABELS = {
     FETA_IRTK_DIR:
         ['background', 'white_matter', 'intra_axial_csf', 'cerebellum', 'extra_axial_csf', 'cortical_grey_matter', 'deep_grey_matter', 'brainstem'],
     SB_FRED: ['background'] + ALL_ROI,
+    SB_FRED2: ['background'] + ALL_ROI,
     CDH_LEUVEN_TESTINGSET: ['background'] + ALL_ROI,
     DATA_FOLDER_CONTROLS2_PARTIAL_FULLYSEG: ['background'] + ALL_ROI,
     SB_VIENNA: ['background'] + ALL_ROI,
     UCLH_MMC_2: ['background'] + ALL_ROI,
     DOAA_BRAIN_LONGITUDINAL_SRR_AND_SEG2: ['background'] + ALL_ROI,
+    CONTROLS_KCL: ['background'] + ALL_ROI,
 }
 
 
