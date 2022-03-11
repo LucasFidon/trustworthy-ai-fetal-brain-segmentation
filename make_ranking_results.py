@@ -79,7 +79,7 @@ def read_ranking():
             if 'atlas' in segmentation:
                 method = 'Fallback'
             elif 'trust' in segmentation:
-                method ='Trustworthy AI'
+                method ='TW-AI'
             else:
                 method = 'AI'
             r = scores[i]
@@ -92,7 +92,7 @@ def read_ranking():
 
 def main():
     df = read_ranking()
-    sns.set(font_scale=SNS_FONT_SCALE)
+    sns.set(font_scale=SNS_FONT_SCALE+1.5)
     sns.set_style("whitegrid")
     nrows = len(CONDITIONS)
     ncols = 1
@@ -114,8 +114,16 @@ def main():
                 palette='colorblind',
                 fliersize=10,
                 linewidth=3,
-                hue_order=['AI', 'Fallback', 'Trustworthy AI'],
+                hue_order=['AI', 'Fallback', 'TW-AI'],
                 order=[ROI_NAMES_TO_DISPLAY[roi] for roi in ALL_ROI[:-1]],
+            )
+        if i < len(CONDITIONS) - 1:
+            ax[i].set(xlabel=None)
+        else:
+            ax[i].set_xlabel(
+                '\nROI' ,
+                fontsize=FONT_SIZE_AXIS,
+                fontweight='bold',
             )
         ax[i].set_ylabel(
                 CONDITION_NAMES_TO_DISPLAY[condition] + '\n' ,
@@ -128,12 +136,12 @@ def main():
 
     fig.suptitle(
         'Trustworthiness scores per ROI for out-of-distribution 3D MRIs',
-        fontsize=50,
+        fontsize=55,
     )
     # Remove extra empty space
     fig.tight_layout()
     # Save the figure
-    save_name = 'scores.png'
+    save_name = 'scores.pdf'
     fig.savefig(save_name, bbox_inches='tight')
     print('Figure saved in', save_name)
 
@@ -143,7 +151,7 @@ def main_aggregated():
     # Average scores across ROIs
     df = df.groupby(['Study', 'Condition', 'Methods'])['Scores'].mean().reset_index()
 
-    sns.set(font_scale=SNS_FONT_SCALE)
+    sns.set(font_scale=SNS_FONT_SCALE+1.6)
     sns.set_style("whitegrid")
     nrows = 1
     ncols = len(CONDITIONS)
@@ -151,7 +159,7 @@ def main_aggregated():
     fig, ax = plt.subplots(
         nrows=nrows,
         ncols=ncols,
-        figsize=(12 * ncols, 10 * nrows),
+        figsize=(12 * ncols, 12 * nrows),
     )
     for i, condition in enumerate(CONDITIONS):
         data = df[df['Condition'] == condition]
@@ -164,12 +172,12 @@ def main_aggregated():
                 palette='colorblind',
                 fliersize=10,
                 linewidth=3,
-                order=['AI', 'Fallback', 'Trustworthy AI'],
+                order=['AI', 'Fallback', 'TW-AI'],
                 # order=[ROI_NAMES_TO_DISPLAY[roi] for roi in ALL_ROI[:-1]],
             )
         ax[i].set_xlabel(
                 '\n' + CONDITION_NAMES_TO_DISPLAY[condition],
-                fontsize=40,
+                fontsize=50,
                 fontweight='bold',
             )
         ax[i].set(ylim=YAXIS_LIM)
@@ -177,19 +185,19 @@ def main_aggregated():
         if i == 0:
             ax[i].set_ylabel(
                 'Mean-ROI score' + '\n',
-                fontsize=40,
+                fontsize=50,
                 fontweight='bold',
             )
         else:
             ax[i].set(ylabel=None)
     fig.suptitle(
         'Mean-ROI trustworthiness score for out-of-distribution 3D MRIs',
-        fontsize=50,
+        fontsize=65,
     )
     # Remove extra empty space
     fig.tight_layout()
     # Save the figure
-    save_name = 'scores_aggregated.png'
+    save_name = 'scores_aggregated.pdf'
     fig.savefig(save_name, bbox_inches='tight')
     print('Figure saved in', save_name)
 

@@ -23,7 +23,7 @@ METHODS_TO_PLOT = ['cnn', 'atlas', 'trustworthy']
 METHOD_NAME_TO_DISPLAY = {
     'cnn': 'AI',
     'atlas': 'Fallback',
-    'trustworthy': 'Trustworthy AI',
+    'trustworthy': 'TW-AI',
 }
 ROI_NAMES_TO_DISPLAY = {
     'white_matter': 'WM',
@@ -70,20 +70,41 @@ YAXIS_LIM = {
 }
 YAXIS_LIM_AGGREGATED = {
     'dice': {
-        'Neurotypical': (69, 100),
-        'Spina Bifida': (18, 100),
-        'Pathological': (18, 100),
+        'Neurotypical': (74, 95),
+        'Spina Bifida': (39, 95),
+        'Pathological': (69, 95),
     },
     'hausdorff': {  # Rk: max is 57.6mm
-        'Neurotypical': (-0.3, 12.3),
-        'Spina Bifida': (-1, 36),
-        'Pathological': (-0.5, 18),
+        'Neurotypical': (-0.1, 6.1),
+        'Spina Bifida': (-0.2, 14.2),
+        'Pathological': (-0.1, 7.1),
     },
 }
 YTICKS_HD = {
     'Neurotypical': [i*2 for i in range(0, 7)],
     'Spina Bifida': [i*5 for i in range(0, 8)],
     'Pathological': [i*2.5 for i in range(0, 8)],
+}
+INTERVALS_AGGREGATED = {
+    'dice': {
+        'Neurotypical': 5,
+        'Spina Bifida': 10,
+        'Pathological': 5,
+    },
+    'hausdorff': {
+        'Neurotypical': 1,
+        'Spina Bifida': 2,
+        'Pathological': 1,
+    },
+}
+YTICKS_AGGREGATED = {
+    metric: {
+        cond: [
+            i for i in
+            range(int(YAXIS_LIM_AGGREGATED[metric][cond][0]+1), int(YAXIS_LIM_AGGREGATED[metric][cond][1]+1), INTERVALS_AGGREGATED[metric][cond])]
+        for cond in CONDITIONS
+    }
+    for metric in ['dice', 'hausdorff']
 }
 FONT_SIZE_AXIS = 55
 SNS_FONT_SCALE = 2.8
@@ -103,6 +124,17 @@ def create_df(metric, condition, center_type, average_roi=False):
     if average_roi:  # Remove CC and average metric across ROIs
         df = df[df['ROI'] != 'corpus_callosum']
         df = df.groupby(['Study', 'GA', 'Condition', 'Center type', 'Methods'])[metric].mean().reset_index()
+        # Clip values
+        if metric == 'hausdorff':
+            max_val = YAXIS_LIM_AGGREGATED[metric][condition][1] \
+                - 0.01 * (YAXIS_LIM_AGGREGATED[metric][condition][1] - YAXIS_LIM_AGGREGATED[metric][condition][0])
+            df.loc[df[metric] > max_val, metric] = max_val
+        elif metric == 'dice':
+            min_val = YAXIS_LIM_AGGREGATED[metric][condition][0] + 1
+                # + 0.01 * (YAXIS_LIM_AGGREGATED[metric][condition][1] - YAXIS_LIM_AGGREGATED[metric][condition][0])
+            print('Min val')
+            print(min_val)
+            df.loc[df[metric] < min_val, metric] = min_val
     else:
         # Rename the ROIs
         for roi in list(ROI_NAMES_TO_DISPLAY.keys()):
@@ -120,8 +152,34 @@ def create_df(metric, condition, center_type, average_roi=False):
     return df
 
 
+def statistical_test(df_ave, metric_name):
+    from scipy.stats import wilcoxon
+    print('***Statistical test - mean-ROI %s' % metric_name)
+    ai = df_ave[df_ave['Methods']==METHOD_NAME_TO_DISPLAY['cnn']][metric_name].to_numpy()
+    fallback = df_ave[df_ave['Methods']==METHOD_NAME_TO_DISPLAY['atlas']][metric_name].to_numpy()
+    twai = df_ave[df_ave['Methods']==METHOD_NAME_TO_DISPLAY['trustworthy']][metric_name].to_numpy()
+
+    print('AI - median = %.2f' % np.median(ai))
+    print('Fallback - median = %.2f' % np.median(fallback))
+    print('TWAI - median = %.2f' % np.median(twai))
+
+    alt = 'greater' if metric_name == 'dice' else 'less'
+
+    print('The median of TWAI - AI is %s than 0' % alt)
+    print(wilcoxon(twai, ai, alternative=alt))
+
+    print('The median of TWAI - Fallback is %s than 0' % alt)
+    print(wilcoxon(twai, fallback, alternative=alt))
+
+    print('The median of Fallback is AI is %s than 0' % alt)
+    print(wilcoxon(fallback, ai, alternative=alt))
+    print('')
+
+
 def main(metric_name, aggregated=False):
-    sns.set(font_scale=SNS_FONT_SCALE)
+    sns.set(font_scale=SNS_FONT_SCALE + 0.2)
+    if aggregated:
+        sns.set(font_scale=SNS_FONT_SCALE + 1.6)
     sns.set_style("whitegrid")
     if aggregated:
         nrows = len(CENTERS)
@@ -150,36 +208,42 @@ def main(metric_name, aggregated=False):
                     palette='colorblind',
                     fliersize=10,
                     linewidth=3,
-                    order=['AI', 'Fallback', 'Trustworthy AI'],
+                    order=['AI', 'Fallback', 'TW-AI'],
+                    # order=['AI', 'Fallback', 'Trustworthy AI'],
                 )
 
                 # X axis
                 if j == nrows - 1:
                     ax_ij.set_xlabel(
                         '\n' + CONDITION_NAMES_TO_DISPLAY[condition],
-                        fontsize=FONT_SIZE_AXIS,
+                        fontsize=FONT_SIZE_AXIS + 5,
                         fontweight='bold',
                     )
                 else:
                     ax_ij.set(xlabel=None)
 
                 # Y axis
-                # ax_ij.set(ylim=YAXIS_LIM_AGGREGATED[metric_name][condition])
+                ax_ij.set(ylim=YAXIS_LIM_AGGREGATED[metric_name][condition])
                 if i == 0:
                     ax_ij.set_ylabel(
                         CENTER_TYPES_TO_DISPLAY_AGGREGATED[center_type] + '\n',
-                        fontsize=FONT_SIZE_AXIS,
+                        fontsize=FONT_SIZE_AXIS + 10,
                         fontweight='bold',
                     )
                 else:
                     ax_ij.set(ylabel=None)
 
-                # # Y ticks
-                # if metric_name == 'hausdorff':
-                #     g.set(yticks=YTICKS_HD[condition])
-                #     yticklabels = [str(i) for i in YTICKS_HD[condition]]
-                #     yticklabels[-1] += '+'
-                #     g.set(yticklabels=yticklabels)
+                # Y ticks
+                if metric_name == 'hausdorff' or metric_name == 'dice':
+                    g.set(yticks=YTICKS_AGGREGATED[metric][condition])
+                    yticklabels = [str(i) for i in YTICKS_AGGREGATED[metric][condition]]
+                    if metric_name == 'hausdorff':
+                        yticklabels[-1] += '+'
+                    elif metric_name == 'dice':
+                        yticklabels[0] += '-'
+                    g.set(yticklabels=yticklabels)
+
+                statistical_test(df, metric_name)
 
             else:  # No aggregation
                 ax_ij = ax[i,j]
@@ -197,7 +261,7 @@ def main(metric_name, aggregated=False):
                     palette='colorblind',
                     fliersize=10,
                     linewidth=3,
-                    hue_order=['AI', 'Fallback', 'Trustworthy AI'],
+                    hue_order=['AI', 'Fallback', 'TW-AI'],
                     order=order,
                 )
 
@@ -276,9 +340,9 @@ def main(metric_name, aggregated=False):
 
     # Save the figure
     if aggregated:
-        save_name = '%s_aggregated.png' % metric_name
+        save_name = '%s_aggregated.pdf' % metric_name
     else:
-        save_name = '%s.png' % metric_name
+        save_name = '%s.pdf' % metric_name
     fig.savefig(save_name, bbox_inches='tight')
     print('Figure saved in', save_name)
 

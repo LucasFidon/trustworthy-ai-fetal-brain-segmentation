@@ -19,9 +19,10 @@ COLOR = {
     'testing': 'royalblue',
 }
 BOXPLOT_SIZE = [15, 10]  # Size of each subplot
-FONT_SIZE_AXIS = 55
-FONT_SIZE_NB_CASES = 45
-SNS_FONT_SCALE = 2.8
+FONT_SIZE_AXIS = 60
+FONT_SIZE_NB_CASES = 55
+FONT_SIZE_TITLE = 95
+SNS_FONT_SCALE = 4.0  # 2.8
 FETA_EXCLUDED = ['sub-007', 'sub-009']
 HARVARD_ATLAS_GA = [i for i in range(21, 39)]
 CHINESE_ATLAS_GA = [i for i in range(22, 36)]
@@ -95,7 +96,7 @@ def main():
                 split, center_type = split_center.split('_')
             ga = get_ga(condition, center_type, split)
             if ga.size > 0:
-                sns.distplot(
+                g = sns.distplot(
                     ga,
                     kde=False,
                     rug=False,
@@ -114,6 +115,7 @@ def main():
 
             # X axis
             ax[i,j].set_xlim((19, 40))
+            ax[i,j].set(xticks=[20 + i for i in range(0, 21, 4)])
             if j == 0:
                 column_name =''
                 if split == 'training':
@@ -144,7 +146,7 @@ def main():
 
     fig.suptitle(
         'Histograms of Number of 3D MRIs per Gestational Age (in weeks)',
-        fontsize=FONT_SIZE_AXIS+40,
+        fontsize=FONT_SIZE_TITLE,
     )
     # Adjust the margins between the subplots
     fig.subplots_adjust(wspace=0.08, hspace=0.15)
@@ -153,7 +155,7 @@ def main():
     fig.tight_layout()
 
     # Save the figure
-    save_name = 'ga_histograms.png'
+    save_name = 'ga_histograms.pdf'
     fig.savefig(save_name, bbox_inches='tight')
     print('Figure saved in', save_name)
 

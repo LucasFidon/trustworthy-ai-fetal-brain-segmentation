@@ -132,9 +132,9 @@ def main(metric, aggregated=False):
     fig.tight_layout()
     post = '_aggregated' if aggregated else ''
     if USE_ABN:
-        save_name = '%s_GA%s.png' % (metric, post)
+        save_name = '%s_GA%s.pdf' % (metric, post)
     else:
-        save_name = '%s_Control_and_SB_GA%s.png' % (metric, post)
+        save_name = '%s_Control_and_SB_GA%s.pdf' % (metric, post)
     fig.savefig(save_name, bbox_inches='tight')
     print('Figure saved in', save_name)
 
