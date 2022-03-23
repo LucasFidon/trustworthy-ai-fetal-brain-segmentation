@@ -8,7 +8,6 @@ REPO_PATH = '/workspace/trustworthy-ai-fetal-brain-segmentation'
 # GENERAL EVALUATION OPTIONS
 IMG_RES = 0.8  # in mm; isotropic
 NUM_CLASS = 9  # number of classes predicted by the model
-# METHOD_NAMES = ['cnn', 'atlas', 'trustworthy_atlas_only', 'trustworthy']
 METHOD_NAMES = ['cnn', 'atlas', 'trustworthy']
 ALL_ROI = [
     'white_matter', 'intra_axial_csf', 'cerebellum', 'extra_axial_csf',
@@ -18,7 +17,7 @@ CONDITIONS = ['Neurotypical', 'Spina Bifida', 'Pathological']
 CENTERS = ['in', 'out']  # in- or -out of distribution
 
 # DEMPSTER
-ATLAS_MARGIN = [2] * 9  # bg, wm, vent, cer, ext-csf, cgm, dgm, bs, cc (in voxels)
+# ATLAS_MARGIN = [2] * 9  # bg, wm, vent, cer, ext-csf, cgm, dgm, bs, cc (in voxels)
 
 
 # EVALUATION
@@ -177,8 +176,8 @@ CONTROLS_KCL = os.path.join(
     'SRR_and_Seg_KCL',
     'Control'
 )
-CORRECTED_ZURICH_DATA_DIR = os.path.join(BASE_FOLDER, 'FetalDataZurichCorrected', 'TrainingSet')  # 38 volumes
-EXCLUDED_ZURICH_DATA_DIR = os.path.join(BASE_FOLDER, 'FetalDataZurichCorrected', 'TrainingSetExcluded')  # 2 volumes
+CORRECTED_ZURICH_DATA_DIR = os.path.join(BASE_FOLDER, 'FetalDataZurichCorrected', 'TrainingSet')  # 30 volumes
+EXCLUDED_ZURICH_DATA_DIR = os.path.join(BASE_FOLDER, 'FetalDataZurichCorrected', 'TrainingSetExcluded')  # 8 volumes
 ZURICH_TEST_DATA_DIR = os.path.join(BASE_FOLDER, 'FetalDataZurichCorrected', 'TestingSet')  # 10 volumes
 FETA_IRTK_DIR = os.path.join(DATA_FOLDER, 'FetalDataFeTAChallengeIRTK_Jun21_corrected')  # 40 volumes
 SB_VIENNA = os.path.join(DATA_FOLDER_NADA_GROUP, 'vienna_MMC_unoperated')  # 11 cases
@@ -192,14 +191,14 @@ DATASET_LABELS = {
     TRAINING_DATA_PREPROCESSED_DIR: ['background'] + ALL_ROI,
     DATA_FOLDER_THOMAS_GROUP1: ['background'] + ALL_ROI,
     DATA_FOLDER_THOMAS_GROUP2: ['background'] + ALL_ROI,
-    CORRECTED_ZURICH_DATA_DIR:
-        ['background', 'white_matter', 'intra_axial_csf', 'cerebellum', 'extra_axial_csf', 'cortical_grey_matter', 'deep_grey_matter', 'brainstem'],
-    EXCLUDED_ZURICH_DATA_DIR:
-        ['background', 'white_matter', 'intra_axial_csf', 'cerebellum', 'extra_axial_csf', 'cortical_grey_matter', 'deep_grey_matter', 'brainstem'],
-    ZURICH_TEST_DATA_DIR:
-        ['background', 'white_matter', 'intra_axial_csf', 'cerebellum', 'extra_axial_csf', 'cortical_grey_matter', 'deep_grey_matter', 'brainstem'],
-    FETA_IRTK_DIR:
-        ['background', 'white_matter', 'intra_axial_csf', 'cerebellum', 'extra_axial_csf', 'cortical_grey_matter', 'deep_grey_matter', 'brainstem'],
+    CORRECTED_ZURICH_DATA_DIR: ['background'] + ALL_ROI,
+        # ['background', 'white_matter', 'intra_axial_csf', 'cerebellum', 'extra_axial_csf', 'cortical_grey_matter', 'deep_grey_matter', 'brainstem'],
+    EXCLUDED_ZURICH_DATA_DIR: ['background'] + ALL_ROI,
+        # ['background', 'white_matter', 'intra_axial_csf', 'cerebellum', 'extra_axial_csf', 'cortical_grey_matter', 'deep_grey_matter', 'brainstem'],
+    ZURICH_TEST_DATA_DIR: ['background'] + ALL_ROI,
+        # ['background', 'white_matter', 'intra_axial_csf', 'cerebellum', 'extra_axial_csf', 'cortical_grey_matter', 'deep_grey_matter', 'brainstem'],
+    FETA_IRTK_DIR: ['background'] + ALL_ROI,
+        # ['background', 'white_matter', 'intra_axial_csf', 'cerebellum', 'extra_axial_csf', 'cortical_grey_matter', 'deep_grey_matter', 'brainstem'],
     SB_FRED: ['background'] + ALL_ROI,
     SB_FRED2: ['background'] + ALL_ROI,
     CDH_LEUVEN_TESTINGSET: ['background'] + ALL_ROI,

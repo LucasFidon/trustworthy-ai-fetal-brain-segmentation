@@ -58,22 +58,11 @@ def main(dataset_path_list):
         os.mkdir(pred_folder)
 
     metric_data = []
-    # Initialize the metric dict
-    #Todo: remove the metrics dict; use only the metric_data
-    # metrics = {
-    #     center: {
-    #         cond: {
-    #             method: {'%s_%s' % (metric, roi): [] for roi in ALL_ROI for metric in METRIC_NAMES}
-    #             for method in METHOD_NAMES
-    #         }
-    #         for cond in CONDITIONS
-    #     }
-    #     for center in CENTERS
-    # }
     pred_dict = {}
 
     # Get all data info
-    patid_ga, patid_cond, patid_center, _ = get_feta_info()
+    patid_sample = get_feta_info()
+    # patid_ga, patid_cond, patid_center, _ = get_feta_info()
 
     # Run the batch inference
     for dataset in dataset_path_list:
@@ -81,11 +70,12 @@ def main(dataset_path_list):
         for f_n in sample_folders:
             # Get case info
             patid = f_n.replace('feta', '')
-            if not patid in list(patid_ga.keys()):
-                print('\n*** Unknown GA. \nSkip %s.' % f_n)
+            if not patid in list(patid_sample.keys()):
+                print('\n*** Unknown sample. \nSkip %s.' % f_n)
                 continue
             print('\n--------------')
-            ga_ori = patid_ga[patid]
+            sample = patid_sample[patid]
+            ga_ori = sample.ga
             # GA is rounded to the closest week and clipped to the range of GA of the atlases
             ga = int(round(ga_ori))
             if ga > MAX_GA:
@@ -94,8 +84,10 @@ def main(dataset_path_list):
             if ga < MIN_GA:
                 print('Found ga=%d for %s. Change it to %d (min value accepted)' % (ga, patid, MIN_GA))
                 ga = MIN_GA
-            cond = patid_cond[patid]
-            center_val = patid_center[patid]
+            # cond = patid_cond[patid]
+            # center_val = patid_center[patid]
+            cond = sample.cond
+            center_val = sample.center
 
             # Paths of input
             input_path = os.path.join(dataset, f_n, 'srr.nii.gz')
@@ -229,8 +221,6 @@ def main(dataset_path_list):
                 for roi in DATASET_LABELS[dataset]:
                     if not roi in ALL_ROI:
                         continue
-                    # metrics[center_val][cond][method]['dice_%s' % roi].append(dice[roi])
-                    # metrics[center_val][cond][method]['hausdorff_%s' % roi].append(haus[roi])
                     line = [patid, ga_ori, cond, center_val, method, roi, dice[roi], haus[roi]]
                     metric_data.append(line)
 
@@ -239,19 +229,6 @@ def main(dataset_path_list):
         df = pd.DataFrame(metric_data, columns=METRICS_COLUMN)
         csv_path = os.path.join(pred_folder, 'metrics.csv')
         df.to_csv(csv_path, index=False)
-    # for center in CENTERS:
-    #     print('=======\n%s\n=======' % center)
-    #     for cond in CONDITIONS:
-    #         print('\n%s\n-------' % cond)
-    #         save_metrics_path = os.path.join(
-    #             pred_folder,
-    #             'metrics_%s-distribution_%s.pkl' % (center, cond.replace(' ', '_')),
-    #         )
-    #         print_results(
-    #             metrics[center][cond],
-    #             method_names=METHOD_NAMES,
-    #             save_path=save_metrics_path,
-    #         )
 
 
 if __name__ == '__main__':

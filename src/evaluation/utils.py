@@ -56,7 +56,7 @@ def compute_evaluation_metrics(pred_seg_path, gt_seg_path, dataset_path, compute
     else:
         return dice_values, haus_values
 
-
+#TODO update the two print functions to use panda
 def print_results(metrics, method_names=METHOD_NAMES, metric_names=METRIC_NAMES, roi_names=ALL_ROI, save_path=None):
     print('\n*** Global statistics for the metrics')
     for method in method_names:

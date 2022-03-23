@@ -58,7 +58,7 @@ BOXPLOT_SIZE = {
 }
 YAXIS_LIM = {
     'dice': {
-        'Neurotypical': (48, 100),
+        'Neurotypical': (28, 100),
         'Spina Bifida': (-2, 100),
         'Pathological': (-2, 100),
     },
@@ -72,12 +72,12 @@ YAXIS_LIM_AGGREGATED = {
     'dice': {
         'Neurotypical': (74, 95),
         'Spina Bifida': (39, 95),
-        'Pathological': (69, 95),
+        'Pathological': (59, 95),
     },
     'hausdorff': {  # Rk: max is 57.6mm
-        'Neurotypical': (-0.1, 6.1),
-        'Spina Bifida': (-0.2, 14.2),
-        'Pathological': (-0.1, 7.1),
+        'Neurotypical': (-0.1, 4.1),
+        'Spina Bifida': (-0.2, 12.2),
+        'Pathological': (-0.1, 9.1),
     },
 }
 YTICKS_HD = {
@@ -122,7 +122,7 @@ def create_df(metric, condition, center_type, average_roi=False):
     df = df[df['Condition'] == condition]
     df = df[df['Center type'] == center_type]
     if average_roi:  # Remove CC and average metric across ROIs
-        df = df[df['ROI'] != 'corpus_callosum']
+        # df = df[df['ROI'] != 'corpus_callosum']
         df = df.groupby(['Study', 'GA', 'Condition', 'Center type', 'Methods'])[metric].mean().reset_index()
         # Clip values
         if metric == 'hausdorff':
@@ -171,7 +171,7 @@ def statistical_test(df_ave, metric_name):
     print('The median of TWAI - Fallback is %s than 0' % alt)
     print(wilcoxon(twai, fallback, alternative=alt))
 
-    print('The median of Fallback is AI is %s than 0' % alt)
+    print('The median of Fallback - AI is %s than 0' % alt)
     print(wilcoxon(fallback, ai, alternative=alt))
     print('')
 
@@ -247,11 +247,12 @@ def main(metric_name, aggregated=False):
 
             else:  # No aggregation
                 ax_ij = ax[i,j]
-                if center_type == 'out':
-                    # no CC
-                    order = [ROI_NAMES_TO_DISPLAY[roi] for roi in ALL_ROI[:-1]]
-                else:
-                    order = [ROI_NAMES_TO_DISPLAY[roi] for roi in ALL_ROI]
+                # if center_type == 'out':
+                #     # no CC
+                #     order = [ROI_NAMES_TO_DISPLAY[roi] for roi in ALL_ROI[:-1]]
+                # else:
+                #     order = [ROI_NAMES_TO_DISPLAY[roi] for roi in ALL_ROI]
+                order = [ROI_NAMES_TO_DISPLAY[roi] for roi in ALL_ROI]
                 g = sns.boxplot(
                     data=df,
                     hue='Methods',

@@ -44,8 +44,8 @@ def main(metric, aggregated=False):
     # Filter condition
     if not USE_ABN:
         df = df[df['Condition'] != 'Pathological']
-    if aggregated:
-        df = df[df['ROI'] != 'corpus_callosum']
+    # if aggregated:
+    #     df = df[df['ROI'] != 'corpus_callosum']
 
     # Filter GA
     df['GA'] = df['GA'].round(decimals=0)
