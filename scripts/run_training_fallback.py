@@ -1,7 +1,19 @@
+"""
+@brief  Run the hyper-parameter search for the fallback method.
+        The data used are the training data of the fold0
+        as defined by nnU-Net (backbone AI method).
+        This script was used to generate the results in the appendix about
+        the parameters tuning of te fallback method.
+
+@author Lucas Fidon (lucas.fidon@kcl.ac.uk)
+"""
+
 import os
 from time import time
 import numpy as np
 import nibabel as nib
+import sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from src.utils.definitions import *
 from src.utils.utils import get_feta_info
 from src.evaluation.utils import print_results, compute_evaluation_metrics, print_summary_results
@@ -9,7 +21,7 @@ from src.multi_atlas.inference import multi_atlas_segmentation
 from src.multi_atlas.utils import get_atlas_list
 from src.segmentations_fusion.dempster_shaffer import dempster_add_intensity_prior
 
-SAVE_FOLDER = '/data/saved_res_fetal_multiatlas21_v1'
+SAVE_FOLDER = '/data/saved_res_fetal_fallback'
 ATLAS_METRIC_NAMES = METRIC_NAMES + ['missing_coverage', 'number_registrations']
 
 # OPTIONS
@@ -23,10 +35,6 @@ REUSE_REGISTRATION = True  # to force recomputing the registration
 FORCE_COMPUTE_HEAT_MAP = False
 APPLY_INTENSITY_PRIOR = False
 NEW_FINAL_SEG = True  # to force recomputing the final seg from all the warped seg
-#todo more pre-processing on the atlas segmentation? bilateral filtering, nb components, closing operation
-# applying the intensity prior to the multi-atlas segmentation; but we might have problem with high intensity on the background sometimes
-# or we have to erode the brain mask first
-# but maybe this is already reflected in the registration parameters..
 
 
 def convert_to_patid(folder_name):
@@ -74,19 +82,14 @@ def main(pred_folder):
     pred_dict = {}
 
     # Get data information
-    patid_ga, patid_cond = get_feta_info()
+    patid_to_sample = get_feta_info(round_GA=True)
     sample_folders = get_fold0_data()
 
-    #todo add AI seg for the fold0 model
-    # if we want to evaluate: bilateral filtering, etc...
     for sample_f in sample_folders:
         patid = convert_to_patid(os.path.split(sample_f)[1])
-        if not patid in list(patid_ga.keys()):
+        if not patid in list(patid_to_sample.keys()):
             print('\n*** Unknown GA. \nSkip %s.' % sample_f)
             continue
-        # if patid != 'UZL00056_Study2':
-        #     print('Skip')
-        #     continue
         print('\n--------------')
         print('Start inference for case %s' % sample_f)
         # Paths of input
@@ -98,8 +101,8 @@ def main(pred_folder):
             os.mkdir(output_path)
 
         # Info about the case
-        ga = patid_ga[patid]  # GA rounded to the closest week
-        cond = patid_cond[patid]
+        ga = patid_to_sample[patid].ga  # GA rounded to the closest week
+        cond = patid_to_sample[patid].cond
         print('GA: %d weeks, Condition: %s' % (ga, cond))
 
         img_nii = nib.load(input_path)

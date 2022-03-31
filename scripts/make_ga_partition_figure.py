@@ -1,7 +1,10 @@
 import numpy as np
+import os
 import csv
 from matplotlib import pyplot as plt
 import seaborn as sns
+import sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from src.utils.definitions import *
 
 SPLIT_CENTERS = ['training', 'testing_in', 'testing_out']
@@ -156,9 +159,13 @@ def main():
 
     # Save the figure
     save_name = 'ga_histograms.pdf'
-    fig.savefig(save_name, bbox_inches='tight')
-    print('Figure saved in', save_name)
+    save_path = os.path.join(OUTPUT_PATH, save_name)
+    if not os.path.exists(OUTPUT_PATH):
+        os.mkdir(OUTPUT_PATH)
+    fig.savefig(save_path, bbox_inches='tight')
+    print('Figure saved in', save_path)
 
 
 if __name__ == '__main__':
+    print('\033[93mMake Dataset Figure with the Distribution of Gestational Ages for each Group.\033[0m')
     main()

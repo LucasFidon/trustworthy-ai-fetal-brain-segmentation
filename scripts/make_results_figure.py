@@ -1,24 +1,13 @@
 import os
-import pickle
 import pandas as pd
 from matplotlib import pyplot as plt
 import matplotlib.transforms as mtrans
 import seaborn as sns
-from run_infer_eval import SAVE_FOLDER
+import sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from src.utils.definitions import *
 
-CSV_RES = '/data/saved_res_fetal_trust21_v3/nnunet_task225/metrics.csv'
-PKL_FILES = {
-    center: {
-        cond: os.path.join(
-            SAVE_FOLDER,
-            'nnunet_task225',
-            'metrics_%s-distribution_%s.pkl' % (center, cond.replace(' ', '_'))
-        )
-        for cond in CONDITIONS
-    }
-    for center in CENTERS
-}
+CSV_RES = os.path.join(REPO_DATA_PATH, 'metrics.csv')
 METHODS_TO_PLOT = ['cnn', 'atlas', 'trustworthy']
 METHOD_NAME_TO_DISPLAY = {
     'cnn': 'AI',
@@ -121,8 +110,7 @@ def create_df(metric, condition, center_type, average_roi=False):
     # Filter data
     df = df[df['Condition'] == condition]
     df = df[df['Center type'] == center_type]
-    if average_roi:  # Remove CC and average metric across ROIs
-        # df = df[df['ROI'] != 'corpus_callosum']
+    if average_roi:  # Average metric across ROIs
         df = df.groupby(['Study', 'GA', 'Condition', 'Center type', 'Methods'])[metric].mean().reset_index()
         # Clip values
         if metric == 'hausdorff':
@@ -209,7 +197,6 @@ def main(metric_name, aggregated=False):
                     fliersize=10,
                     linewidth=3,
                     order=['AI', 'Fallback', 'TW-AI'],
-                    # order=['AI', 'Fallback', 'Trustworthy AI'],
                 )
 
                 # X axis
@@ -247,11 +234,6 @@ def main(metric_name, aggregated=False):
 
             else:  # No aggregation
                 ax_ij = ax[i,j]
-                # if center_type == 'out':
-                #     # no CC
-                #     order = [ROI_NAMES_TO_DISPLAY[roi] for roi in ALL_ROI[:-1]]
-                # else:
-                #     order = [ROI_NAMES_TO_DISPLAY[roi] for roi in ALL_ROI]
                 order = [ROI_NAMES_TO_DISPLAY[roi] for roi in ALL_ROI]
                 g = sns.boxplot(
                     data=df,
@@ -344,11 +326,15 @@ def main(metric_name, aggregated=False):
         save_name = '%s_aggregated.pdf' % metric_name
     else:
         save_name = '%s.pdf' % metric_name
-    fig.savefig(save_name, bbox_inches='tight')
-    print('Figure saved in', save_name)
+    save_path = os.path.join(OUTPUT_PATH, save_name)
+    if not os.path.exists(OUTPUT_PATH):
+        os.mkdir(OUTPUT_PATH)
+    fig.savefig(save_path, bbox_inches='tight')
+    print('Figure saved in', save_path)
 
 
 if __name__ == '__main__':
+    print('\033[93mMake boxplot figures for the analysis of the Dice scores and Hausdorff distances\033[0m')
     for metric in METRIC_NAMES:
         for aggregated in [True, False]:
             main(metric, aggregated)

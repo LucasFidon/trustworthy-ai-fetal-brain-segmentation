@@ -1,0 +1,91 @@
+participant_id	Pathology	Gestational age	SRR quality rating	
+sub-001	Spina Bifida	27.9	2.33	
+sub-002	Spina Bifida	28.2	1.33	
+sub-003	Spina Bifida	27.4	2	
+sub-004	Spina Bifida	25.5	1.67	
+sub-005	Spina Bifida	22.6	1	
+sub-006	Spina Bifida	26.9	2.67	
+sub-007	Spina Bifida	22.8	1	
+sub-008	Spina Bifida	25.2	2	
+sub-009	Spina Bifida	29	1	
+sub-010	Spina Bifida	27.3	3	
+sub-011	Spina Bifida	27.6	2	
+sub-012	Spina Bifida	25.9	2	
+sub-013	Spina Bifida	27.5	3	
+sub-014	Spina Bifida	26.7	2	
+sub-015	Spina Bifida	23.7	1.67	
+sub-016	Spina Bifida	23.3	1.67	
+sub-017	Spina Bifida	22.8	1	
+sub-018	Spina Bifida	28.5	2	
+sub-019	Spina Bifida	29.2	2	
+sub-020	Spina Bifida	25.8	1	
+sub-021	Spina Bifida	26.1	1.33	
+sub-022	Spina Bifida	20	1.33	
+sub-023	Spina Bifida	23.7	1	
+sub-024	Spina Bifida	30.4	2	
+sub-025	Spina Bifida	24.2	1.67	
+sub-026	Neurotypical	27.8	2.33	
+sub-027	Neurotypical	26.5	3	
+sub-028	Neurotypical	31.1	3	
+sub-029	Neurotypical	32.5	1.67	
+sub-030	Neurotypical	33.4	2.33	
+sub-031	Neurotypical	31.4	2.33	
+sub-032	Neurotypical	32.3	2	
+sub-033	Neurotypical	30	3	
+sub-034	Neurotypical	28.7	3	
+sub-035	Neurotypical	32.8	2	
+sub-036	Neurotypical	22.7	2.33	
+sub-037	Neurotypical	23.4	2	
+sub-038	Neurotypical	26.9	2.33	
+sub-039	Neurotypical	24.3	2.67	
+sub-040	Neurotypical	27.3	2.33	
+sub-041	Neurotypical	34.8	3	
+sub-042	Pathological	23.6	3	Heterotopia
+sub-043	Pathological	22.9	3	Heterotopia
+sub-044	Neurotypical	27.9	3	
+sub-045	Neurotypical	24.7	3	
+sub-046	Neurotypical	23.9	3	
+sub-047	Pathological	28.1	3	High-flow dural sinus malformation; was originally labelled as Neurotypical by mistake
+sub-048	Pathological	27.9	3	Heterotopia
+sub-049	Pathological	31.1	3	Unilateral VM
+sub-050	Pathological	33.1	3	Moderate VM
+sub-051	Neurotypical	29.6	3	
+sub-052	Pathological	21.2	3	Aqueductal stenosis
+sub-053	Neurotypical	30.3	3	
+sub-054	Pathological	33.1	3	Unilateral moderate VM
+sub-055	Pathological	27.1	3	Cerebellar hemorrhage
+sub-056	Pathological	26.6	3	Unilateral moderate VM
+sub-057	Neurotypical	28.2	3	
+sub-058	Neurotypical	29.2	3	
+sub-059	Neurotypical	34.8	3	
+sub-060	Neurotypical	31.7	3	
+sub-061	Neurotypical	33	3	
+sub-062	Neurotypical	24.4	3	
+sub-063	Pathological	21.7	3	Interhemispheric cyst
+sub-064	Spina Bifida	27.8	3	SB postop with heterotopia
+sub-065	Pathological	20.9	3	VM; LF changed it to Pathological
+sub-066	Pathological	21.8	3	Moderate - severe VM; acqueductal stenosis?
+sub-067	Pathological	29	3	Unilateral moderate VM
+sub-068	Neurotypical	31.5	3	
+sub-069	Pathological	27.4	3	Unilateral moderate VM
+sub-070	Pathological	20.1	3	
+sub-071	Spina Bifida	22.4	2	SB
+sub-072	Neurotypical	25.9	3	
+sub-073	Pathological	27.2	3	Interhemispheric cyst
+sub-074	Pathological	23.3	3	Bilateral subependymal cysts, tempora lcysts, increased signal WM (CMV most likely)
+sub-075	Spina Bifida	29	3	SB postop
+sub-076	Neurotypical	23.2	3	
+sub-077	Spina Bifida	26.9	3	SB postop with heterotopia (query vermis abnormality?)
+sub-078	Spina Bifida	24	2	SB preop
+sub-079	Neurotypical	29.1	3	
+sub-080	Spina Bifida	26.9	3	SB postop
+sub-081	Spina Bifida	30.2	2	Testing data FeTA datat release 1
+sub-082	Spina Bifida	21.8	1	Testing data FeTA datat release 1
+sub-083	Spina Bifida	27.2	2.67	Testing data FeTA datat release 1
+sub-084	Spina Bifida	28.7	2	Testing data FeTA datat release 1
+sub-085	Spina Bifida	22.9	1.33	Testing data FeTA datat release 1
+sub-086	Spina Bifida	25.8	1.33	Testing data FeTA datat release 1
+sub-087	Spina Bifida	27.5	2.33	Testing data FeTA datat release 1
+sub-088	Neurotypical	21.2	2	Testing data FeTA datat release 1
+sub-089	Neurotypical	28.6	2	Testing data FeTA datat release 1
+sub-090	Neurotypical	32.1	2.33	Testing data FeTA datat release 1

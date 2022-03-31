@@ -2,7 +2,10 @@ import os
 import numpy as np
 
 
-REPO_PATH = '/workspace/trustworthy-ai-fetal-brain-segmentation'
+# PATHS OF FOLDERS IN THE REPO
+REPO_PATH = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+OUTPUT_PATH = os.path.join(REPO_PATH, 'output')
+REPO_DATA_PATH = os.path.join(REPO_PATH, 'data')
 
 
 # GENERAL EVALUATION OPTIONS
@@ -14,10 +17,7 @@ ALL_ROI = [
     'cortical_grey_matter', 'deep_grey_matter', 'brainstem', 'corpus_callosum'
 ]
 CONDITIONS = ['Neurotypical', 'Spina Bifida', 'Pathological']
-CENTERS = ['in', 'out']  # in- or -out of distribution
-
-# DEMPSTER
-# ATLAS_MARGIN = [2] * 9  # bg, wm, vent, cer, ext-csf, cgm, dgm, bs, cc (in voxels)
+CENTERS = ['in', 'out']  # in- or out-of-distribution
 
 
 # EVALUATION
@@ -38,8 +38,8 @@ MAX_HD = (144. / 2.) * IMG_RES  # distance from thr center to the border (57.6 m
 
 # REGISTRATION HYPER-PARAMETERS
 GRID_SPACING = 4  # in mm (default is 4 mm = 5 voxels x 0.8 mm.voxels**(-1))
-BE = 0.1  # NiftyReg default 0.001
-LE = 0.3  # NiftyReg default 0.01
+BE = 0.1
+LE = 0.3
 LP = 3  # default 3; we do only the lp first level of the pyramid
 DELTA_GA_CONTROL = 1
 DELTA_GA_SPINA_BIFIDA = 3
@@ -211,7 +211,7 @@ DATASET_LABELS = {
 
 
 # CSV
-INFO_DATA_TSV = os.path.join('/data', 'feta_2.1', 'participants.tsv')  # FeTA challenge data info
-INFO_DATA_TSV2 = os.path.join('/data', 'Fetal_SRR_and_Seg', 'iid_testing_trustworthyai21.tsv')
-INFO_DATA_TSV3 = os.path.join('/data', 'Fetal_SRR_and_Seg', 'ood_testing_trustworthyai21.tsv')
-INFO_TRAINING_DATA_TSV = os.path.join('/data', 'Fetal_SRR_and_Seg', 'training_trustworthyai21_noatlas.tsv')
+INFO_DATA_TSV = os.path.join(REPO_DATA_PATH, 'participants.tsv')  # FeTA challenge data info
+INFO_DATA_TSV2 = os.path.join(REPO_DATA_PATH, 'iid_testing_trustworthyai21.tsv')
+INFO_DATA_TSV3 = os.path.join(REPO_DATA_PATH, 'ood_testing_trustworthyai21.tsv')
+INFO_TRAINING_DATA_TSV = os.path.join(REPO_DATA_PATH, 'training_trustworthyai21_noatlas.tsv')

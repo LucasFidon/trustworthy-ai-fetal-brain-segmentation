@@ -4,15 +4,18 @@ import openpyxl
 from matplotlib import pyplot as plt
 import pandas as pd
 import seaborn as sns
-from create_ranking_files import DECODE_CSV
+import sys
+repo_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(repo_path)
+from scripts.create_scoring_files import DECODE_CSV
 from src.utils.utils import get_feta_info
 from src.utils.definitions import *
 
 RANKING_CSV = {
-    'Leuven': '/data/ranking_fetal_brain/ranking_MA.xlsx',
-    'Vienna': '/data/ranking_fetal_brain/ranking_Vienna.xlsx',
-    'Zurich_AJ': '/data/ranking_fetal_brain/aj_ranking.xlsx',
-    'Zurich_AB': '/data/ranking_fetal_brain/A_BINK_ranking.xlsx',
+    'Leuven': os.path.join(REPO_DATA_PATH, 'ranking_MA.xlsx'),
+    'Vienna': os.path.join(REPO_DATA_PATH, 'ranking_Vienna.xlsx'),
+    'Zurich_AJ': os.path.join(REPO_DATA_PATH, 'aj_ranking.xlsx'),
+    'Zurich_AB': os.path.join(REPO_DATA_PATH, 'A_BINK_ranking.xlsx'),
 }
 
 BOXPLOT_SIZE = [25, 10]  # Size of each subplot
@@ -158,8 +161,11 @@ def main(center='all'):
         save_name = 'scores_%s.pdf' % center
     else:
         save_name = 'scores.pdf'
-    fig.savefig(save_name, bbox_inches='tight')
-    print('Figure saved in', save_name)
+    save_path = os.path.join(OUTPUT_PATH, save_name)
+    if not os.path.exists(OUTPUT_PATH):
+        os.mkdir(OUTPUT_PATH)
+    fig.savefig(save_path, bbox_inches='tight')
+    print('Figure saved in', save_path)
 
 
 def main_aggregated(center='all'):
@@ -221,8 +227,11 @@ def main_aggregated(center='all'):
         save_name = 'scores_aggregated_%s.pdf' % center
     else:
         save_name = 'scores_aggregated.pdf'
-    fig.savefig(save_name, bbox_inches='tight')
-    print('Figure saved in', save_name)
+    save_path = os.path.join(OUTPUT_PATH, save_name)
+    if not os.path.exists(OUTPUT_PATH):
+        os.mkdir(OUTPUT_PATH)
+    fig.savefig(save_path, bbox_inches='tight')
+    print('Figure saved in', save_path)
 
 
 def main_aggregated_inter_rater_std():
@@ -275,8 +284,11 @@ def main_aggregated_inter_rater_std():
     fig.tight_layout()
     # Save the figure
     save_name = 'scores_aggregated_inter_rater_std.pdf'
-    fig.savefig(save_name, bbox_inches='tight')
-    print('Figure saved in', save_name)
+    save_path = os.path.join(OUTPUT_PATH, save_name)
+    if not os.path.exists(OUTPUT_PATH):
+        os.mkdir(OUTPUT_PATH)
+    fig.savefig(save_path, bbox_inches='tight')
+    print('Figure saved in', save_path)
 
 
 def main_scores_vs_quality():
@@ -326,11 +338,15 @@ def main_scores_vs_quality():
     fig.tight_layout()
     # Save the figure
     save_name = 'scores_aggregated_vs_srr_quality.pdf'
-    fig.savefig(save_name, bbox_inches='tight')
-    print('Figure saved in', save_name)
+    save_path = os.path.join(OUTPUT_PATH, save_name)
+    if not os.path.exists(OUTPUT_PATH):
+        os.mkdir(OUTPUT_PATH)
+    fig.savefig(save_path, bbox_inches='tight')
+    print('Figure saved in', save_path)
 
 
 if __name__ == '__main__':
+    print('\033[93mMake figures for the analysis of the expert scores\033[0m')
     main()
     main_aggregated()
     main_scores_vs_quality()

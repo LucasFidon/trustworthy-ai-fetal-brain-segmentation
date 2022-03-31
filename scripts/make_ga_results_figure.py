@@ -2,9 +2,11 @@ import os
 import pandas as pd
 from matplotlib import pyplot as plt
 import seaborn as sns
+import sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from src.utils.definitions import *
 
-CSV_RES = '/data/saved_res_fetal_trust21_v3/nnunet_task225/metrics.csv'
+CSV_RES = os.path.join(REPO_DATA_PATH, 'metrics.csv')
 USE_ABN = False
 PLOT_SIZE = {
     False: [14, 8],
@@ -44,8 +46,6 @@ def main(metric, aggregated=False):
     # Filter condition
     if not USE_ABN:
         df = df[df['Condition'] != 'Pathological']
-    # if aggregated:
-    #     df = df[df['ROI'] != 'corpus_callosum']
 
     # Filter GA
     df['GA'] = df['GA'].round(decimals=0)
@@ -135,11 +135,15 @@ def main(metric, aggregated=False):
         save_name = '%s_GA%s.pdf' % (metric, post)
     else:
         save_name = '%s_Control_and_SB_GA%s.pdf' % (metric, post)
-    fig.savefig(save_name, bbox_inches='tight')
-    print('Figure saved in', save_name)
+    save_path = os.path.join(OUTPUT_PATH, save_name)
+    if not os.path.exists(OUTPUT_PATH):
+        os.mkdir(OUTPUT_PATH)
+    fig.savefig(save_path, bbox_inches='tight')
+    print('Figure saved in', save_path)
 
 
 if __name__ == '__main__':
+    print('\033[93mMake figures Dice scores and Hausdorff distances vs Gestational Age\033[0m')
     for metric in METRIC_NAMES:
         for aggregated in [True, False]:
             main(metric, aggregated)

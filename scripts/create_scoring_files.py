@@ -1,14 +1,29 @@
+"""
+@brief  This script has been used to select the fetal brain MRIs used for
+        the trustworthiness scoring by experts.
+        The automatic segmentations are pseudonymised so that
+        the raters are blind to the segmentation method they score.
+        A csv decode.csv is generated to de-anonymized the segmentations.
+        The raters did no have access to this CSV.
+        A csv to be filled by the raters is also automatically generated.
+
+@author Lucas Fidon (lucas.fidon@kcl.ac.uk)
+"""
+
 import os
 import random
 import csv
 import nibabel as nib
+import sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from src.utils.utils import get_feta_info
 from src.utils.definitions import *
-from run_infer_eval import SAVE_FOLDER
+from run_infer_eval_all import SAVE_FOLDER
 
-SAVE_FOLDER_RANKING = '/data/ranking_fetal_brain'
+
+SAVE_FOLDER_RANKING = os.path.join(OUTPUT_PATH, 'trustworthiness_scores_fetal_brain')
 RANKING_CSV = os.path.join(SAVE_FOLDER_RANKING, 'ranking.csv')
-DECODE_CSV = os.path.join(SAVE_FOLDER_RANKING, 'decode.csv')
+DECODE_CSV = os.path.join(REPO_DATA_PATH, 'decode.csv')
 
 
 def main():
