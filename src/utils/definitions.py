@@ -59,23 +59,24 @@ BASE_FOLDER = os.path.join(DATA_FOLDER, 'Fetal_SRR_and_Seg')
 DATA_FOLDER_MICHAEL_GROUP = os.path.join(BASE_FOLDER, 'SRR_and_Seg_Michael_cases_group')
 DATA_FOLDER_NADA_GROUP = os.path.join(BASE_FOLDER, 'SRR_and_Seg_Nada_cases_group')
 
-NIFTYREG_PATH = os.path.join(WORKSPACE_FOLDER, 'niftyreg_stable', 'build', 'reg-apps')
+NIFTYREG_PATH = os.path.join(WORKSPACE_FOLDER, 'third-party', 'niftyreg', 'build', 'reg-apps')
 
 
 # ATLAS FOLDERS
 ATLAS_CONTROL_HARVARD = os.path.join(  # GA: 21 -> 37
-    DATA_FOLDER,
+    REPO_DATA_PATH,
     'fetal_brain_atlases',
-    'Gholipour2017_atlas_NiftyMIC_preprocessed_corrected',
+    'Neurotypical_Gholipour2017',
 )
 ATLAS_CONTROL_CHINESE = os.path.join(  # GA: 22 -> 35
-    DATA_FOLDER,
+    REPO_DATA_PATH,
     'fetal_brain_atlases',
-    'FBA_Chinese_main_preprocessed_corrected',
+    'Neurotypical_Wu2021',
 )
 ATLAS_SB = os.path.join(
-    DATA_FOLDER,
-    'spina_bifida_atlas',
+    REPO_DATA_PATH,
+    'fetal_brain_atlases',
+    'SpinaBifida_Fidon2021',
 )
 
 
@@ -192,13 +193,9 @@ DATASET_LABELS = {
     DATA_FOLDER_THOMAS_GROUP1: ['background'] + ALL_ROI,
     DATA_FOLDER_THOMAS_GROUP2: ['background'] + ALL_ROI,
     CORRECTED_ZURICH_DATA_DIR: ['background'] + ALL_ROI,
-        # ['background', 'white_matter', 'intra_axial_csf', 'cerebellum', 'extra_axial_csf', 'cortical_grey_matter', 'deep_grey_matter', 'brainstem'],
     EXCLUDED_ZURICH_DATA_DIR: ['background'] + ALL_ROI,
-        # ['background', 'white_matter', 'intra_axial_csf', 'cerebellum', 'extra_axial_csf', 'cortical_grey_matter', 'deep_grey_matter', 'brainstem'],
     ZURICH_TEST_DATA_DIR: ['background'] + ALL_ROI,
-        # ['background', 'white_matter', 'intra_axial_csf', 'cerebellum', 'extra_axial_csf', 'cortical_grey_matter', 'deep_grey_matter', 'brainstem'],
     FETA_IRTK_DIR: ['background'] + ALL_ROI,
-        # ['background', 'white_matter', 'intra_axial_csf', 'cerebellum', 'extra_axial_csf', 'cortical_grey_matter', 'deep_grey_matter', 'brainstem'],
     SB_FRED: ['background'] + ALL_ROI,
     SB_FRED2: ['background'] + ALL_ROI,
     CDH_LEUVEN_TESTINGSET: ['background'] + ALL_ROI,

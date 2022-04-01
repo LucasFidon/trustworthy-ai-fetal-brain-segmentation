@@ -62,7 +62,6 @@ def main(dataset_path_list):
 
     # Get all data info
     patid_sample = get_feta_info()
-    # patid_ga, patid_cond, patid_center, _ = get_feta_info()
 
     # Run the batch inference
     for dataset in dataset_path_list:
@@ -84,8 +83,6 @@ def main(dataset_path_list):
             if ga < MIN_GA:
                 print('Found ga=%d for %s. Change it to %d (min value accepted)' % (ga, patid, MIN_GA))
                 ga = MIN_GA
-            # cond = patid_cond[patid]
-            # center_val = patid_center[patid]
             cond = sample.cond
             center_val = sample.center
 

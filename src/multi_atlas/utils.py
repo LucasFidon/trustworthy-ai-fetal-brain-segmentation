@@ -44,12 +44,16 @@ def get_atlas_list(ga, condition, ga_delta_max=1):
             )
             if os.path.exists(template_path_notop):
                 atlas_list.append(template_path_notop)
+            else:
+                print('%s not found.' % template_path_notop)
             template_path_op = os.path.join(
                 ATLAS_SB,
                 'fetal_SB_atlas_GA%d_operated' % (ga + ga_shift),
             )
             if os.path.exists(template_path_op):
                 atlas_list.append(template_path_op)
+            else:
+                print('%s not found.' % template_path_op)
 
         elif condition == 'Neurotypical':
             template_harvard_path = os.path.join(
@@ -58,11 +62,15 @@ def get_atlas_list(ga, condition, ga_delta_max=1):
             )
             if os.path.exists(template_harvard_path):
                 atlas_list.append(template_harvard_path)
+            else:
+                print('%s not found.' % template_harvard_path)
             template_chinese_path = os.path.join(
                 ATLAS_CONTROL_CHINESE,
                 'Chinese%d_Study1' % (ga + ga_shift),
             )
             if os.path.exists(template_chinese_path):
                 atlas_list.append(template_chinese_path)
+            else:
+                print('%s not found.' % template_chinese_path)
 
     return atlas_list

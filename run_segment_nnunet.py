@@ -4,10 +4,14 @@ from src.utils.definitions import *
 from run_infer_eval_all import apply_bias_field_corrections
 
 parser = ArgumentParser()
-parser.add_argument('--input', type=str, help='Path to the 3D fetal brain MRI to be segmented')
-parser.add_argument('--mask', type=str, help='Path to the 3D brain mask of the fetal brain MRI to be segmented')
-parser.add_argument('--output_folder', type=str)
-parser.add_argument('--bfc', action='store_true', help='Allow to use intensity bias field correction')
+parser.add_argument('--input', type=str,
+                    help='Path to the 3D fetal brain MRI to be segmented')
+parser.add_argument('--mask', type=str,
+                    help='Path to the 3D brain mask of the fetal brain MRI to be segmented')
+parser.add_argument('--output_folder', type=str,
+                    help='Path of the folder where the output will be saved.')
+parser.add_argument('--bfc', action='store_true',
+                    help='Allow to use intensity bias field correction')
 
 
 def main(args):
