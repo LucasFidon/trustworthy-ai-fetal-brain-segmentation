@@ -1,0 +1,2 @@
+/usr/bin/ar qc lib_reg_f3d.a  CMakeFiles/_reg_f3d.dir/_reg_base.cpp.o CMakeFiles/_reg_f3d.dir/_reg_f3d.cpp.o CMakeFiles/_reg_f3d.dir/_reg_f3d2.cpp.o CMakeFiles/_reg_f3d.dir/_reg_f3d_sym.cpp.o
+/usr/bin/ranlib lib_reg_f3d.a

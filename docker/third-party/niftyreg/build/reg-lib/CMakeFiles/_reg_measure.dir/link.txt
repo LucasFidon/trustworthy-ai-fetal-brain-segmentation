@@ -1,0 +1,2 @@
+/usr/bin/ar qc lib_reg_measure.a  CMakeFiles/_reg_measure.dir/cpu/_reg_nmi.cpp.o CMakeFiles/_reg_measure.dir/cpu/_reg_ssd.cpp.o CMakeFiles/_reg_measure.dir/cpu/_reg_kld.cpp.o CMakeFiles/_reg_measure.dir/cpu/_reg_lncc.cpp.o CMakeFiles/_reg_measure.dir/cpu/_reg_dti.cpp.o CMakeFiles/_reg_measure.dir/cpu/_reg_mind.cpp.o
+/usr/bin/ranlib lib_reg_measure.a

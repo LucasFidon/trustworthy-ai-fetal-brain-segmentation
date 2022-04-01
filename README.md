@@ -16,6 +16,29 @@ However, it has been tested only for
 * Linux Ubuntu 20.04.3 LTS
 
 ## Installation Guide
+The installation is performed using docker.
+
+Install docker.
+
+Install nvidia-docker.
+
+Install the docker image using
+```bash
+sh build_docker.sh
+```
+This step takes a few minutes.
+
+Create a docker container for the docker image
+ ```twai:latest``` that was previously built, using the command
+ ```bash
+nvidia-docker run --ipc=host -it -v <repository-path>:/workspace/trustworthy-ai-fetal-brain-segmentation -v <data-path>:/data --name twai twai:latest
+```
+where ```<repository-path>``` has to be replaced by the path of the git repository on your system
+and ```<data-path>``` has to be replaced by the path of a folder containing the data to be used for segmentation.
+
+The installation has been tested for
+* Docker version 20.10.12, build e91ed57
+
 
 ## Demo
 

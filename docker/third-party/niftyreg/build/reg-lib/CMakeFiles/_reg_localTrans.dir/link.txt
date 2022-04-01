@@ -1,0 +1,2 @@
+/usr/bin/ar qc lib_reg_localTrans.a  CMakeFiles/_reg_localTrans.dir/cpu/_reg_splineBasis.cpp.o CMakeFiles/_reg_localTrans.dir/cpu/_reg_localTrans.cpp.o CMakeFiles/_reg_localTrans.dir/cpu/_reg_localTrans_regul.cpp.o CMakeFiles/_reg_localTrans.dir/cpu/_reg_localTrans_jac.cpp.o
+/usr/bin/ranlib lib_reg_localTrans.a

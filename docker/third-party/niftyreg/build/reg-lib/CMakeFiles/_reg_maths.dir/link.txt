@@ -1,0 +1,2 @@
+/usr/bin/ar qc lib_reg_maths.a  CMakeFiles/_reg_maths.dir/cpu/_reg_maths.cpp.o CMakeFiles/_reg_maths.dir/cpu/_reg_maths_eigen.cpp.o
+/usr/bin/ranlib lib_reg_maths.a

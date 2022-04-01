@@ -1,0 +1,2 @@
+/usr/bin/ar qc lib_reg_femTrans.a  CMakeFiles/_reg_femTrans.dir/cpu/_reg_femTrans.cpp.o
+/usr/bin/ranlib lib_reg_femTrans.a

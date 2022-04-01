@@ -1,0 +1,2 @@
+/usr/bin/ar qc lib_reg_globalTrans.a  CMakeFiles/_reg_globalTrans.dir/cpu/_reg_globalTrans.cpp.o
+/usr/bin/ranlib lib_reg_globalTrans.a

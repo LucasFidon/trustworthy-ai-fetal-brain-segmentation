@@ -1,0 +1,2 @@
+/usr/bin/ar qc lib_reg_ReadWriteImage.a  CMakeFiles/_reg_ReadWriteImage.dir/_reg_ReadWriteImage.cpp.o CMakeFiles/_reg_ReadWriteImage.dir/_reg_ReadWriteMatrix.cpp.o CMakeFiles/_reg_ReadWriteImage.dir/_reg_ReadWriteBinary.cpp.o CMakeFiles/_reg_ReadWriteImage.dir/_reg_stringFormat.cpp.o
+/usr/bin/ranlib lib_reg_ReadWriteImage.a
