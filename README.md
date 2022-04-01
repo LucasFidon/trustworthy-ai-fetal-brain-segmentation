@@ -18,7 +18,7 @@ However, it has been tested only for
 ## Installation Guide
 The installation is performed using docker.
 
-Install docker.
+Install docker (see https://docs.docker.com/get-docker/).
 
 Install nvidia-docker.
 
@@ -51,7 +51,7 @@ The installation has been tested for
 
 ## Demo
 Fetal brain 3D MRI from a subset of the testing dataset can be downloaded at
-https://zenodo.org/record/5148612#.YkWIjSTMI5l
+https://zenodo.org/record/6405632#.YkbWPCTMI5k
 
 Put the folder ```\sub-feta001``` of the first case in ```<data-path>``` on your system.
 
@@ -82,12 +82,12 @@ segmentation computed by the algorithm of the same name as the folder name.
 You can compute the automatic segmentations for the backbone AI, fallback, and trustworthy AI algorithms
  using the python script ```run_segment.py```.
 
-To learn more about the usage of hte script, please see
+To learn more about the usage of the script, please see
 ```bash
 python run_segment.py -h
 ```
  
-Please refer to the demo above for a detailed example.
+We refer to the demo above for a detailed example.
 
 #### Figures
 The figures shown in the paper can be reproduced by running
