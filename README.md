@@ -60,7 +60,7 @@ To learn more about the usage of the script, please see
 python run_segment.py -h
 ```
  
-We refer to the demo above for a detailed example.
+We refer to the demo below for a detailed example.
 
 ### Demonstration: example case
 Fetal brain 3D MRI from a subset of the testing dataset can be downloaded at
@@ -97,4 +97,11 @@ sh run_make_all_figures.sh
 After running this command, the figures will be in the folder ```\output```.
 
 ## How to cite
-tba
+If you find this research useful for your work, please cite
+* L. Fidon, M. Aertsen, F. Kofler, A. Bink, A. L. David, T. Deprest, D. Emam, F. Guffens, A. Jakab, G. Kasprian,
+ P. Kienast, A. Melbourne, B. Menze, N. Mufti, I. Pogledic, D. Prayer, M. Stuempflen, E. Van Elslander, S. Ourselin, 
+ J. Deprest, T. Vercauteren.
+ [A Dempster-Shafer approach to trustworthy AI with application to fetal brain MRI segmentation][twai]
+
+
+[twai]: https://arxiv.org/abs/2204.02779
