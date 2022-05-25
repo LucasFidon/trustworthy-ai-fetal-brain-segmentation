@@ -5617,27 +5617,27 @@ AutoUploadSubject00144_Study1,36.3,Neurotypical,in,trustworthy,corpus_callosum,8
 61194134_20160502,25.6,Spina Bifida,in,trustworthy,corpus_callosum,68.84446611409068,1.1313708498984762
 60521227_EnlargedSubarach_Study1,25.57,Pathological,in,cnn,white_matter,96.58704631017216,0.8
 60521227_EnlargedSubarach_Study1,25.57,Pathological,in,cnn,intra_axial_csf,94.7039697264728,0.8
-60521227_EnlargedSubarach_Study1,25.57,Pathological,in,cnn,cerebellum,96.88599348534201,0.8
-60521227_EnlargedSubarach_Study1,25.57,Pathological,in,cnn,extra_axial_csf,93.28446751468826,0.8
-60521227_EnlargedSubarach_Study1,25.57,Pathological,in,cnn,cortical_grey_matter,91.0494147725003,4.0
+60521227_EnlargedSubarach_Study1,25.57,Pathological,in,cnn,cerebellum,96.89271057260113,0.8
+60521227_EnlargedSubarach_Study1,25.57,Pathological,in,cnn,extra_axial_csf,93.71995772775308,0.8
+60521227_EnlargedSubarach_Study1,25.57,Pathological,in,cnn,cortical_grey_matter,91.04651720225635,4.0
 60521227_EnlargedSubarach_Study1,25.57,Pathological,in,cnn,deep_grey_matter,87.42203029679897,4.0
-60521227_EnlargedSubarach_Study1,25.57,Pathological,in,cnn,brainstem,93.23608339640818,1.1313708498984762
+60521227_EnlargedSubarach_Study1,25.57,Pathological,in,cnn,brainstem,92.83323085331693,1.1313708498984762
 60521227_EnlargedSubarach_Study1,25.57,Pathological,in,cnn,corpus_callosum,84.03530895334174,1.9595917942265426
 60521227_EnlargedSubarach_Study1,25.57,Pathological,in,atlas,white_matter,92.08496055527046,1.788854381999832
 60521227_EnlargedSubarach_Study1,25.57,Pathological,in,atlas,intra_axial_csf,90.32184302292346,1.1313708498984762
-60521227_EnlargedSubarach_Study1,25.57,Pathological,in,atlas,cerebellum,88.73615374349393,1.6
-60521227_EnlargedSubarach_Study1,25.57,Pathological,in,atlas,extra_axial_csf,90.70078289096811,1.1313708498984762
-60521227_EnlargedSubarach_Study1,25.57,Pathological,in,atlas,cortical_grey_matter,83.31412563607029,0.8
+60521227_EnlargedSubarach_Study1,25.57,Pathological,in,atlas,cerebellum,88.7435777673984,1.6
+60521227_EnlargedSubarach_Study1,25.57,Pathological,in,atlas,extra_axial_csf,90.98244823560735,1.1313708498984762
+60521227_EnlargedSubarach_Study1,25.57,Pathological,in,atlas,cortical_grey_matter,83.31752293984663,0.8
 60521227_EnlargedSubarach_Study1,25.57,Pathological,in,atlas,deep_grey_matter,84.3786438641744,1.9595917942265426
-60521227_EnlargedSubarach_Study1,25.57,Pathological,in,atlas,brainstem,83.14257453723329,2.4000000000000004
+60521227_EnlargedSubarach_Study1,25.57,Pathological,in,atlas,brainstem,83.75648758591669,2.4000000000000004
 60521227_EnlargedSubarach_Study1,25.57,Pathological,in,atlas,corpus_callosum,74.04616109279321,1.1313708498984762
 60521227_EnlargedSubarach_Study1,25.57,Pathological,in,trustworthy,white_matter,96.54646475650942,0.8
 60521227_EnlargedSubarach_Study1,25.57,Pathological,in,trustworthy,intra_axial_csf,94.43972991919713,0.8
-60521227_EnlargedSubarach_Study1,25.57,Pathological,in,trustworthy,cerebellum,96.17746088334323,0.8
-60521227_EnlargedSubarach_Study1,25.57,Pathological,in,trustworthy,extra_axial_csf,93.51843453811618,0.8
-60521227_EnlargedSubarach_Study1,25.57,Pathological,in,trustworthy,cortical_grey_matter,93.22644301924026,0.8
+60521227_EnlargedSubarach_Study1,25.57,Pathological,in,trustworthy,cerebellum,96.17111169791391,0.8
+60521227_EnlargedSubarach_Study1,25.57,Pathological,in,trustworthy,extra_axial_csf,93.9407114624506,0.8
+60521227_EnlargedSubarach_Study1,25.57,Pathological,in,trustworthy,cortical_grey_matter,93.22358629422841,0.8
 60521227_EnlargedSubarach_Study1,25.57,Pathological,in,trustworthy,deep_grey_matter,90.59430428944951,1.1313708498984762
-60521227_EnlargedSubarach_Study1,25.57,Pathological,in,trustworthy,brainstem,93.32687249065485,1.1313708498984762
+60521227_EnlargedSubarach_Study1,25.57,Pathological,in,trustworthy,brainstem,93.47079037800687,1.1313708498984762
 60521227_EnlargedSubarach_Study1,25.57,Pathological,in,trustworthy,corpus_callosum,84.19200804222167,1.9595917942265426
 Anon_71807895_20170517,31.43,Pathological,in,cnn,white_matter,92.26044902547027,1.788854381999832
 Anon_71807895_20170517,31.43,Pathological,in,cnn,intra_axial_csf,80.53972602739726,6.835202996254026
@@ -5663,30 +5663,30 @@ Anon_71807895_20170517,31.43,Pathological,in,trustworthy,cortical_grey_matter,84
 Anon_71807895_20170517,31.43,Pathological,in,trustworthy,deep_grey_matter,87.5247300887457,2.4000000000000004
 Anon_71807895_20170517,31.43,Pathological,in,trustworthy,brainstem,90.22891566265059,1.6
 Anon_71807895_20170517,31.43,Pathological,in,trustworthy,corpus_callosum,77.33898754306917,1.1313708498984762
-60521227_EnlargedSubarach_Study3,30.71,Pathological,in,cnn,white_matter,95.28375233179412,0.8
-60521227_EnlargedSubarach_Study3,30.71,Pathological,in,cnn,intra_axial_csf,95.37631215380445,0.8
-60521227_EnlargedSubarach_Study3,30.71,Pathological,in,cnn,cerebellum,95.38039826932896,0.8
-60521227_EnlargedSubarach_Study3,30.71,Pathological,in,cnn,extra_axial_csf,93.32600258157066,1.1313708498984762
-60521227_EnlargedSubarach_Study3,30.71,Pathological,in,cnn,cortical_grey_matter,88.05072611986091,3.298484500494129
-60521227_EnlargedSubarach_Study3,30.71,Pathological,in,cnn,deep_grey_matter,90.1359263190331,1.385640646055102
-60521227_EnlargedSubarach_Study3,30.71,Pathological,in,cnn,brainstem,89.71472761642893,3.298484500494129
-60521227_EnlargedSubarach_Study3,30.71,Pathological,in,cnn,corpus_callosum,77.4622892635315,2.9933259094191533
-60521227_EnlargedSubarach_Study3,30.71,Pathological,in,atlas,white_matter,85.98465342035787,3.6660605559646724
-60521227_EnlargedSubarach_Study3,30.71,Pathological,in,atlas,intra_axial_csf,91.89290495314592,0.8
-60521227_EnlargedSubarach_Study3,30.71,Pathological,in,atlas,cerebellum,87.1643379906853,1.9595917942265426
-60521227_EnlargedSubarach_Study3,30.71,Pathological,in,atlas,extra_axial_csf,88.27490955502769,2.4000000000000004
-60521227_EnlargedSubarach_Study3,30.71,Pathological,in,atlas,cortical_grey_matter,74.1220051331269,1.9595917942265426
-60521227_EnlargedSubarach_Study3,30.71,Pathological,in,atlas,deep_grey_matter,85.89971958166522,6.299206299209449
-60521227_EnlargedSubarach_Study3,30.71,Pathological,in,atlas,brainstem,81.86440677966101,4.079215610874228
-60521227_EnlargedSubarach_Study3,30.71,Pathological,in,atlas,corpus_callosum,71.49294082307,2.4000000000000004
-60521227_EnlargedSubarach_Study3,30.71,Pathological,in,trustworthy,white_matter,92.82866886598138,1.788854381999832
-60521227_EnlargedSubarach_Study3,30.71,Pathological,in,trustworthy,intra_axial_csf,94.96464593948217,0.8
-60521227_EnlargedSubarach_Study3,30.71,Pathological,in,trustworthy,cerebellum,94.67295290738633,0.8
-60521227_EnlargedSubarach_Study3,30.71,Pathological,in,trustworthy,extra_axial_csf,93.06738509382014,1.1313708498984762
-60521227_EnlargedSubarach_Study3,30.71,Pathological,in,trustworthy,cortical_grey_matter,86.45262735111392,1.1313708498984762
-60521227_EnlargedSubarach_Study3,30.71,Pathological,in,trustworthy,deep_grey_matter,91.45006122092006,4.525483399593905
-60521227_EnlargedSubarach_Study3,30.71,Pathological,in,trustworthy,brainstem,90.33523693273465,4.308131845707604
-60521227_EnlargedSubarach_Study3,30.71,Pathological,in,trustworthy,corpus_callosum,77.48924172725924,2.8844410203711917
+60521227_EnlargedSubarach_Study3,30.71,Pathological,in,cnn,white_matter,95.27340451949343,0.8
+60521227_EnlargedSubarach_Study3,30.71,Pathological,in,cnn,intra_axial_csf,95.39251347934886,0.8
+60521227_EnlargedSubarach_Study3,30.71,Pathological,in,cnn,cerebellum,95.87121617285271,0.8
+60521227_EnlargedSubarach_Study3,30.71,Pathological,in,cnn,extra_axial_csf,93.34331389100934,1.1313708498984762
+60521227_EnlargedSubarach_Study3,30.71,Pathological,in,cnn,cortical_grey_matter,88.09080530788776,3.298484500494129
+60521227_EnlargedSubarach_Study3,30.71,Pathological,in,cnn,deep_grey_matter,90.17664208540559,1.385640646055102
+60521227_EnlargedSubarach_Study3,30.71,Pathological,in,cnn,brainstem,90.15588665920248,2.529822128134704
+60521227_EnlargedSubarach_Study3,30.71,Pathological,in,cnn,corpus_callosum,77.42793791574279,2.9933259094191533
+60521227_EnlargedSubarach_Study3,30.71,Pathological,in,atlas,white_matter,86.01093965485109,3.6660605559646724
+60521227_EnlargedSubarach_Study3,30.71,Pathological,in,atlas,intra_axial_csf,91.97213046792463,0.8
+60521227_EnlargedSubarach_Study3,30.71,Pathological,in,atlas,cerebellum,87.57944915254238,1.9595917942265426
+60521227_EnlargedSubarach_Study3,30.71,Pathological,in,atlas,extra_axial_csf,88.29615833511923,2.4000000000000004
+60521227_EnlargedSubarach_Study3,30.71,Pathological,in,atlas,cortical_grey_matter,74.21137222535945,1.788854381999832
+60521227_EnlargedSubarach_Study3,30.71,Pathological,in,atlas,deep_grey_matter,86.05756488859834,5.122499389946279
+60521227_EnlargedSubarach_Study3,30.71,Pathological,in,atlas,brainstem,82.99204149154967,4.079215610874228
+60521227_EnlargedSubarach_Study3,30.71,Pathological,in,atlas,corpus_callosum,71.46074163038583,2.4000000000000004
+60521227_EnlargedSubarach_Study3,30.71,Pathological,in,trustworthy,white_matter,92.85071333165567,1.788854381999832
+60521227_EnlargedSubarach_Study3,30.71,Pathological,in,trustworthy,intra_axial_csf,94.98915767467831,0.8
+60521227_EnlargedSubarach_Study3,30.71,Pathological,in,trustworthy,cerebellum,95.14437464614058,0.8
+60521227_EnlargedSubarach_Study3,30.71,Pathological,in,trustworthy,extra_axial_csf,93.0804710979708,1.1313708498984762
+60521227_EnlargedSubarach_Study3,30.71,Pathological,in,trustworthy,cortical_grey_matter,86.5257138461144,1.1313708498984762
+60521227_EnlargedSubarach_Study3,30.71,Pathological,in,trustworthy,deep_grey_matter,91.61321978060492,3.4871191548325395
+60521227_EnlargedSubarach_Study3,30.71,Pathological,in,trustworthy,brainstem,91.34367489622022,3.9191835884530852
+60521227_EnlargedSubarach_Study3,30.71,Pathological,in,trustworthy,corpus_callosum,77.45476119845743,2.8844410203711917
 Anon_73502031_20190805,28.86,Pathological,in,cnn,white_matter,93.66043268493104,1.1313708498984762
 Anon_73502031_20190805,28.86,Pathological,in,cnn,intra_axial_csf,86.52756074394092,1.788854381999832
 Anon_73502031_20190805,28.86,Pathological,in,cnn,cerebellum,96.48543106037849,0.8
@@ -5711,30 +5711,30 @@ Anon_73502031_20190805,28.86,Pathological,in,trustworthy,cortical_grey_matter,86
 Anon_73502031_20190805,28.86,Pathological,in,trustworthy,deep_grey_matter,87.51607999064437,1.9595917942265426
 Anon_73502031_20190805,28.86,Pathological,in,trustworthy,brainstem,91.99674443841562,1.6
 Anon_73502031_20190805,28.86,Pathological,in,trustworthy,corpus_callosum,47.53157290470723,3.298484500494129
-60521227_EnlargedSubarach_Study2,28.57,Pathological,in,cnn,white_matter,95.85444706154797,0.8
+60521227_EnlargedSubarach_Study2,28.57,Pathological,in,cnn,white_matter,95.85558036190191,0.8
 60521227_EnlargedSubarach_Study2,28.57,Pathological,in,cnn,intra_axial_csf,95.77320342832027,0.8
-60521227_EnlargedSubarach_Study2,28.57,Pathological,in,cnn,cerebellum,95.83317535545024,0.8
-60521227_EnlargedSubarach_Study2,28.57,Pathological,in,cnn,extra_axial_csf,92.87131223206043,1.1313708498984762
-60521227_EnlargedSubarach_Study2,28.57,Pathological,in,cnn,cortical_grey_matter,89.43296661628477,3.6660605559646724
-60521227_EnlargedSubarach_Study2,28.57,Pathological,in,cnn,deep_grey_matter,86.43587476478723,1.788854381999832
-60521227_EnlargedSubarach_Study2,28.57,Pathological,in,cnn,brainstem,89.80091883614088,3.7523326078587442
-60521227_EnlargedSubarach_Study2,28.57,Pathological,in,cnn,corpus_callosum,77.9398839866409,2.8844410203711917
-60521227_EnlargedSubarach_Study2,28.57,Pathological,in,atlas,white_matter,88.67094754236182,3.298484500494129
+60521227_EnlargedSubarach_Study2,28.57,Pathological,in,cnn,cerebellum,96.79043896572459,0.8
+60521227_EnlargedSubarach_Study2,28.57,Pathological,in,cnn,extra_axial_csf,93.05337456664914,1.1313708498984762
+60521227_EnlargedSubarach_Study2,28.57,Pathological,in,cnn,cortical_grey_matter,89.44289092163399,3.6660605559646724
+60521227_EnlargedSubarach_Study2,28.57,Pathological,in,cnn,deep_grey_matter,86.61496122091569,3.6660605559646724
+60521227_EnlargedSubarach_Study2,28.57,Pathological,in,cnn,brainstem,91.23695360132272,1.6
+60521227_EnlargedSubarach_Study2,28.57,Pathological,in,cnn,corpus_callosum,77.82060266292922,2.8844410203711917
+60521227_EnlargedSubarach_Study2,28.57,Pathological,in,atlas,white_matter,88.69866090186999,3.298484500494129
 60521227_EnlargedSubarach_Study2,28.57,Pathological,in,atlas,intra_axial_csf,92.78056825849013,0.8
-60521227_EnlargedSubarach_Study2,28.57,Pathological,in,atlas,cerebellum,89.16787874148358,1.6
-60521227_EnlargedSubarach_Study2,28.57,Pathological,in,atlas,extra_axial_csf,88.2240407319397,2.4000000000000004
-60521227_EnlargedSubarach_Study2,28.57,Pathological,in,atlas,cortical_grey_matter,78.70167638849426,1.6
-60521227_EnlargedSubarach_Study2,28.57,Pathological,in,atlas,deep_grey_matter,86.00227682383075,3.3941125496954285
-60521227_EnlargedSubarach_Study2,28.57,Pathological,in,atlas,brainstem,81.41063318193962,4.866210024238576
-60521227_EnlargedSubarach_Study2,28.57,Pathological,in,atlas,corpus_callosum,73.41994382022472,1.788854381999832
-60521227_EnlargedSubarach_Study2,28.57,Pathological,in,trustworthy,white_matter,94.17562082139446,1.385640646055102
+60521227_EnlargedSubarach_Study2,28.57,Pathological,in,atlas,cerebellum,89.55574945938768,1.385640646055102
+60521227_EnlargedSubarach_Study2,28.57,Pathological,in,atlas,extra_axial_csf,88.41287383282963,2.4000000000000004
+60521227_EnlargedSubarach_Study2,28.57,Pathological,in,atlas,cortical_grey_matter,78.70819661171804,1.6
+60521227_EnlargedSubarach_Study2,28.57,Pathological,in,atlas,deep_grey_matter,86.2928941982771,2.4000000000000004
+60521227_EnlargedSubarach_Study2,28.57,Pathological,in,atlas,brainstem,82.87244980789004,3.298484500494129
+60521227_EnlargedSubarach_Study2,28.57,Pathological,in,atlas,corpus_callosum,73.1758530183727,1.788854381999832
+60521227_EnlargedSubarach_Study2,28.57,Pathological,in,trustworthy,white_matter,94.1893561033242,1.385640646055102
 60521227_EnlargedSubarach_Study2,28.57,Pathological,in,trustworthy,intra_axial_csf,95.62493566081855,0.8
-60521227_EnlargedSubarach_Study2,28.57,Pathological,in,trustworthy,cerebellum,95.31148169446043,0.8
-60521227_EnlargedSubarach_Study2,28.57,Pathological,in,trustworthy,extra_axial_csf,92.4384702560733,1.1313708498984762
-60521227_EnlargedSubarach_Study2,28.57,Pathological,in,trustworthy,cortical_grey_matter,88.90800504081969,1.1313708498984762
-60521227_EnlargedSubarach_Study2,28.57,Pathological,in,trustworthy,deep_grey_matter,89.86431065594901,1.9595917942265426
-60521227_EnlargedSubarach_Study2,28.57,Pathological,in,trustworthy,brainstem,90.54382068894283,4.308131845707604
-60521227_EnlargedSubarach_Study2,28.57,Pathological,in,trustworthy,corpus_callosum,78.04706708816298,2.8844410203711917
+60521227_EnlargedSubarach_Study2,28.57,Pathological,in,trustworthy,cerebellum,96.24591534311118,0.8
+60521227_EnlargedSubarach_Study2,28.57,Pathological,in,trustworthy,extra_axial_csf,92.61713060184978,1.1313708498984762
+60521227_EnlargedSubarach_Study2,28.57,Pathological,in,trustworthy,cortical_grey_matter,88.91287434663978,1.1313708498984762
+60521227_EnlargedSubarach_Study2,28.57,Pathological,in,trustworthy,deep_grey_matter,90.16435843777188,1.385640646055102
+60521227_EnlargedSubarach_Study2,28.57,Pathological,in,trustworthy,brainstem,92.08971610811942,1.6
+60521227_EnlargedSubarach_Study2,28.57,Pathological,in,trustworthy,corpus_callosum,77.89252581830912,2.8844410203711917
 Anon_73502031_20190729,27.86,Pathological,in,cnn,white_matter,94.94708623618709,0.8
 Anon_73502031_20190729,27.86,Pathological,in,cnn,intra_axial_csf,88.91074335322843,1.1313708498984762
 Anon_73502031_20190729,27.86,Pathological,in,cnn,cerebellum,97.14963146229576,0.8
@@ -7223,102 +7223,102 @@ sub-011,27.6,Spina Bifida,out,trustworthy,cortical_grey_matter,72.13763324177377
 sub-011,27.6,Spina Bifida,out,trustworthy,deep_grey_matter,75.94054095471611,3.298484500494129
 sub-011,27.6,Spina Bifida,out,trustworthy,brainstem,68.25852370565951,4.381780460041329
 sub-011,27.6,Spina Bifida,out,trustworthy,corpus_callosum,74.00094029149035,0.8
-sub-008,25.2,Spina Bifida,out,cnn,white_matter,76.29005409904286,4.525483399593905
-sub-008,25.2,Spina Bifida,out,cnn,intra_axial_csf,91.01297013349219,0.8
+sub-008,25.2,Spina Bifida,out,cnn,white_matter,76.21314692460433,4.595650117230424
+sub-008,25.2,Spina Bifida,out,cnn,intra_axial_csf,92.09692150647398,0.8
 sub-008,25.2,Spina Bifida,out,cnn,cerebellum,0.0,57.6
-sub-008,25.2,Spina Bifida,out,cnn,extra_axial_csf,6.903239709790963,34.40930106817051
-sub-008,25.2,Spina Bifida,out,cnn,cortical_grey_matter,24.197210509244243,3.3941125496954285
-sub-008,25.2,Spina Bifida,out,cnn,deep_grey_matter,54.4507082287176,5.366563145999495
+sub-008,25.2,Spina Bifida,out,cnn,extra_axial_csf,7.332617257429288,34.29752177636163
+sub-008,25.2,Spina Bifida,out,cnn,cortical_grey_matter,23.52831811104139,3.298484500494129
+sub-008,25.2,Spina Bifida,out,cnn,deep_grey_matter,55.43651912414247,5.366563145999496
 sub-008,25.2,Spina Bifida,out,cnn,brainstem,0.0,57.6
-sub-008,25.2,Spina Bifida,out,cnn,corpus_callosum,0.0,57.6
-sub-008,25.2,Spina Bifida,out,atlas,white_matter,80.63775594588336,2.4000000000000004
-sub-008,25.2,Spina Bifida,out,atlas,intra_axial_csf,87.13317129333504,1.385640646055102
+sub-008,25.2,Spina Bifida,out,cnn,corpus_callosum,59.67617579028527,1.788854381999832
+sub-008,25.2,Spina Bifida,out,atlas,white_matter,80.76368061605166,2.4000000000000004
+sub-008,25.2,Spina Bifida,out,atlas,intra_axial_csf,87.96343321482986,1.385640646055102
 sub-008,25.2,Spina Bifida,out,atlas,cerebellum,58.27073206657829,3.298484500494129
-sub-008,25.2,Spina Bifida,out,atlas,extra_axial_csf,19.408711351839315,33.004242151578026
-sub-008,25.2,Spina Bifida,out,atlas,cortical_grey_matter,34.73566262605684,2.65329983228432
-sub-008,25.2,Spina Bifida,out,atlas,deep_grey_matter,73.55090112031174,2.65329983228432
-sub-008,25.2,Spina Bifida,out,atlas,brainstem,59.12379421221865,3.2
-sub-008,25.2,Spina Bifida,out,atlas,corpus_callosum,0.0,57.6
-sub-008,25.2,Spina Bifida,out,trustworthy,white_matter,79.96849665276936,2.65329983228432
-sub-008,25.2,Spina Bifida,out,trustworthy,intra_axial_csf,88.6530696759499,1.1313708498984762
+sub-008,25.2,Spina Bifida,out,atlas,extra_axial_csf,20.47679545624393,32.994545003682056
+sub-008,25.2,Spina Bifida,out,atlas,cortical_grey_matter,34.2864443592692,2.529822128134704
+sub-008,25.2,Spina Bifida,out,atlas,deep_grey_matter,73.87641581684066,2.65329983228432
+sub-008,25.2,Spina Bifida,out,atlas,brainstem,60.368482947863576,3.2
+sub-008,25.2,Spina Bifida,out,atlas,corpus_callosum,59.72674040338322,1.6
+sub-008,25.2,Spina Bifida,out,trustworthy,white_matter,80.1030118400804,2.65329983228432
+sub-008,25.2,Spina Bifida,out,trustworthy,intra_axial_csf,89.75366674372609,0.8
 sub-008,25.2,Spina Bifida,out,trustworthy,cerebellum,46.58846852800264,3.9191835884530852
-sub-008,25.2,Spina Bifida,out,trustworthy,extra_axial_csf,10.5636271569353,34.1853769907544
-sub-008,25.2,Spina Bifida,out,trustworthy,cortical_grey_matter,24.613904501493746,3.298484500494129
-sub-008,25.2,Spina Bifida,out,trustworthy,deep_grey_matter,66.89309819290224,3.577708763999664
-sub-008,25.2,Spina Bifida,out,trustworthy,brainstem,54.025583145221965,2.65329983228432
-sub-008,25.2,Spina Bifida,out,trustworthy,corpus_callosum,0.0,57.6
-sub-021,26.1,Spina Bifida,out,cnn,white_matter,82.11886735469626,4.664761515876241
-sub-021,26.1,Spina Bifida,out,cnn,intra_axial_csf,88.98157186381519,1.6
+sub-008,25.2,Spina Bifida,out,trustworthy,extra_axial_csf,11.187453903186988,34.10102637751539
+sub-008,25.2,Spina Bifida,out,trustworthy,cortical_grey_matter,23.92988695541725,3.298484500494129
+sub-008,25.2,Spina Bifida,out,trustworthy,deep_grey_matter,67.5857896101651,3.577708763999664
+sub-008,25.2,Spina Bifida,out,trustworthy,brainstem,55.33673717481157,2.529822128134704
+sub-008,25.2,Spina Bifida,out,trustworthy,corpus_callosum,58.75,1.788854381999832
+sub-021,26.1,Spina Bifida,out,cnn,white_matter,82.1412191460974,4.664761515876241
+sub-021,26.1,Spina Bifida,out,cnn,intra_axial_csf,89.16907813145927,1.6
 sub-021,26.1,Spina Bifida,out,cnn,cerebellum,72.64728385615913,22.58495074158897
-sub-021,26.1,Spina Bifida,out,cnn,extra_axial_csf,69.37849308736396,3.298484500494129
-sub-021,26.1,Spina Bifida,out,cnn,cortical_grey_matter,38.57828258102419,4.931531202375181
-sub-021,26.1,Spina Bifida,out,cnn,deep_grey_matter,79.27575042967345,2.8844410203711917
-sub-021,26.1,Spina Bifida,out,cnn,brainstem,65.92461421705033,31.08697476436072
-sub-021,26.1,Spina Bifida,out,cnn,corpus_callosum,54.3640897755611,1.788854381999832
-sub-021,26.1,Spina Bifida,out,atlas,white_matter,77.8250718019712,4.664761515876241
-sub-021,26.1,Spina Bifida,out,atlas,intra_axial_csf,86.1271676300578,1.6
+sub-021,26.1,Spina Bifida,out,cnn,extra_axial_csf,69.58528121837197,3.298484500494129
+sub-021,26.1,Spina Bifida,out,cnn,cortical_grey_matter,38.88488501605189,4.931531202375181
+sub-021,26.1,Spina Bifida,out,cnn,deep_grey_matter,79.26609905264421,2.9933259094191533
+sub-021,26.1,Spina Bifida,out,cnn,brainstem,65.82278481012658,31.08697476436072
+sub-021,26.1,Spina Bifida,out,cnn,corpus_callosum,56.74314493564634,1.788854381999832
+sub-021,26.1,Spina Bifida,out,atlas,white_matter,77.83097397292855,4.664761515876241
+sub-021,26.1,Spina Bifida,out,atlas,intra_axial_csf,86.30835198619239,1.6
 sub-021,26.1,Spina Bifida,out,atlas,cerebellum,78.65028119141846,2.8844410203711917
-sub-021,26.1,Spina Bifida,out,atlas,extra_axial_csf,68.92904243314163,2.8844410203711917
-sub-021,26.1,Spina Bifida,out,atlas,cortical_grey_matter,43.231857318573184,4.079215610874228
-sub-021,26.1,Spina Bifida,out,atlas,deep_grey_matter,78.80962942054114,3.577708763999664
-sub-021,26.1,Spina Bifida,out,atlas,brainstem,80.7597242097047,1.6
-sub-021,26.1,Spina Bifida,out,atlas,corpus_callosum,56.91788526434196,1.6
-sub-021,26.1,Spina Bifida,out,trustworthy,white_matter,82.4088315424228,4.079215610874228
-sub-021,26.1,Spina Bifida,out,trustworthy,intra_axial_csf,89.22616133398613,1.1313708498984762
+sub-021,26.1,Spina Bifida,out,atlas,extra_axial_csf,69.14786881889226,2.8844410203711917
+sub-021,26.1,Spina Bifida,out,atlas,cortical_grey_matter,43.34090663204587,4.079215610874228
+sub-021,26.1,Spina Bifida,out,atlas,deep_grey_matter,78.80792031294108,4.0
+sub-021,26.1,Spina Bifida,out,atlas,brainstem,80.69261814867855,1.6
+sub-021,26.1,Spina Bifida,out,atlas,corpus_callosum,59.051504334523194,1.6
+sub-021,26.1,Spina Bifida,out,trustworthy,white_matter,82.43163010639695,4.079215610874228
+sub-021,26.1,Spina Bifida,out,trustworthy,intra_axial_csf,89.41406474613306,1.1313708498984762
 sub-021,26.1,Spina Bifida,out,trustworthy,cerebellum,81.41515614763048,1.788854381999832
-sub-021,26.1,Spina Bifida,out,trustworthy,extra_axial_csf,73.02844584946793,2.9933259094191533
-sub-021,26.1,Spina Bifida,out,trustworthy,cortical_grey_matter,40.66868424845079,4.595650117230424
-sub-021,26.1,Spina Bifida,out,trustworthy,deep_grey_matter,79.84990316333118,2.65329983228432
-sub-021,26.1,Spina Bifida,out,trustworthy,brainstem,79.49088805322533,2.771281292110204
-sub-021,26.1,Spina Bifida,out,trustworthy,corpus_callosum,53.61334156886968,1.788854381999832
-sub-004,25.5,Spina Bifida,out,cnn,white_matter,76.19775414464327,4.156921938165306
+sub-021,26.1,Spina Bifida,out,trustworthy,extra_axial_csf,73.12554541380692,2.9933259094191533
+sub-021,26.1,Spina Bifida,out,trustworthy,cortical_grey_matter,41.05371392159418,4.595650117230424
+sub-021,26.1,Spina Bifida,out,trustworthy,deep_grey_matter,79.84020660156565,2.8844410203711917
+sub-021,26.1,Spina Bifida,out,trustworthy,brainstem,79.4151708164447,2.771281292110204
+sub-021,26.1,Spina Bifida,out,trustworthy,corpus_callosum,56.0488346281909,1.788854381999832
+sub-004,25.5,Spina Bifida,out,cnn,white_matter,76.16932892073795,4.308131845707604
 sub-004,25.5,Spina Bifida,out,cnn,intra_axial_csf,91.33752244165171,0.8
 sub-004,25.5,Spina Bifida,out,cnn,cerebellum,0.9140008309098464,11.78473589012499
-sub-004,25.5,Spina Bifida,out,cnn,extra_axial_csf,3.8841319001639647,25.17141235608364
-sub-004,25.5,Spina Bifida,out,cnn,cortical_grey_matter,23.189970810062935,3.577708763999664
-sub-004,25.5,Spina Bifida,out,cnn,deep_grey_matter,58.39548844824449,4.931531202375181
-sub-004,25.5,Spina Bifida,out,cnn,brainstem,0.0,21.77705214210592
-sub-004,25.5,Spina Bifida,out,cnn,corpus_callosum,57.97807551766139,0.8
-sub-004,25.5,Spina Bifida,out,atlas,white_matter,83.96476762115266,2.2627416997969525
+sub-004,25.5,Spina Bifida,out,cnn,extra_axial_csf,3.8698393032831686,25.17141235608364
+sub-004,25.5,Spina Bifida,out,cnn,cortical_grey_matter,21.97089879398871,3.6660605559646724
+sub-004,25.5,Spina Bifida,out,cnn,deep_grey_matter,58.41543700340522,4.931531202375181
+sub-004,25.5,Spina Bifida,out,cnn,brainstem,0.0,22.24230203913255
+sub-004,25.5,Spina Bifida,out,cnn,corpus_callosum,61.737089201877936,0.8
+sub-004,25.5,Spina Bifida,out,atlas,white_matter,84.08603005486205,2.2627416997969525
 sub-004,25.5,Spina Bifida,out,atlas,intra_axial_csf,88.37308607332398,1.6
 sub-004,25.5,Spina Bifida,out,atlas,cerebellum,50.487494701144556,3.577708763999664
-sub-004,25.5,Spina Bifida,out,atlas,extra_axial_csf,12.357414448669202,23.67783773911799
-sub-004,25.5,Spina Bifida,out,atlas,cortical_grey_matter,41.023479323862915,2.9933259094191533
-sub-004,25.5,Spina Bifida,out,atlas,deep_grey_matter,73.15605823607268,3.2
-sub-004,25.5,Spina Bifida,out,atlas,brainstem,62.12603437301082,3.2
-sub-004,25.5,Spina Bifida,out,atlas,corpus_callosum,49.51644100580271,1.6
-sub-004,25.5,Spina Bifida,out,trustworthy,white_matter,81.15239475800063,2.8844410203711917
+sub-004,25.5,Spina Bifida,out,atlas,extra_axial_csf,12.358796555195168,23.67783773911799
+sub-004,25.5,Spina Bifida,out,atlas,cortical_grey_matter,40.48972266142473,2.9933259094191533
+sub-004,25.5,Spina Bifida,out,atlas,deep_grey_matter,73.14377252703244,3.2
+sub-004,25.5,Spina Bifida,out,atlas,brainstem,62.3298512187401,3.2
+sub-004,25.5,Spina Bifida,out,atlas,corpus_callosum,53.333333333333336,1.385640646055102
+sub-004,25.5,Spina Bifida,out,trustworthy,white_matter,81.16635136246666,2.8844410203711917
 sub-004,25.5,Spina Bifida,out,trustworthy,intra_axial_csf,88.3054892601432,1.1313708498984762
 sub-004,25.5,Spina Bifida,out,trustworthy,cerebellum,42.529296875,2.9933259094191533
-sub-004,25.5,Spina Bifida,out,trustworthy,extra_axial_csf,9.870294210692819,24.605690398767518
-sub-004,25.5,Spina Bifida,out,trustworthy,cortical_grey_matter,27.827296838993,4.079215610874228
-sub-004,25.5,Spina Bifida,out,trustworthy,deep_grey_matter,67.3818275066245,4.0
-sub-004,25.5,Spina Bifida,out,trustworthy,brainstem,46.64688427299703,4.308131845707604
-sub-004,25.5,Spina Bifida,out,trustworthy,corpus_callosum,55.54140127388535,0.8
-sub-017,22.8,Spina Bifida,out,cnn,white_matter,83.13087978639818,5.059644256269408
-sub-017,22.8,Spina Bifida,out,cnn,intra_axial_csf,81.41342756183747,1.1313708498984762
+sub-004,25.5,Spina Bifida,out,trustworthy,extra_axial_csf,9.855255872814997,24.605690398767518
+sub-004,25.5,Spina Bifida,out,trustworthy,cortical_grey_matter,26.70547250518146,4.079215610874228
+sub-004,25.5,Spina Bifida,out,trustworthy,deep_grey_matter,67.39492212502667,4.0
+sub-004,25.5,Spina Bifida,out,trustworthy,brainstem,46.72823737472981,4.308131845707604
+sub-004,25.5,Spina Bifida,out,trustworthy,corpus_callosum,59.31372549019608,0.8
+sub-017,22.8,Spina Bifida,out,cnn,white_matter,83.46668734535046,5.30659966456864
+sub-017,22.8,Spina Bifida,out,cnn,intra_axial_csf,83.98561748029319,1.1313708498984762
 sub-017,22.8,Spina Bifida,out,cnn,cerebellum,0.0,57.6
-sub-017,22.8,Spina Bifida,out,cnn,extra_axial_csf,1.188227887944602,21.13575170179665
-sub-017,22.8,Spina Bifida,out,cnn,cortical_grey_matter,32.20576824657851,3.7523326078587442
-sub-017,22.8,Spina Bifida,out,cnn,deep_grey_matter,77.85400523172598,2.8844410203711917
-sub-017,22.8,Spina Bifida,out,cnn,brainstem,7.20384204909285,8.275264346230882
-sub-017,22.8,Spina Bifida,out,cnn,corpus_callosum,27.242524916943523,11.142710621747296
-sub-017,22.8,Spina Bifida,out,atlas,white_matter,81.82605955569561,2.4000000000000004
-sub-017,22.8,Spina Bifida,out,atlas,intra_axial_csf,66.94158852107105,2.8844410203711917
-sub-017,22.8,Spina Bifida,out,atlas,cerebellum,70.54308640539597,2.8844410203711917
-sub-017,22.8,Spina Bifida,out,atlas,extra_axial_csf,10.065988144502851,19.0829767070025
-sub-017,22.8,Spina Bifida,out,atlas,cortical_grey_matter,30.907107691400608,3.2
-sub-017,22.8,Spina Bifida,out,atlas,deep_grey_matter,77.93371155568826,2.2627416997969525
-sub-017,22.8,Spina Bifida,out,atlas,brainstem,74.00209298848857,1.9595917942265426
-sub-017,22.8,Spina Bifida,out,atlas,corpus_callosum,26.073131955484897,16.178998732925347
-sub-017,22.8,Spina Bifida,out,trustworthy,white_matter,85.94973096484115,2.4000000000000004
-sub-017,22.8,Spina Bifida,out,trustworthy,intra_axial_csf,78.07827762642036,1.385640646055102
-sub-017,22.8,Spina Bifida,out,trustworthy,cerebellum,57.13913835741246,3.7523326078587442
-sub-017,22.8,Spina Bifida,out,trustworthy,extra_axial_csf,6.231818475660999,20.0
-sub-017,22.8,Spina Bifida,out,trustworthy,cortical_grey_matter,35.32506406040953,2.529822128134704
-sub-017,22.8,Spina Bifida,out,trustworthy,deep_grey_matter,78.48439821693908,2.529822128134704
-sub-017,22.8,Spina Bifida,out,trustworthy,brainstem,65.39705353934603,2.529822128134704
-sub-017,22.8,Spina Bifida,out,trustworthy,corpus_callosum,26.217228464419474,15.11555490215295
+sub-017,22.8,Spina Bifida,out,cnn,extra_axial_csf,1.222858038723838,24.72245942457991
+sub-017,22.8,Spina Bifida,out,cnn,cortical_grey_matter,31.742966539037788,4.079215610874228
+sub-017,22.8,Spina Bifida,out,cnn,deep_grey_matter,78.23343848580441,2.8844410203711917
+sub-017,22.8,Spina Bifida,out,cnn,brainstem,7.431874483897605,8.2365041127896
+sub-017,22.8,Spina Bifida,out,cnn,corpus_callosum,57.03703703703704,4.3817804600413295
+sub-017,22.8,Spina Bifida,out,atlas,white_matter,82.42834509577992,2.4000000000000004
+sub-017,22.8,Spina Bifida,out,atlas,intra_axial_csf,69.43488397912735,2.8844410203711917
+sub-017,22.8,Spina Bifida,out,atlas,cerebellum,71.52088622201708,2.8844410203711917
+sub-017,22.8,Spina Bifida,out,atlas,extra_axial_csf,11.018918021905078,21.894291493446417
+sub-017,22.8,Spina Bifida,out,atlas,cortical_grey_matter,32.234125321682924,2.8844410203711917
+sub-017,22.8,Spina Bifida,out,atlas,deep_grey_matter,78.13726951940758,1.9595917942265426
+sub-017,22.8,Spina Bifida,out,atlas,brainstem,74.74901125646485,1.788854381999832
+sub-017,22.8,Spina Bifida,out,atlas,corpus_callosum,50.62034739454094,1.788854381999832
+sub-017,22.8,Spina Bifida,out,trustworthy,white_matter,86.36839585951056,2.4000000000000004
+sub-017,22.8,Spina Bifida,out,trustworthy,intra_axial_csf,80.69787123234164,1.385640646055102
+sub-017,22.8,Spina Bifida,out,trustworthy,cerebellum,58.167741935483875,3.6660605559646724
+sub-017,22.8,Spina Bifida,out,trustworthy,extra_axial_csf,7.040534463930108,21.62960933535324
+sub-017,22.8,Spina Bifida,out,trustworthy,cortical_grey_matter,36.18221855216075,2.65329983228432
+sub-017,22.8,Spina Bifida,out,trustworthy,deep_grey_matter,78.814858782213,2.529822128134704
+sub-017,22.8,Spina Bifida,out,trustworthy,brainstem,66.55659512016145,2.4000000000000004
+sub-017,22.8,Spina Bifida,out,trustworthy,corpus_callosum,55.623721881390594,1.788854381999832
 sub-022,20.0,Spina Bifida,out,cnn,white_matter,80.73593923918025,4.0
 sub-022,20.0,Spina Bifida,out,cnn,intra_axial_csf,89.7901901620939,0.8
 sub-022,20.0,Spina Bifida,out,cnn,cerebellum,0.0,57.6
@@ -7343,78 +7343,78 @@ sub-022,20.0,Spina Bifida,out,trustworthy,cortical_grey_matter,24.16803055100927
 sub-022,20.0,Spina Bifida,out,trustworthy,deep_grey_matter,73.907421773985,2.529822128134704
 sub-022,20.0,Spina Bifida,out,trustworthy,brainstem,57.306590257879655,3.2
 sub-022,20.0,Spina Bifida,out,trustworthy,corpus_callosum,69.6969696969697,1.1313708498984762
-sub-027,26.5,Neurotypical,out,cnn,white_matter,92.33851491261598,1.385640646055102
+sub-027,26.5,Neurotypical,out,cnn,white_matter,92.36393585907823,1.385640646055102
 sub-027,26.5,Neurotypical,out,cnn,intra_axial_csf,88.2793017456359,0.8
 sub-027,26.5,Neurotypical,out,cnn,cerebellum,92.99108734402853,0.8
-sub-027,26.5,Neurotypical,out,cnn,extra_axial_csf,85.33508887425938,1.1313708498984762
-sub-027,26.5,Neurotypical,out,cnn,cortical_grey_matter,73.69751256724989,2.8844410203711917
+sub-027,26.5,Neurotypical,out,cnn,extra_axial_csf,85.48845587750708,1.1313708498984762
+sub-027,26.5,Neurotypical,out,cnn,cortical_grey_matter,74.15235008103728,2.8844410203711917
 sub-027,26.5,Neurotypical,out,cnn,deep_grey_matter,79.61412789793062,3.298484500494129
 sub-027,26.5,Neurotypical,out,cnn,brainstem,74.04725992961288,8.27526434623088
 sub-027,26.5,Neurotypical,out,cnn,corpus_callosum,75.60366361365529,1.6
-sub-027,26.5,Neurotypical,out,atlas,white_matter,91.90360841964585,1.385640646055102
+sub-027,26.5,Neurotypical,out,atlas,white_matter,91.9403833217036,1.385640646055102
 sub-027,26.5,Neurotypical,out,atlas,intra_axial_csf,87.20544173617297,1.1313708498984762
 sub-027,26.5,Neurotypical,out,atlas,cerebellum,86.73806898724209,1.385640646055102
-sub-027,26.5,Neurotypical,out,atlas,extra_axial_csf,87.9067437808496,0.8
-sub-027,26.5,Neurotypical,out,atlas,cortical_grey_matter,76.69131800222874,0.8
+sub-027,26.5,Neurotypical,out,atlas,extra_axial_csf,88.02732399677734,0.8
+sub-027,26.5,Neurotypical,out,atlas,cortical_grey_matter,77.1400306872325,0.8
 sub-027,26.5,Neurotypical,out,atlas,deep_grey_matter,81.98097736962939,2.771281292110204
 sub-027,26.5,Neurotypical,out,atlas,brainstem,81.56132272917539,2.4000000000000004
 sub-027,26.5,Neurotypical,out,atlas,corpus_callosum,65.13157894736842,2.4000000000000004
-sub-027,26.5,Neurotypical,out,trustworthy,white_matter,92.35858113688482,1.1313708498984762
+sub-027,26.5,Neurotypical,out,trustworthy,white_matter,92.40074155474838,1.1313708498984762
 sub-027,26.5,Neurotypical,out,trustworthy,intra_axial_csf,87.98506573459905,0.8
 sub-027,26.5,Neurotypical,out,trustworthy,cerebellum,92.48942686305965,0.8
-sub-027,26.5,Neurotypical,out,trustworthy,extra_axial_csf,87.04394684111527,1.1313708498984762
-sub-027,26.5,Neurotypical,out,trustworthy,cortical_grey_matter,76.99767711962834,0.8
+sub-027,26.5,Neurotypical,out,trustworthy,extra_axial_csf,87.1832012149623,1.1313708498984762
+sub-027,26.5,Neurotypical,out,trustworthy,cortical_grey_matter,77.4466114937207,0.8
 sub-027,26.5,Neurotypical,out,trustworthy,deep_grey_matter,81.7753693310109,2.771281292110204
 sub-027,26.5,Neurotypical,out,trustworthy,brainstem,79.20751633986927,3.2
 sub-027,26.5,Neurotypical,out,trustworthy,corpus_callosum,75.88477366255144,1.1313708498984762
-sub-023,23.7,Spina Bifida,out,cnn,white_matter,82.11764705882352,2.4000000000000004
+sub-023,23.7,Spina Bifida,out,cnn,white_matter,82.19926244247357,2.4000000000000004
 sub-023,23.7,Spina Bifida,out,cnn,intra_axial_csf,89.54907465765199,1.385640646055102
 sub-023,23.7,Spina Bifida,out,cnn,cerebellum,30.740393626991562,4.595650117230423
 sub-023,23.7,Spina Bifida,out,cnn,extra_axial_csf,6.05992085924251,25.424397731313128
-sub-023,23.7,Spina Bifida,out,cnn,cortical_grey_matter,30.991998757088478,3.298484500494129
+sub-023,23.7,Spina Bifida,out,cnn,cortical_grey_matter,30.474940222232643,3.298484500494129
 sub-023,23.7,Spina Bifida,out,cnn,deep_grey_matter,75.82199113014222,3.3941125496954285
 sub-023,23.7,Spina Bifida,out,cnn,brainstem,26.866348990242795,7.959899496852961
 sub-023,23.7,Spina Bifida,out,cnn,corpus_callosum,61.12759643916914,1.1313708498984762
-sub-023,23.7,Spina Bifida,out,atlas,white_matter,83.69551022540288,2.2627416997969525
+sub-023,23.7,Spina Bifida,out,atlas,white_matter,83.72411901823666,1.9595917942265426
 sub-023,23.7,Spina Bifida,out,atlas,intra_axial_csf,85.65342072920934,1.1313708498984762
 sub-023,23.7,Spina Bifida,out,atlas,cerebellum,55.2286102308737,2.8844410203711917
 sub-023,23.7,Spina Bifida,out,atlas,extra_axial_csf,26.899246973596412,25.17141235608364
-sub-023,23.7,Spina Bifida,out,atlas,cortical_grey_matter,38.384753278611186,2.4000000000000004
+sub-023,23.7,Spina Bifida,out,atlas,cortical_grey_matter,38.048539445426385,2.4000000000000004
 sub-023,23.7,Spina Bifida,out,atlas,deep_grey_matter,78.88779527559055,3.2
 sub-023,23.7,Spina Bifida,out,atlas,brainstem,67.24862592951827,3.2
 sub-023,23.7,Spina Bifida,out,atlas,corpus_callosum,54.12667946257198,1.385640646055102
-sub-023,23.7,Spina Bifida,out,trustworthy,white_matter,83.27574118589743,2.2627416997969525
+sub-023,23.7,Spina Bifida,out,trustworthy,white_matter,83.35576435533243,2.2627416997969525
 sub-023,23.7,Spina Bifida,out,trustworthy,intra_axial_csf,88.13264504544944,1.1313708498984762
 sub-023,23.7,Spina Bifida,out,trustworthy,cerebellum,39.516396157668105,4.308131845707604
 sub-023,23.7,Spina Bifida,out,trustworthy,extra_axial_csf,15.181341606932705,25.910615585122635
-sub-023,23.7,Spina Bifida,out,trustworthy,cortical_grey_matter,33.4923501550414,2.529822128134704
+sub-023,23.7,Spina Bifida,out,trustworthy,cortical_grey_matter,33.026956581384184,2.529822128134704
 sub-023,23.7,Spina Bifida,out,trustworthy,deep_grey_matter,76.15232493281275,3.2
 sub-023,23.7,Spina Bifida,out,trustworthy,brainstem,54.23663385446825,4.0
 sub-023,23.7,Spina Bifida,out,trustworthy,corpus_callosum,59.65965965965966,1.1313708498984762
-sub-020,25.8,Spina Bifida,out,cnn,white_matter,78.32507912865388,4.381780460041329
-sub-020,25.8,Spina Bifida,out,cnn,intra_axial_csf,73.55022768420476,12.185236969382254
+sub-020,25.8,Spina Bifida,out,cnn,white_matter,78.38144083969466,4.3817804600413295
+sub-020,25.8,Spina Bifida,out,cnn,intra_axial_csf,74.04092769440655,12.185236969382254
 sub-020,25.8,Spina Bifida,out,cnn,cerebellum,0.0,57.6
-sub-020,25.8,Spina Bifida,out,cnn,extra_axial_csf,29.096964419389828,17.99555500672319
-sub-020,25.8,Spina Bifida,out,cnn,cortical_grey_matter,20.43717097734035,5.059644256269408
-sub-020,25.8,Spina Bifida,out,cnn,deep_grey_matter,76.27290006875076,3.298484500494129
+sub-020,25.8,Spina Bifida,out,cnn,extra_axial_csf,29.39382851567264,17.85273088353712
+sub-020,25.8,Spina Bifida,out,cnn,cortical_grey_matter,20.747524469120258,5.122499389946279
+sub-020,25.8,Spina Bifida,out,cnn,deep_grey_matter,76.20435592259736,3.298484500494129
 sub-020,25.8,Spina Bifida,out,cnn,brainstem,0.0,33.6
-sub-020,25.8,Spina Bifida,out,cnn,corpus_callosum,51.66279969064191,4.0
-sub-020,25.8,Spina Bifida,out,atlas,white_matter,77.31503857651755,4.0
-sub-020,25.8,Spina Bifida,out,atlas,intra_axial_csf,47.67395093176029,8.2365041127896
-sub-020,25.8,Spina Bifida,out,atlas,cerebellum,58.53391684901532,3.298484500494129
-sub-020,25.8,Spina Bifida,out,atlas,extra_axial_csf,39.476876421531465,17.176728442867113
-sub-020,25.8,Spina Bifida,out,atlas,cortical_grey_matter,36.57189179451767,3.298484500494129
-sub-020,25.8,Spina Bifida,out,atlas,deep_grey_matter,77.96677215189874,4.0
-sub-020,25.8,Spina Bifida,out,atlas,brainstem,77.28285077951003,1.788854381999832
-sub-020,25.8,Spina Bifida,out,atlas,corpus_callosum,39.473684210526315,3.3941125496954285
-sub-020,25.8,Spina Bifida,out,trustworthy,white_matter,81.40054221980503,3.2
-sub-020,25.8,Spina Bifida,out,trustworthy,intra_axial_csf,63.1578947368421,5.2459508194416005
-sub-020,25.8,Spina Bifida,out,trustworthy,cerebellum,44.86730095142714,4.156921938165306
-sub-020,25.8,Spina Bifida,out,trustworthy,extra_axial_csf,31.581966429478687,17.618172436436193
-sub-020,25.8,Spina Bifida,out,trustworthy,cortical_grey_matter,25.245818474806402,4.0
-sub-020,25.8,Spina Bifida,out,trustworthy,deep_grey_matter,77.46271103097853,2.9933259094191533
-sub-020,25.8,Spina Bifida,out,trustworthy,brainstem,70.95714499029417,2.2627416997969525
-sub-020,25.8,Spina Bifida,out,trustworthy,corpus_callosum,45.52429667519181,1.788854381999832
+sub-020,25.8,Spina Bifida,out,cnn,corpus_callosum,52.25362872421696,4.0
+sub-020,25.8,Spina Bifida,out,atlas,white_matter,77.40131726331825,4.0
+sub-020,25.8,Spina Bifida,out,atlas,intra_axial_csf,48.2127346829692,8.2365041127896
+sub-020,25.8,Spina Bifida,out,atlas,cerebellum,58.90448665015139,3.298484500494129
+sub-020,25.8,Spina Bifida,out,atlas,extra_axial_csf,39.69373286700066,16.97056274847714
+sub-020,25.8,Spina Bifida,out,atlas,cortical_grey_matter,36.95204913724489,3.298484500494129
+sub-020,25.8,Spina Bifida,out,atlas,deep_grey_matter,78.09146703623044,4.0
+sub-020,25.8,Spina Bifida,out,atlas,brainstem,77.49168411974867,1.788854381999832
+sub-020,25.8,Spina Bifida,out,atlas,corpus_callosum,39.950372208436725,3.3941125496954285
+sub-020,25.8,Spina Bifida,out,trustworthy,white_matter,81.48850868654205,3.2
+sub-020,25.8,Spina Bifida,out,trustworthy,intra_axial_csf,63.80184230243731,5.2459508194416005
+sub-020,25.8,Spina Bifida,out,trustworthy,cerebellum,45.17950786607503,4.079215610874228
+sub-020,25.8,Spina Bifida,out,trustworthy,extra_axial_csf,31.837391280639093,17.472263734273245
+sub-020,25.8,Spina Bifida,out,trustworthy,cortical_grey_matter,25.649292495074334,4.079215610874228
+sub-020,25.8,Spina Bifida,out,trustworthy,deep_grey_matter,77.58316583945198,2.9933259094191533
+sub-020,25.8,Spina Bifida,out,trustworthy,brainstem,70.94474153297683,2.2627416997969525
+sub-020,25.8,Spina Bifida,out,trustworthy,corpus_callosum,46.25735912531539,1.788854381999832
 sub-053,30.3,Neurotypical,out,cnn,white_matter,92.73708611964838,4.525483399593905
 sub-053,30.3,Neurotypical,out,cnn,intra_axial_csf,91.97739309707461,0.8
 sub-053,30.3,Neurotypical,out,cnn,cerebellum,96.14243323442136,0.8
