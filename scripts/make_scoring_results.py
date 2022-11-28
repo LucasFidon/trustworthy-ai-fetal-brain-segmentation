@@ -7,7 +7,8 @@ import seaborn as sns
 import sys
 repo_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(repo_path)
-from scripts.create_scoring_files import DECODE_CSV
+# from scripts.create_scoring_files import DECODE_CSV
+from create_scoring_files import DECODE_CSV
 from src.utils.utils import get_feta_info
 from src.utils.definitions import *
 
@@ -166,6 +167,14 @@ def main(center='all'):
         os.mkdir(OUTPUT_PATH)
     fig.savefig(save_path, bbox_inches='tight')
     print('Figure saved in', save_path)
+
+def check_mean_aggregated_ranking():
+    df = read_ranking()
+    df = df.groupby(['Study', 'Condition', 'Methods'])['Scores'].mean().reset_index()
+    ai = df[df['Methods'] == 'AI']['Scores'].values
+    twai = df[df['Methods'] == 'TW-AI']['Scores'].values
+    import pdb
+    pdb.set_trace()
 
 
 def main_aggregated(center='all'):
@@ -354,3 +363,4 @@ if __name__ == '__main__':
     for center in list(RANKING_CSV.keys()):
         main(center)
         main_aggregated(center)
+    # check_mean_aggregated_ranking()

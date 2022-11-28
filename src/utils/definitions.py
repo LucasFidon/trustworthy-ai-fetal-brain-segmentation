@@ -4,14 +4,20 @@ import numpy as np
 
 # PATHS OF FOLDERS IN THE REPO
 REPO_PATH = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-OUTPUT_PATH = os.path.join(REPO_PATH, 'output')
+# OUTPUT_PATH = os.path.join(REPO_PATH, 'output')
+OUTPUT_PATH = os.path.join(REPO_PATH, 'output_rebuttal')
 REPO_DATA_PATH = os.path.join(REPO_PATH, 'data')
 
 
 # GENERAL EVALUATION OPTIONS
 IMG_RES = 0.8  # in mm; isotropic
 NUM_CLASS = 9  # number of classes predicted by the model
-METHOD_NAMES = ['cnn', 'atlas', 'trustworthy']
+METHOD_NAMES = [
+    'cnn', 'atlas', 'add_fusion', 'mult_fusion',
+    'cnn_trustworthy', 'cnn_trustworthy_atlas_only', 'cnn_trustworthy_intensity_only',
+    'add_fusion_trustworthy', 'add_fusion_trustworthy_atlas_only', 'add_fusion_trustworthy_intensity_only',
+    'mult_fusion_trustworthy', 'mult_fusion_trustworthy_atlas_only', 'mult_fusion_trustworthy_intensity_only',
+]
 ALL_ROI = [
     'white_matter', 'intra_axial_csf', 'cerebellum', 'extra_axial_csf',
     'cortical_grey_matter', 'deep_grey_matter', 'brainstem', 'corpus_callosum'
@@ -59,7 +65,17 @@ BASE_FOLDER = os.path.join(DATA_FOLDER, 'Fetal_SRR_and_Seg')
 DATA_FOLDER_MICHAEL_GROUP = os.path.join(BASE_FOLDER, 'SRR_and_Seg_Michael_cases_group')
 DATA_FOLDER_NADA_GROUP = os.path.join(BASE_FOLDER, 'SRR_and_Seg_Nada_cases_group')
 
-NIFTYREG_PATH = os.path.join(WORKSPACE_FOLDER, 'third-party', 'niftyreg', 'build', 'reg-apps')
+
+# SWINUNETR
+SWINUNETR_TEST_PRED = [
+    os.path.join(DATA_FOLDER, 'saved_res_fetal_trust21_v3', 'test_model_fold0')
+]
+
+# NIFTYREG_PATH = os.path.join(WORKSPACE_FOLDER, 'third-party', 'niftyreg', 'build', 'reg-apps')
+NIFTYREG_PATH = os.path.join(
+    WORKSPACE_FOLDER, 'trustworthy-ai-fetal-brain-segmentation',
+    'docker', 'third-party', 'niftyreg', 'build', 'reg-apps',
+)
 
 
 # ATLAS FOLDERS

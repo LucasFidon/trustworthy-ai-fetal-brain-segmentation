@@ -20,6 +20,7 @@ parser.add_argument('--model', default='3d_fullres', type=str)
 parser.add_argument('--trainer', default='nnUNetTrainerV2', type=str)
 parser.add_argument('--plan', default='nnUNetPlansv2.1', type=str)
 parser.add_argument('--save_npz', action='store_true')
+parser.add_argument('--seg_prior', type=str)
 
 
 def load_softmax(softmax_path, pkl_path):
@@ -62,7 +63,7 @@ def main(args):
         img_np[np.isnan(img_np)] = np.nanmean(img_np)
 
     # Save the processed image to the output folder
-    tmp_folder = './tmp'
+    tmp_folder = './tmp_%s' % args.task
     if not os.path.exists(tmp_folder):
         os.mkdir(tmp_folder)
     if not os.path.exists(args.output_folder):
@@ -71,6 +72,18 @@ def main(args):
     save_img_path = os.path.join(tmp_folder, '%s_0000.nii.gz' % img_name)
     img_save_nii = nib.Nifti1Image(img_np, img_nii.affine, img_nii.header)
     nib.save(img_save_nii, save_img_path)
+    # Save the segmentation prior as additional input
+    if args.seg_prior is not None:
+        seg_prior = nib.load(args.seg_prior).get_fdata().astype(np.float32)
+        for c in range(1, 9):
+            seg_prior_c = seg_prior[:,:,:,c]
+            seg_prior_c_nii = nib.Nifti1Image(seg_prior_c, img_nii.affine, img_nii.header)
+            nib.save(
+                seg_prior_c_nii,
+                os.path.join(tmp_folder, img_name + "_" + str(c).zfill(4) + ".nii.gz")
+            )
+        os.system('rm %s' % args.seg_prior)
+
 
     # Run the autoseg with nnUNet and save it in the specified output folder
     if args.fold == 'all':
@@ -78,11 +91,14 @@ def main(args):
         # Compute the softmax predictions for each fold in separate tmp folders
         for fold in range(5):
             output_folder_fold = os.path.join(tmp_folder, 'fold%d' % fold)
-            folders.append(output_folder_fold)
+            # folders.append(output_folder_fold)
             options = '-t %s -f %d -m %s -tr %s -p %s --save_npz' % \
                 (args.task, fold, args.model, args.trainer, args.plan)
             cmd = 'nnUNet_predict -i %s -o %s %s' % (tmp_folder, output_folder_fold, options)
             os.system(cmd)
+            if os.path.exists(os.path.join(output_folder_fold, '%s.npz' % img_name)):
+                # Only if the fold model exists, the fold output is included
+                folders.append(output_folder_fold)
         # Ensemble the predictions
         cmd = 'nnUNet_ensemble -f '
         for folder in folders:

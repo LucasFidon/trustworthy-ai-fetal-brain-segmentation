@@ -14,7 +14,7 @@ def merge_deep_and_atlas_seg(deep_proba, atlas_seg, condition):
         'Only conditions %s are supported. Received %s.' % (str(CONDITIONS), condition)
 
     # Anatomical prior
-    out_score = np.copy(deep_proba)
+    out = np.copy(deep_proba)
     if condition == 'Neurotypical':
         atlas_margin = ATLAS_MARGINS_CONTROL
     elif condition == 'Spina Bifida':
@@ -29,12 +29,12 @@ def merge_deep_and_atlas_seg(deep_proba, atlas_seg, condition):
     for c in range(len(atlas_margin)):
         atlas_seg_c = (atlas_seg == c)
         atlas_seg_c = binary_dilation(atlas_seg_c, iterations=atlas_margin[c])
-        out_score[c, np.logical_not(atlas_seg_c)] = 0
+        out[c, np.logical_not(atlas_seg_c)] = 0
 
     # Normalize the probability
-    out_score[:, ...] /= np.sum(out_score, axis=0)
+    out[:, ...] /= np.sum(out, axis=0)
 
-    return out_score
+    return out
 
 
 def bilateral_filtering(image, mask, sigma_color=1, sigma_spatial=1):
@@ -70,6 +70,8 @@ def bilateral_filtering(image, mask, sigma_color=1, sigma_spatial=1):
 
 
 def dempster_add_intensity_prior(deep_proba, image, mask, denoise=False):
+    out = np.copy(deep_proba)
+
     mask[np.isnan(image)] = 0  # mask nan values
     # Erode the mask for the intensity prior
     # because we want to make sure we do not include the background.
@@ -114,18 +116,18 @@ def dempster_add_intensity_prior(deep_proba, image, mask, denoise=False):
         if roi_eval in ['intra_axial_csf', 'extra_axial_csf', 'background']:
             for i in LABELS[roi_eval]:
                 if not i in labels_seen:
-                    deep_proba[i, mask == 1] *= (m_csf + m_mix)
+                    out[i, mask == 1] *= (m_csf + m_mix)
                     labels_seen.append(i)
         else:
             for i in LABELS[roi_eval]:
                 if not i in labels_seen:
                     labels_seen.append(i)
-                    deep_proba[i, mask == 1] *= m_mix
+                    out[i, mask == 1] *= m_mix
 
     # Normalize the probability
-    deep_proba[:, ...] /= np.sum(deep_proba, axis=0)
+    out[:, ...] /= np.sum(out, axis=0)
 
-    return deep_proba
+    return out
 
 
 if __name__ == '__main__':

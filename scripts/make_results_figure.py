@@ -7,13 +7,22 @@ import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from src.utils.definitions import *
 
-CSV_RES = os.path.join(REPO_DATA_PATH, 'metrics.csv')
-METHODS_TO_PLOT = ['cnn', 'atlas', 'trustworthy']
+# CSV_RES = os.path.join(REPO_DATA_PATH, 'metrics.csv')  # CSV of the TPAMI submission
+# CSV_RES = '/home/lucasf/data/saved_res_fetal_trust21_v3/all/metrics.csv'
+CSV_RES = '/home/lucasf/data/saved_res_fetal_trust21_v3/all/metrics_all.csv'
+DEEP_LEARNING_MODELS = ['nnUNet', 'nnUNetSegPrior', 'SwinUNETR']
+
 METHOD_NAME_TO_DISPLAY = {
-    'cnn': 'AI',
     'atlas': 'Fallback',
-    'trustworthy': 'TW-AI',
 }
+for deep_model in DEEP_LEARNING_MODELS:
+    # for key, disp in [(deep_model, deep_model), ('%s_add_fusion' % deep_model, deep_model + '+Atlas'), ('%s_mult_fusion' % deep_model, deep_model + '*Atlas')]:
+    for key, disp in [(deep_model, deep_model), ('%s_add_fusion' % deep_model, deep_model + '+Atlas')]:
+        METHOD_NAME_TO_DISPLAY[key] =  disp
+        METHOD_NAME_TO_DISPLAY['%s_trustworthy_intensity_only' % key] = disp + '-TW_Intensity'
+        METHOD_NAME_TO_DISPLAY['%s_trustworthy_atlas_only' % key] = disp + '-TW_Atlas'
+        METHOD_NAME_TO_DISPLAY['%s_trustworthy' % key] = disp+ '-TW_Atlas+Intensity'
+HUE_ORDER = METHOD_NAME_TO_DISPLAY.values()
 ROI_NAMES_TO_DISPLAY = {
     'white_matter': 'WM',
     'intra_axial_csf': 'In-CSF',
@@ -119,9 +128,6 @@ def create_df(metric, condition, center_type, average_roi=False):
             df.loc[df[metric] > max_val, metric] = max_val
         elif metric == 'dice':
             min_val = YAXIS_LIM_AGGREGATED[metric][condition][0] + 1
-                # + 0.01 * (YAXIS_LIM_AGGREGATED[metric][condition][1] - YAXIS_LIM_AGGREGATED[metric][condition][0])
-            print('Min val')
-            print(min_val)
             df.loc[df[metric] < min_val, metric] = min_val
     else:
         # Rename the ROIs
@@ -140,28 +146,36 @@ def create_df(metric, condition, center_type, average_roi=False):
     return df
 
 
-def statistical_test(df_ave, metric_name):
-    from scipy.stats import wilcoxon
-    print('***Statistical test - mean-ROI %s' % metric_name)
-    ai = df_ave[df_ave['Methods']==METHOD_NAME_TO_DISPLAY['cnn']][metric_name].to_numpy()
-    fallback = df_ave[df_ave['Methods']==METHOD_NAME_TO_DISPLAY['atlas']][metric_name].to_numpy()
-    twai = df_ave[df_ave['Methods']==METHOD_NAME_TO_DISPLAY['trustworthy']][metric_name].to_numpy()
+# def statistical_test(df_ave, metric_name):
+#     from scipy.stats import wilcoxon
+#     print('***Statistical test - mean-ROI %s' % metric_name)
+#     ai = df_ave[df_ave['Methods']==METHOD_NAME_TO_DISPLAY['cnn']][metric_name].to_numpy()
+#     fallback = df_ave[df_ave['Methods']==METHOD_NAME_TO_DISPLAY['atlas']][metric_name].to_numpy()
+#     twai = df_ave[df_ave['Methods']==METHOD_NAME_TO_DISPLAY['trustworthy']][metric_name].to_numpy()
+#
+#     print('AI - median = %.2f' % np.median(ai))
+#     print('Fallback - median = %.2f' % np.median(fallback))
+#     print('TWAI - median = %.2f' % np.median(twai))
+#
+#     alt = 'greater' if metric_name == 'dice' else 'less'
+#
+#     print('The median of TWAI - AI is %s than 0' % alt)
+#     print(wilcoxon(twai, ai, alternative=alt))
+#
+#     print('The median of TWAI - Fallback is %s than 0' % alt)
+#     print(wilcoxon(twai, fallback, alternative=alt))
+#
+#     print('The median of Fallback - AI is %s than 0' % alt)
+#     print(wilcoxon(fallback, ai, alternative=alt))
+#     print('')
 
-    print('AI - median = %.2f' % np.median(ai))
-    print('Fallback - median = %.2f' % np.median(fallback))
-    print('TWAI - median = %.2f' % np.median(twai))
 
-    alt = 'greater' if metric_name == 'dice' else 'less'
-
-    print('The median of TWAI - AI is %s than 0' % alt)
-    print(wilcoxon(twai, ai, alternative=alt))
-
-    print('The median of TWAI - Fallback is %s than 0' % alt)
-    print(wilcoxon(twai, fallback, alternative=alt))
-
-    print('The median of Fallback - AI is %s than 0' % alt)
-    print(wilcoxon(fallback, ai, alternative=alt))
-    print('')
+def print_mean_std(df, metric_name):
+    methods = HUE_ORDER
+    for method in methods:
+        method_metric = df[df['Methods']==method][metric_name].to_numpy()
+        print(method)
+        print('Mean (STD): %.1f (%.1f)' % (np.mean(method_metric), np.std(method_metric)))
 
 
 def main(metric_name, aggregated=False):
@@ -187,7 +201,8 @@ def main(metric_name, aggregated=False):
             # Create the boxplot
             if aggregated:
                 ax_ij = ax[j,i]
-                print('*** %s - %s: %d cases' % (condition, center_type, len(df) / 3))
+                unique_samples = np.unique(df['Study'].values)
+                print('*** \033[92m%s - %s: %d cases\033[0m' % (condition, center_type, unique_samples.size))
                 g = sns.boxplot(
                     data=df,
                     x='Methods',
@@ -196,7 +211,7 @@ def main(metric_name, aggregated=False):
                     palette='colorblind',
                     fliersize=10,
                     linewidth=3,
-                    order=['AI', 'Fallback', 'TW-AI'],
+                    order=HUE_ORDER,
                 )
 
                 # X axis
@@ -230,7 +245,8 @@ def main(metric_name, aggregated=False):
                         yticklabels[0] += '-'
                     g.set(yticklabels=yticklabels)
 
-                statistical_test(df, metric_name)
+                print_mean_std(df, metric_name)
+                # statistical_test(df, metric_name)
 
             else:  # No aggregation
                 ax_ij = ax[i,j]
@@ -244,7 +260,7 @@ def main(metric_name, aggregated=False):
                     palette='colorblind',
                     fliersize=10,
                     linewidth=3,
-                    hue_order=['AI', 'Fallback', 'TW-AI'],
+                    hue_order=HUE_ORDER,
                     order=order,
                 )
 

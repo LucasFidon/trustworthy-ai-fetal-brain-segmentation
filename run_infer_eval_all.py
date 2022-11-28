@@ -12,6 +12,11 @@ from src.multi_atlas.inference import multi_atlas_segmentation
 from src.multi_atlas.utils import get_atlas_list
 from src.segmentations_fusion.dempster_shaffer import merge_deep_and_atlas_seg, dempster_add_intensity_prior
 
+# Training set (used to generate the segmentation prior for training)
+# DATA_DIR = [
+#     TRAINING_DATA_PREPROCESSED_DIR,
+# ]
+# Testing set
 DATA_DIR = [
     CONTROLS_KCL,
     SB_FRED2,
@@ -24,14 +29,23 @@ DATA_DIR = [
     CORRECTED_ZURICH_DATA_DIR, EXCLUDED_ZURICH_DATA_DIR, FETA_IRTK_DIR,
 ]
 
+# SAVE_FOLDER = '/data/saved_res_fetal_trust22_training'
 SAVE_FOLDER = '/data/saved_res_fetal_trust21_v3'
 DO_BIAS_FIELD_CORRECTION = True  # Will be ignored for data from Leuven
 MERGING_MULTI_ATLAS = 'GIF'  # Can be 'GIF' or 'mean'
-DO_BILATERAL_FILTERING = False
+DO_BILATERAL_FILTERING = False  # Not used; option for the data pre-processing in the intensity-based contracts
 REUSE_CNN_PRED = True  # Set to False if you want to force recomputing the trustworthy segmentations
 REUSE_ATLAS_PRED = True  # Set to False if you want to force recomputing the registration
 FORCE_RECOMPUTE_HEAT_MAP = False  # This might lead to recomputing the registrations
-INFERENCE_ONLY = False
+INFERENCE_ONLY = False  # Set to true if you do not want to compute the evaluation metrics
+ATLAS_ONLY = False  # True to run only the atlas-based inference; Need to use INFERENCE_ONLY=True with that
+
+DEEP_LEARNING_MODELS = ['nnUNet', 'nnUNetSegPrior', 'SwinUNETR']
+# DEEP_LEARNING_MODELS = ['SwinUNETR']
+TASK_NAME = {
+    '225': 'Task225_FetalBrain3dTrust',
+    '235': 'Task235_FetalBrain3dTrustSegPrior',
+}
 
 METRICS_COLUMN = ['Study', 'GA', 'Condition', 'Center type', 'Methods', 'ROI', 'dice', 'hausdorff']
 
@@ -52,10 +66,55 @@ def apply_bias_field_corrections(img_path, mask_path, save_img_path):
     sitk.WriteImage(output, save_img_path)
 
 
+def save_seg(seg, affine, save_path):
+    save_folder = os.path.split(save_path)[0]
+    if not os.path.exists(save_folder):
+        os.makedirs(save_folder)
+    seg_nii = nib.Nifti1Image(seg, affine)
+    nib.save(seg_nii, save_path)
+
+
+def apply_TWAI(ai, fallback, atlas_seg, cond, img, mask_foreground, affine,
+               save_path, save_path_intensity_only=None, save_path_atlas_only=None, eps=0.01):
+    pred_proba = ai + eps * fallback
+
+    # TWAI atlas
+    pred_proba_trustworthy_atlas = merge_deep_and_atlas_seg(
+        deep_proba=pred_proba,
+        atlas_seg=atlas_seg,
+        condition=cond,  # Used to know which margins to use
+    )
+    if save_path_atlas_only is not None:
+        seg_trustworthy_atlas = np.argmax(pred_proba_trustworthy_atlas, axis=0).astype(np.uint8)
+        save_seg(seg_trustworthy_atlas, affine=affine, save_path=save_path_atlas_only)
+
+    # TWAI intensity
+    if save_path_intensity_only is not None:
+        pred_proba_trustworthy_intensity = dempster_add_intensity_prior(
+            deep_proba=pred_proba,
+            image=img,
+            mask=mask_foreground,
+            denoise=DO_BILATERAL_FILTERING,
+        )
+        pred_trustworthy_intensity = np.argmax(pred_proba_trustworthy_intensity, axis=0).astype(np.uint8)
+        save_seg(pred_trustworthy_intensity, affine=affine, save_path=save_path_intensity_only)
+
+    # Trustworthy AI with the intensity prior + atlas prior
+    pred_proba_trustworthy = dempster_add_intensity_prior(
+        deep_proba=pred_proba_trustworthy_atlas,
+        image=img,
+        mask=mask_foreground,
+        denoise=DO_BILATERAL_FILTERING,
+    )
+    # Save the trustworthy prediction
+    pred_trustworthy = np.argmax(pred_proba_trustworthy, axis=0).astype(np.uint8)
+    save_seg(pred_trustworthy, affine=affine, save_path=save_path)
+
+
 def main(dataset_path_list):
-    pred_folder = os.path.join(SAVE_FOLDER, 'nnunet_task225')
+    pred_folder = os.path.join(SAVE_FOLDER, 'all')
     if not os.path.exists(pred_folder):
-        os.mkdir(pred_folder)
+        os.makedirs(pred_folder)
 
     metric_data = []
     pred_dict = {}
@@ -106,39 +165,52 @@ def main(dataset_path_list):
                 input_path = pre_input_path
 
             # Set the predictions paths
-            pred_path = os.path.join(output_path, '%s.nii.gz' % f_n)  # pred segmentation using CNN only
-            pred_atlas_path = os.path.join(output_path, '%s_atlas.nii.gz' % f_n)
-            pred_trustworthy_atlas_only_path = os.path.join(output_path, '%s_trustworthy_atlas_only.nii.gz' % f_n)
-            pred_trustworthy_path = os.path.join(output_path, '%s_trustworthy.nii.gz' % f_n)
-            pred_dict['cnn'] = pred_path
-            pred_dict['atlas'] = pred_atlas_path
-            pred_dict['trustworthy_atlas_only'] = pred_trustworthy_atlas_only_path
-            pred_dict['trustworthy'] = pred_trustworthy_path
-            pred_softmax_path = os.path.join(output_path, '%s.npz' % f_n)
-            volume_info_path = os.path.join(output_path, '%s.pkl' % f_n)  # info about the volume and preprocessing doen by nnUNet
+            pred_dict['atlas'] = os.path.join(output_path, '%s_atlas.nii.gz' % f_n)
+            for deep_model in DEEP_LEARNING_MODELS:
+                pred_dict[deep_model] = os.path.join(output_path, deep_model, '%s.nii.gz' % f_n)
+                pred_dict['%s_add_fusion' % deep_model] = os.path.join(
+                    output_path, '%s_%s_add_fusion.nii.gz' % (f_n, deep_model))
+                pred_dict['%s_mult_fusion' % deep_model] = os.path.join(
+                    output_path, '%s_%s_mult_fusion.nii.gz' % (f_n, deep_model))
+                for ai in [deep_model, '%s_add_fusion' % deep_model, '%s_mult_fusion' % deep_model]:
+                    pred_dict['%s_trustworthy_atlas_only' % ai] = os.path.join(
+                        output_path, '%s_%s_trustworthy_atlas_only.nii.gz' % (f_n, ai))
+                    pred_dict['%s_trustworthy_intensity_only' % ai] = os.path.join(
+                        output_path, '%s_%s_trustworthy_intensity_only.nii.gz' % (f_n, ai))
+                    pred_dict['%s_trustworthy' % ai] = os.path.join(
+                        output_path, '%s_%s_trustworthy.nii.gz' % (f_n, ai))
+
+            pred_softmax_path = {
+                'nnUNet': os.path.join(output_path, 'nnUNet', '%s.npz' % f_n),
+                'nnUNetSegPrior': os.path.join(output_path, 'nnUNetSegPrior', '%s.npz' % f_n),
+                'SwinUNETR': os.path.join(SWINUNETR_TEST_PRED[0], '%s.nii.gz' % f_n),
+            }
+
+            volume_info_path = {
+                'nnUNet': os.path.join(output_path, 'nnUNet', '%s.pkl' % f_n),
+                'nnUNetSegPrior': os.path.join(output_path, 'nnUNetSegPrior', '%s.pkl' % f_n),
+            }
 
             # Inference
             skip_inference = False
             if REUSE_CNN_PRED and REUSE_ATLAS_PRED and not FORCE_RECOMPUTE_HEAT_MAP:
-                skip_inference = os.path.exists(pred_path) and os.path.exists(pred_atlas_path) and os.path.exists(pred_trustworthy_path) and os.path.exists(pred_trustworthy_atlas_only_path)
+                # The softmax is not stored to save space
+                # that's why we need to run the deep learning inference if any prediction is missing
+                skip_inference = True
+                for p in pred_dict.values():
+                    if not os.path.exists(p):
+                        skip_inference = False
+                        break
             if skip_inference:
                 print('Skip inference for %s.\nThe predictions already exist.' % f_n)
             else:
                 print('\nStart inference for case %s' % f_n)
-                # CNN inference
-                cmd_options = '--input %s --mask %s --output_folder %s --fold all --task Task225_FetalBrain3dTrust --save_npz' % \
-                    (input_path, mask_path, output_path)
-                cmd = 'python %s/src/deep_learning/inference_nnunet.py %s' % (REPO_PATH, cmd_options)
-                print(cmd)
-                os.system(cmd)
 
-                # Trustworthy - atlas
-                # Load the softmax prediction, img and mask
+                # Load the img and mask
                 img_nii = nib.load(input_path)
                 img = img_nii.get_fdata().astype(np.float32)
                 mask_nii = nib.load(mask_path)
                 mask = mask_nii.get_fdata().astype(np.uint8)
-                softmax = load_softmax(pred_softmax_path, volume_info_path)
 
                 # Propagate the atlas volumes segmentation
                 if cond == 'Pathological':
@@ -151,6 +223,7 @@ def main(dataset_path_list):
                     atlas_list = get_atlas_list(ga=ga, condition='Spina Bifida', ga_delta_max=DELTA_GA_SPINA_BIFIDA)
                 print('\nStart atlas propagation using the volumes')
                 print(atlas_list)
+                # Save folder for the intermediate results of the atlas-based segmentation
                 atlas_pred_save_folder = os.path.join(output_path, 'atlas_pred')
                 pred_proba_atlas = multi_atlas_segmentation(
                     img_nii,
@@ -169,51 +242,130 @@ def main(dataset_path_list):
 
                 # Save the atlas-based prediction
                 pred_atlas = np.argmax(pred_proba_atlas, axis=3).astype(np.uint8)
-                pred_atlas_nii = nib.Nifti1Image(pred_atlas, img_nii.affine)
-                nib.save(pred_atlas_nii, pred_atlas_path)
+                save_seg(pred_atlas, affine=img_nii.affine, save_path=pred_dict['atlas'])
+
+                # CNNs inference
+                for deep_model in DEEP_LEARNING_MODELS:
+                    out_folder = os.path.split(pred_dict[deep_model])[0]
+                    if deep_model == 'nnUNetSegPrior':
+                        task = TASK_NAME['235']
+                        trainer = 'nnUNetTrainerV2_Seg_Prior'
+                        seg_prior_path = './tmp_%s/seg_prior.nii.gz' % task
+                        if not os.path.exists('tmp_%s' % task):
+                            os.mkdir('tmp_%s' % task)
+                        save_seg(pred_proba_atlas, affine=img_nii.affine, save_path=seg_prior_path)
+                        cmd_options = '--input %s --mask %s --output_folder %s --fold all --task %s --trainer %s --save_npz' % \
+                            (input_path, mask_path, out_folder, task, trainer)
+                        if os.path.exists(seg_prior_path):
+                            cmd_options += ' --seg_prior %s' % seg_prior_path
+                        cmd = 'python %s/src/deep_learning/inference_nnunet.py %s' % (REPO_PATH, cmd_options)
+                        print(cmd)
+                        os.system(cmd)
+                    elif deep_model == 'nnUNet':
+                        task = TASK_NAME['225']
+                        trainer = 'nnUNetTrainerV2'
+                        cmd_options = '--input %s --mask %s --output_folder %s --fold all --task %s --trainer %s --save_npz' % \
+                            (input_path, mask_path, out_folder, task, trainer)
+                        cmd = 'python %s/src/deep_learning/inference_nnunet.py %s' % (REPO_PATH, cmd_options)
+                        print(cmd)
+                        os.system(cmd)
+                    elif deep_model == 'SwinUNETR':
+                        softmax = nib.load(pred_softmax_path[deep_model]).get_fdata().astype(np.float32)
+                        pred_seg_swin = np.argmax(softmax, axis=3).astype(np.uint8)
+                        save_seg(
+                            pred_seg_swin,
+                            affine=img_nii.affine,
+                            save_path=pred_dict[deep_model],
+                        )
+                    else:
+                        raise ValueError('Unknown deep learning model %s' % deep_model)
 
                 # Transpose the atlas proba to match PyTorch convention
                 pred_proba_atlas = np.transpose(pred_proba_atlas, axes=(3, 0, 1, 2))
 
-                # Take a weighted average of the CNN and atlas predicted proba
-                pred_proba_trustworthy = 5 * softmax + pred_proba_atlas  # 5=nb of CNNs in the ensemble
-                pred_proba_trustworthy /= 6
+                # Compute the TWAI predictions
+                for deep_model in DEEP_LEARNING_MODELS:
+                    # Load the deep learning softmax prediction
+                    if deep_model == 'SwinUNETR':
+                        softmax = nib.load(pred_softmax_path[deep_model]).get_fdata().astype(np.float32)
+                        softmax = np.transpose(softmax, axes=(3, 0, 1, 2))
+                    else:
+                        softmax = load_softmax(pred_softmax_path[deep_model], volume_info_path[deep_model])
 
-                # Apply Dempster's rule with the atlas prior
-                pred_proba_trustworthy = merge_deep_and_atlas_seg(
-                    deep_proba=pred_proba_trustworthy,
-                    atlas_seg=pred_atlas,
-                    condition=cond,  # Used to know which margins to use
-                )
+                    # ADDITIVE FUSION
+                    pred_proba_add_fusion = 0.5 * (softmax + pred_proba_atlas)
+                    pred_add_fusion = np.argmax(pred_proba_add_fusion, axis=0).astype(np.uint8)
+                    save_seg(
+                        pred_add_fusion,
+                        affine=img_nii.affine,
+                        save_path=pred_dict['%s_add_fusion' % deep_model],
+                    )
 
-                # Save the trustworthy (atlas only) prediction
-                pred_trustworthy = np.argmax(pred_proba_trustworthy, axis=0).astype(np.uint8)
-                pred_trustworthy_nii = nib.Nifti1Image(pred_trustworthy, img_nii.affine)
-                nib.save(pred_trustworthy_nii, pred_trustworthy_atlas_only_path)
+                    # MULTIPLICATIVE FUSION
+                    pred_proba_mult_fusion = softmax * pred_proba_atlas
+                    pred_proba_mult_fusion += 0.001
+                    # Normalize the probability
+                    pred_proba_mult_fusion[:, ...] /= np.sum(pred_proba_mult_fusion, axis=0)
+                    pred_mult_fusion = np.argmax(pred_proba_mult_fusion, axis=0).astype(np.uint8)
+                    save_seg(
+                        pred_mult_fusion,
+                        affine=img_nii.affine,
+                        save_path=pred_dict['%s_mult_fusion' % deep_model],
+                    )
 
-                # Trustworthy AI with the intensity prior
-                pred_proba_trustworthy = dempster_add_intensity_prior(
-                    deep_proba=pred_proba_trustworthy,
-                    image=img,
-                    mask=mask,
-                    denoise=DO_BILATERAL_FILTERING,
-                )
-                # Save the trustworthy prediction
-                pred_trustworthy = np.argmax(pred_proba_trustworthy, axis=0).astype(np.uint8)
-                pred_trustworthy_nii = nib.Nifti1Image(pred_trustworthy, img_nii.affine)
-                nib.save(pred_trustworthy_nii, pred_trustworthy_path)
+                    apply_TWAI(
+                        ai=softmax,
+                        fallback=pred_proba_atlas,
+                        atlas_seg=pred_atlas,
+                        cond=cond,
+                        img=img,
+                        mask_foreground=mask,
+                        affine=img_nii.affine,
+                        save_path=pred_dict['%s_trustworthy' % deep_model],
+                        save_path_intensity_only=pred_dict['%s_trustworthy_intensity_only' % deep_model],
+                        save_path_atlas_only=pred_dict['%s_trustworthy_atlas_only' % deep_model],
+                    )
 
-                # Clean folder
-                if os.path.exists(pred_softmax_path):  # Remove the npz file (it takes a lot of space)
-                    os.system('rm %s' % pred_softmax_path)
-                if os.path.exists(volume_info_path):  # Delete the pkl file
-                    os.system('rm %s' % volume_info_path)
+                    apply_TWAI(
+                        ai=pred_proba_add_fusion,
+                        fallback=pred_proba_atlas,
+                        atlas_seg=pred_atlas,
+                        cond=cond,
+                        img=img,
+                        mask_foreground=mask,
+                        affine=img_nii.affine,
+                        save_path=pred_dict['%s_add_fusion_trustworthy' % deep_model],
+                        save_path_intensity_only=pred_dict['%s_add_fusion_trustworthy_intensity_only' % deep_model],
+                        save_path_atlas_only=pred_dict['%s_add_fusion_trustworthy_atlas_only' % deep_model],
+                    )
+
+                    apply_TWAI(
+                        ai=pred_proba_add_fusion,
+                        fallback=pred_proba_atlas,
+                        atlas_seg=pred_atlas,
+                        cond=cond,
+                        img=img,
+                        mask_foreground=mask,
+                        affine=img_nii.affine,
+                        save_path=pred_dict['%s_mult_fusion_trustworthy' % deep_model],
+                        save_path_intensity_only=pred_dict['%s_mult_fusion_trustworthy_intensity_only' % deep_model],
+                        save_path_atlas_only=pred_dict['%s_mult_fusion_trustworthy_atlas_only' % deep_model],
+                    )
+
+
+                    # Clean folder
+                    if 'nnUNet' in deep_model:
+                        if os.path.exists(pred_softmax_path[deep_model]):  # Remove the npz file (it takes a lot of space)
+                            os.system('rm %s' % pred_softmax_path[deep_model])
+                        if os.path.exists(volume_info_path[deep_model]):  # Delete the pkl file
+                            os.system('rm %s' % volume_info_path[deep_model])
 
             # Evaluation
             if INFERENCE_ONLY:
                 continue
             gt_seg_path = os.path.join(dataset, f_n, 'parcellation.nii.gz')
-            for method in METHOD_NAMES:
+            # for method in METHOD_NAMES:
+            for method in list(pred_dict.keys()):
                 dice, haus = compute_evaluation_metrics(pred_dict[method], gt_seg_path, dataset_path=dataset)
                 for roi in DATASET_LABELS[dataset]:
                     if not roi in ALL_ROI:
@@ -224,7 +376,7 @@ def main(dataset_path_list):
     # Save and print the metrics aggregated
     if not INFERENCE_ONLY:
         df = pd.DataFrame(metric_data, columns=METRICS_COLUMN)
-        csv_path = os.path.join(pred_folder, 'metrics.csv')
+        csv_path = os.path.join(pred_folder, 'metrics_all.csv')
         df.to_csv(csv_path, index=False)
 
 
