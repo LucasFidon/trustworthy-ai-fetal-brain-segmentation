@@ -127,9 +127,8 @@ def main(args):
     # Transpose the atlas proba to match PyTorch convention
     pred_proba_atlas = np.transpose(pred_proba_atlas, axes=(3, 0, 1, 2))
 
-    # Take a weighted average of the CNN and atlas predicted proba
-    pred_proba_trustworthy = 5 * softmax + pred_proba_atlas  # 5=nb of CNNs in the backbone AI
-    pred_proba_trustworthy /= 6
+    # Take the average of the CNN and atlas predicted proba as backbone AI
+    pred_proba_trustworthy = 0.5 * (softmax + pred_proba_atlas)
 
     # Apply Dempster's rule with the atlas prior
     pred_proba_trustworthy = merge_deep_and_atlas_seg(
@@ -154,9 +153,9 @@ def main(args):
     pred_trustworthy_path = os.path.join(output_twai_path, '%s.nii.gz' % f_n)
     nib.save(pred_trustworthy_nii, pred_trustworthy_path)
 
-    print('\nBackbone AI segmentation has been saved in %s' % output_backboneAI_path)
+    print('\nBackbone AI (nnU-Net) segmentation has been saved in %s' % output_backboneAI_path)
     print('Fallback segmentation has been saved in %s' % output_fallback_path)
-    print('Trustworthy AI AI segmentation has been saved in %s' % output_twai_path)
+    print('Trustworthy AI segmentation has been saved in %s' % output_twai_path)
 
     # Clean folder
     if os.path.exists(pred_softmax_path):  # Remove the npz file (it takes a lot of space)
