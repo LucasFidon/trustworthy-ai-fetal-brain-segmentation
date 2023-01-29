@@ -38,7 +38,7 @@ RUN cd third-party/nnUNet_trained_models && mkdir nnUNet
 RUN cd third-party/nnUNet_trained_models/nnUNet && mkdir 3d_fullres
 RUN pip3 install gdown
 RUN cd third-party/nnUNet_trained_models/nnUNet/3d_fullres \
-    && gdown https://drive.google.com/uc\?export\=download\&id\=1d42VyRZHhSNxKEPQldDqcIaeReX78jfY
+    && gdown https://drive.google.com/uc\?export\=download\&id\=1DC5qVOrarjkt8NhSIUFazKgqgLVcuWco
 RUN cd third-party/nnUNet_trained_models/nnUNet/3d_fullres && unzip Task225_FetalBrain3dTrust.zip
 
 # nnU-Net installation (used for the backbone AI)
