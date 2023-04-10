@@ -165,5 +165,10 @@ def main(args):
 
 
 if __name__ == '__main__':
+    print("Please cite the following paper when using this code:")
+    print("L.Fidon et al. A Dempster-Shafer approach to trustworthy AI with application to fetal brain MRI segmentation.")
+    print("arXiv preprint arXiv:2204.02779 (2022).")
+    print("")
+    print("If you have questions or suggestions, feel free to open an issue at https://github.com/LucasFidon/trustworthy-ai-fetal-brain-segmentation. ")
     args = parser.parse_args()
     main(args)

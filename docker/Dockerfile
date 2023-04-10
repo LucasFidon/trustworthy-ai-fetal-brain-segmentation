@@ -53,7 +53,7 @@ ARG NIFTYREG="/workspace/third-party/niftyreg/build/reg-apps"
 ENV PATH="$PATH:$NIFTYREG"
 
 # Install python libraries
-RUN pip3 install pyyaml nested_dict seaborn==0.11.2 scipy==1.6.3
+RUN pip3 install pyyaml nested_dict==1.61 seaborn==0.11.2
 
 WORKDIR /
 

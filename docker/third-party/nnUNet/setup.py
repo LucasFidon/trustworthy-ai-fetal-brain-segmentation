@@ -10,18 +10,17 @@ setup(name='nnunet',
       license='Apache License Version 2.0, January 2004',
       install_requires=[
             "torch",
-            "tqdm",
-            "dicom2nifti",
+            "tqdm==4.62.1",
+            "dicom2nifti==2.4.8",
             "scikit-image>=0.14",
-            "medpy",
-            "scipy",
+            "medpy==0.4.0",
+            "scipy==1.8.0",
             "batchgenerators==0.21.0",
-            "numpy",
+            "numpy==1.21.2",
             "sklearn",
-            "SimpleITK",
-            "pandas",
-            "pandas",
-            "nibabel"
+            "SimpleITK==2.2.1",
+            "pandas==2.0.0",
+            "nibabel==5.1.0"
       ],
       entry_points={
           'console_scripts': [

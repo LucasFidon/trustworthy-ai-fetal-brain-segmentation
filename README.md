@@ -84,8 +84,12 @@ For more information about the argument of ```run_segment.py``` please run
 python run_segment.py -h
 ```
 The output can be found in the folder pointed by ```--output_folder``` (```output/sub-feta001'``` in the example above).
-The output folder contains three main folders of interest: ```\backboneAI```, ```\fallback```, and ```\trustworthyAI```.
-Each of those folders should contain one segmentation file with the extension ```.nii.gz``` corresponding to the
+The output folder contains three main folders of interest:
+ * ```\backboneAI```: output segmentation of the deep learning method [nnU-Net][nnunet]
+ * ```\fallback```: output segmentation of the atlas-based method
+ * ```\trustworthyAI```: output segmentation of our trustworthy AI algorithm combining the output of the backbone AI and the fallback algorithms
+ 
+Each of those folders should contain a unique segmentation file with the extension ```.nii.gz``` corresponding to the
 segmentation computed by the algorithm of the same name as the folder name.
 
 
@@ -97,11 +101,20 @@ sh run_make_all_figures.sh
 After running this command, the figures will be in the folder ```\output```.
 
 ## How to cite
-If you find this research useful for your work, please cite
+If you find this research useful for your work, please give this repo a star :star: and cite
 * L. Fidon, M. Aertsen, F. Kofler, A. Bink, A. L. David, T. Deprest, D. Emam, F. Guffens, A. Jakab, G. Kasprian,
  P. Kienast, A. Melbourne, B. Menze, N. Mufti, I. Pogledic, D. Prayer, M. Stuempflen, E. Van Elslander, S. Ourselin, 
  J. Deprest, T. Vercauteren.
  [A Dempster-Shafer approach to trustworthy AI with application to fetal brain MRI segmentation][twai]
 
+```
+@article{fidon2022dempster,
+  title={A Dempster-Shafer approach to trustworthy AI with application to fetal brain MRI segmentation},
+  author={Fidon, Lucas and Aertsen, Michael and Kofler, Florian and Bink, Andrea and David, Anna L and Deprest, Thomas and Emam, Doaa and Guffens, Fr and Jakab, Andr{\'a}s and Kasprian, Gregor and others},
+  journal={arXiv preprint arXiv:2204.02779},
+  year={2022}
+}
+```
 
 [twai]: https://arxiv.org/abs/2204.02779
+[nnunet]: https://github.com/MIC-DKFZ/nnUNet
