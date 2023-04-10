@@ -1,5 +1,8 @@
 # A Dempster-Shafer approach to trustworthy AI with application to fetal brain MRI segmentation
 
+Trustworthy AI method based on Dempster-Shafer theory with application to fetal brain 3D T2w MRI segmentation.
+![auto-seg](https://user-images.githubusercontent.com/17875992/174453165-2ab9c26b-14da-4728-bec3-710166d12f7b.gif)
+
 
 ## System requirements
 ### Hardware requirements
