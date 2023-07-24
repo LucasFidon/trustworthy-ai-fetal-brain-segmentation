@@ -23,8 +23,6 @@ The installation is performed using docker:
 
 First, install docker (see https://docs.docker.com/get-docker/).
 
-Second, install nvidia-docker (see https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html)
-
 ### Installation of the docker image
 Install the docker image  ```twai:latest``` using
 ```bash
@@ -36,7 +34,7 @@ This step takes a few minutes.
 Create a docker container for the docker image
  ```twai:latest``` that was previously built, using the command
  ```bash
-nvidia-docker run --ipc=host -it -v <repository-path>:/workspace/trustworthy-ai-fetal-brain-segmentation -v <data-path>:/data --name twai twai:latest
+docker run --ipc=host --gpus all -it -v <repository-path>:/workspace/trustworthy-ai-fetal-brain-segmentation -v <data-path>:/data --name twai twai:latest
 ```
 where ```<repository-path>``` has to be replaced by the path of the git repository on your system
 and ```<data-path>``` has to be replaced by the path of a folder containing the data to be used for segmentation.
@@ -44,8 +42,8 @@ This step creates a docker container called ```twai```.
 
 If you have already created the docker container ```twai```, you can reuse it using the command lines
 ```bash
-nvidia-docker start twai
-nvidia-docker attach twai
+docker start twai
+docker attach twai
 ```
 
 The installation has been tested for
