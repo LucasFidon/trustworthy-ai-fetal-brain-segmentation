@@ -38,14 +38,17 @@ RUN cd third-party/nnUNet_trained_models && mkdir nnUNet
 RUN cd third-party/nnUNet_trained_models/nnUNet && mkdir 3d_fullres
 RUN pip3 install gdown
 RUN cd third-party/nnUNet_trained_models/nnUNet/3d_fullres \
-    && gdown https://drive.google.com/uc\?export\=download\&id\=1DC5qVOrarjkt8NhSIUFazKgqgLVcuWco
-RUN cd third-party/nnUNet_trained_models/nnUNet/3d_fullres && unzip Task225_FetalBrain3dTrust.zip
+#    && gdown https://drive.google.com/uc\?export\=download\&id\=1DC5qVOrarjkt8NhSIUFazKgqgLVcuWco
+    && gdown https://drive.google.com/uc\?export\=download\&id\=19YjsPp_1g3FyXsthg2E47ckg1fu11c6l
+#RUN cd third-party/nnUNet_trained_models/nnUNet/3d_fullres && unzip Task225_FetalBrain3dTrust.zip
+RUN cd third-party/nnUNet_trained_models/nnUNet/3d_fullres && unzip Task240_FetalBrain3d_554.zip
 
 # nnU-Net installation (used for the backbone AI)
 ENV nnUNet_raw_data_base="/workspace/third-party/nnUNet_raw_data_base"
 ENV nnUNet_preprocessed="/workspace/third-party/nnUNet_preprocessed"
 ENV RESULTS_FOLDER="/workspace/third-party/nnUNet_trained_models"
 ENV MKL_THREADING_LAYER="GNU"
+RUN pip3 install git+https://github.com/LucasFidon/HardnessWeightedSampler.git
 RUN cd third-party/nnUNet && pip3 install -e .
 
 # NiftyReg (used for the fallback)
@@ -53,8 +56,8 @@ ARG NIFTYREG="/workspace/third-party/niftyreg/build/reg-apps"
 ENV PATH="$PATH:$NIFTYREG"
 
 # Install python libraries
-RUN pip3 install pyyaml nested_dict==1.61 seaborn==0.11.2
+RUN pip3 install pyyaml nested_dict==1.61 seaborn==0.11.2 loguru
 
-WORKDIR /
+WORKDIR /workspace/trustworthy-ai-fetal-brain-segmentation/
 
 CMD "bash"

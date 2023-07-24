@@ -15,10 +15,10 @@ parser = ArgumentParser()
 parser.add_argument('--input', type=str)
 parser.add_argument('--mask', type=str)
 parser.add_argument('--output_folder', type=str)
-parser.add_argument('--task', default='Task225_FetalBrain3dTrust', type=str)  # Fetal 3D
+parser.add_argument('--task', default='Task240_FetalBrain3d_554', type=str)  # Fetal 3D
 parser.add_argument('--fold', default='all', type=str, help='all, 0, 1, 2, 3, or 4.')
 parser.add_argument('--model', default='3d_fullres', type=str)
-parser.add_argument('--trainer', default='nnUNetTrainerV2', type=str)
+parser.add_argument('--trainer', default='nnUNetTrainerV2_DRO_IS', type=str)
 parser.add_argument('--plan', default='nnUNetPlansv2.1', type=str)
 parser.add_argument('--save_npz', action='store_true')
 parser.add_argument('--seg_prior', type=str)

@@ -85,7 +85,7 @@ def main(args):
 
     # Backbone AI inference
     output_backboneAI_path = os.path.join(output_path, 'backboneAI')
-    cmd_options = '--input %s --mask %s --output_folder %s --fold all --task Task225_FetalBrain3dTrust --save_npz' % \
+    cmd_options = '--input %s --mask %s --output_folder %s --fold all --save_npz' % \
         (input_path, mask_path, output_backboneAI_path)
     cmd = 'python %s/src/deep_learning/inference_nnunet.py %s' % (REPO_PATH, cmd_options)
     logger.info('Backbone AI inference:\n%s' % cmd)

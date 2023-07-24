@@ -74,7 +74,6 @@ Start and attach the docker container (see above).
 You can now compute the automatic segmentations for the backbone AI, fallback, and trustworthy AI algorithms using,
  inside the docker container
 ```bash
-cd /workspace/trustworthy-ai-fetal-brain-segmentation
 python run_segment.py --input '/data/sub-feta001/srr.nii.gz' --mask '/data/sub-feta001/mask.nii.gz' --ga 27.9 --condition 'Spina Bifida' --output_folder 'output/sub-feta001' --bfc
 ```
 This step takes several minutes.
