@@ -1,6 +1,7 @@
 import os
 from time import time
 import numpy as np
+from loguru import logger
 from math import ceil
 from scipy.ndimage.morphology import binary_dilation, binary_erosion
 from sklearn.mixture import GaussianMixture
@@ -23,7 +24,7 @@ def merge_deep_and_atlas_seg(deep_proba, atlas_seg, condition):
         atlas_margin = np.maximum(ATLAS_MARGINS_CONTROL, ATLAS_MARGINS_SPINA_BIFIDA)
     # Round the margins to the closest integer values
     atlas_margin = np.rint(atlas_margin).astype(np.int)
-    print('\nApply atlas-based margins to the deep learning-based segmentation. ', atlas_margin)
+    logger.info('Apply atlas-based margins to the deep learning-based segmentation. ', atlas_margin)
 
     # We set the proba to zeros outside of "atlas mask + margin"
     for c in range(len(atlas_margin)):
@@ -79,7 +80,7 @@ def dempster_add_intensity_prior(deep_proba, image, mask, denoise=False):
     mask_prior = binary_erosion(mask, iterations=3)
 
     if denoise:
-        print('\n*** Apply bilateral filtering before adding the intensity prior.')
+        logger.warning('Apply bilateral filtering before adding the intensity prior.')
         t0 = time()
         image = bilateral_filtering(
             image=image,
@@ -88,9 +89,9 @@ def dempster_add_intensity_prior(deep_proba, image, mask, denoise=False):
             sigma_spatial=1,
         )
         t1 = time()
-        print('Bilateral filtering done is %.0f seconds.' % (t1 - t0))
+        logger.warining('Bilateral filtering done is %.0f seconds.' % (t1 - t0))
 
-    print('\nFit a GMM with two components for the intensity prior.')
+    logger.info('Fit a GMM with two components for the intensity prior.')
     # Fit the GMM with two components
     X = image[mask_prior == 1]
     X = X[:, None]

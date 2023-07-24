@@ -250,10 +250,6 @@ def predict_cases(model, list_of_lists, output_filenames, folds, save_npz, num_t
                                               [for_which_classes] * len(output_filenames),
                                               [min_valid_obj_size] * len(output_filenames))))
         _ = [i.get() for i in results]
-    else:
-        print("WARNING! Cannot run postprocessing because the postprocessing file is missing. Make sure to run "
-              "consolidate_folds in the output folder of the model first!\nThe folder you need to run this in is "
-              "%s" % model)
 
     pool.close()
     pool.join()
@@ -447,10 +443,6 @@ def predict_cases_fast(model, list_of_lists, output_filenames, folds, num_thread
                                               [for_which_classes] * len(output_filenames),
                                               [min_valid_obj_size] * len(output_filenames))))
         _ = [i.get() for i in results]
-    else:
-        print("WARNING! Cannot run postprocessing because the postprocessing file is missing. Make sure to run "
-              "consolidate_folds in the output folder of the model first!\nThe folder you need to run this in is "
-              "%s" % model)
 
     pool.close()
     pool.join()
@@ -561,10 +553,6 @@ def predict_cases_fastest(model, list_of_lists, output_filenames, folds, num_thr
                                               [for_which_classes] * len(output_filenames),
                                               [min_valid_obj_size] * len(output_filenames))))
         _ = [i.get() for i in results]
-    else:
-        print("WARNING! Cannot run postprocessing because the postprocessing file is missing. Make sure to run "
-              "consolidate_folds in the output folder of the model first!\nThe folder you need to run this in is "
-              "%s" % model)
 
     pool.close()
     pool.join()

@@ -1,5 +1,6 @@
 import os
 import nibabel as nib
+from loguru import logger
 from scipy.ndimage import gaussian_filter
 from scipy.ndimage.morphology import binary_dilation
 import numpy as np
@@ -68,7 +69,8 @@ def probabilistic_segmentation_prior(image_nii, mask_nii,
     duration = int(time() - time_0)  # in seconds
     minutes = duration // 60
     seconds = duration - minutes * 60
-    print('The atlas propagation has been performed in %dmin%dsec' % (minutes, seconds))
+    logger.success('The atlas propagation has been performed in %dmin%dsec' % (minutes, seconds))
+    logger.success('Results saved in %s' % save_folder_path)
 
     return proba_seg_prior
 

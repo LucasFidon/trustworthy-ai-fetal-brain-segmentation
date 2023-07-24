@@ -6,7 +6,8 @@ import os
 import numpy as np
 import nibabel as nib
 from argparse import ArgumentParser
-from scipy.ndimage.morphology import binary_dilation
+from loguru import logger
+from scipy.ndimage import binary_dilation
 import pickle
 
 
@@ -57,9 +58,9 @@ def main(args):
     # Set Nan values to mean intensity value
     num_nans = np.count_nonzero(np.isnan(img_np))
     if num_nans > 0:
-        print('\nWarning! %d NaN values were found in the image %s'
+        logger.warning('%d NaN values were found in the image %s'
                 % (num_nans, args.input))
-        print('Replace nan values with the mean value of the image.')
+        logger.warning('Replaced NaN values with the mean value of the image.')
         img_np[np.isnan(img_np)] = np.nanmean(img_np)
 
     # Save the processed image to the output folder

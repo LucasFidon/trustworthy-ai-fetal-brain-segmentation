@@ -1,5 +1,6 @@
 import os
 from argparse import ArgumentParser
+from loguru import logger
 import nibabel as nib
 from src.utils.definitions import *
 from run_infer_eval_all import apply_bias_field_corrections
@@ -28,6 +29,9 @@ parser.add_argument('--bfc', action='store_true',
                     help='Allow to use intensity bias field correction. '
                          'Recommended if no correction for intensity bias field correction has been '
                          'performed before.')
+parser.add_argument('--force_rerun', action='store_true',
+                    help='Force to re-run all the segmentations including all the image registrations required'
+                         ' for the fallback. By default segmentations are re-used if they exist already')
 
 
 def _get_atlas_volumes_path_list(condition, ga):
@@ -44,10 +48,8 @@ def _get_atlas_volumes_path_list(condition, ga):
 def _preproces_GA(ga):
     out = int(round(ga))
     if out > MAX_GA:
-        print('Found ga=%d. Change it to %d (max value accepted)' % (ga, MAX_GA))
         out = MAX_GA
     if out < MIN_GA:
-        print('Found ga=%d. Change it to %d (min value accepted)' % (ga, MIN_GA))
         out = MIN_GA
     return out
 
@@ -56,11 +58,15 @@ def main(args):
     input_path = args.input
     mask_path = args.mask
     output_path = args.output_folder
+    logger.info('Input 3D T2w-MRI: %s' % input_path)
+    logger.info('Input 3D brain mask: %s' % mask_path)
+    logger.info('Output folder: %s' % output_path)
+
     # GA is rounded to the closest week and clipped to the range of GA of the atlases
     ga = _preproces_GA(args.ga)
-    print('Use GA=%d weeks (rounded to the closest integer in [%d, %d])' % (ga, MIN_GA, MAX_GA))
+    logger.info('Use GA=%d weeks (rounded to the closest integer in [%d, %d])' % (ga, MIN_GA, MAX_GA))
     cond = args.condition
-    print('Condition: %s' % cond)
+    logger.info('Condition: %s' % cond)
 
     assert cond in SUPPORTED_CONDITIONS, \
         '--condition argument must be in %s.\nFound %s' % (str(SUPPORTED_CONDITIONS), cond)
@@ -70,18 +76,19 @@ def main(args):
 
     # Bias field correction (optional)
     if args.bfc:
+        logger.warning('Intensity bias field correction will be applied to the input 3D MRI prior to segmentation')
         pre_input_path = os.path.join(output_path, 'srr_preprocessed.nii.gz')
         apply_bias_field_corrections(input_path, mask_path, pre_input_path)
         input_path = pre_input_path
 
-    print('\nStart inference for fetal brain 3D MRI %s' % input_path)
+    logger.info('Start inference...')
 
     # Backbone AI inference
     output_backboneAI_path = os.path.join(output_path, 'backboneAI')
     cmd_options = '--input %s --mask %s --output_folder %s --fold all --task Task225_FetalBrain3dTrust --save_npz' % \
         (input_path, mask_path, output_backboneAI_path)
     cmd = 'python %s/src/deep_learning/inference_nnunet.py %s' % (REPO_PATH, cmd_options)
-    print(cmd)
+    logger.info('Backbone AI inference:\n%s' % cmd)
     os.system(cmd)
 
      # Load the softmax prediction, img and mask
@@ -97,8 +104,10 @@ def main(args):
     # Fallback inference
     # Propagate the atlas volumes segmentation
     atlas_list = _get_atlas_volumes_path_list(cond, ga)
-    print('\nStart atlas propagation using the volumes')
-    print(atlas_list)
+    logger.info('Fallback inference')
+    logger.info('Atlas propagation will be computed for the volumes:')
+    for p in atlas_list:
+        logger.info(p)
     atlas_pred_save_folder = os.path.join(output_path, 'atlas_pred')
     pred_proba_atlas = multi_atlas_segmentation(
         img_nii,
@@ -111,7 +120,7 @@ def main(args):
         save_folder=atlas_pred_save_folder,
         only_affine=False,
         merging_method=MERGING_MULTI_ATLAS,
-        reuse_existing_pred=False,
+        reuse_existing_pred=not args.force_rerun,
         force_recompute_heat_kernels=False,
     )
 
@@ -153,9 +162,9 @@ def main(args):
     pred_trustworthy_path = os.path.join(output_twai_path, '%s.nii.gz' % f_n)
     nib.save(pred_trustworthy_nii, pred_trustworthy_path)
 
-    print('\nBackbone AI (nnU-Net) segmentation has been saved in %s' % output_backboneAI_path)
-    print('Fallback segmentation has been saved in %s' % output_fallback_path)
-    print('Trustworthy AI segmentation has been saved in %s' % output_twai_path)
+    logger.success('Backbone AI (nnU-Net-DRO) segmentation has been saved in %s' % output_backboneAI_path)
+    logger.success('Fallback segmentation has been saved in %s' % output_fallback_path)
+    logger.success('Trustworthy AI segmentation has been saved in %s' % output_twai_path)
 
     # Clean folder
     if os.path.exists(pred_softmax_path):  # Remove the npz file (it takes a lot of space)
@@ -165,10 +174,10 @@ def main(args):
 
 
 if __name__ == '__main__':
-    print("Please cite the following paper when using this code:")
-    print("L.Fidon et al. A Dempster-Shafer approach to trustworthy AI with application to fetal brain MRI segmentation.")
-    print("arXiv preprint arXiv:2204.02779 (2022).")
-    print("")
-    print("If you have questions or suggestions, feel free to open an issue at https://github.com/LucasFidon/trustworthy-ai-fetal-brain-segmentation. ")
+    paper_ref = 'L.Fidon et al. "A Dempster-Shafer approach to trustworthy AI with application to fetal brain MRI segmentation". arXiv preprint arXiv:2204.02779 (2022).'
+    git_repo = "https://github.com/LucasFidon/trustworthy-ai-fetal-brain-segmentation"
+    logger.success("Please cite the following paper when using this code:\n%s" % paper_ref)
+    logger.success("If you have questions or suggestions, please open an issue at %s" % git_repo)
+    logger.success("Have a good day!")
     args = parser.parse_args()
     main(args)

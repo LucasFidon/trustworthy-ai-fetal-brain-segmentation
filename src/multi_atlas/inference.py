@@ -1,6 +1,7 @@
 import os
 import numpy as np
 import nibabel as nib
+from loguru import logger
 from src.multi_atlas.atlas_propagation import probabilistic_segmentation_prior
 from src.multi_atlas.utils import compute_disp_from_cpp
 from src.multi_atlas.multi_atlas_fusion_weights import log_heat_kernel_GIF
@@ -68,7 +69,7 @@ def multi_atlas_segmentation(img_nii, mask_nii, atlas_folder_list,
                 compute_registration = True
 
         if not compute_registration:
-            print('\n%s already exists.\nSkip registration.' % expected_output)
+            logger.info('%s already exists. Skip registration.' % expected_output)
             proba_atlas_prior_nii = nib.load(expected_output)
             proba_atlas_prior = proba_atlas_prior_nii.get_fdata().astype(np.float32)
         else:
@@ -129,6 +130,7 @@ def multi_atlas_segmentation(img_nii, mask_nii, atlas_folder_list,
 
     # Merge the proba predictions
     if merging_method == 'GIF':
+        logger.info('Merge the atlas-based segmentations using GIF')
         proba_seg = np.stack(proba_seg_list, axis=0)  # n_atlas, n_x, n_y, n_z, n_class
         log_heat_kernels = np.stack(log_heat_kernel_list, axis=0)  # n_atlas, n_x, n_y, n_z
         weights = _weights_from_log_heat_kernels(log_heat_kernels)
