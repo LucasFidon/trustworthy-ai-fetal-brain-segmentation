@@ -2,6 +2,7 @@ import os
 from argparse import ArgumentParser
 from loguru import logger
 import nibabel as nib
+import numpy as np
 from src.utils.definitions import *
 from run_infer_eval_all import apply_bias_field_corrections
 from src.deep_learning.inference_nnunet import load_softmax
@@ -32,7 +33,9 @@ parser.add_argument('--bfc', action='store_true',
 parser.add_argument('--force_rerun', action='store_true',
                     help='Force to re-run all the segmentations including all the image registrations required'
                          ' for the fallback. By default segmentations are re-used if they exist already')
-
+parser.add_argument('--only_backbone', action='store_true',
+                    help='Only run the backbone AI segmentation. No fallback or Trustworthy AI segmentation will be '
+                         'computed.')
 
 def _get_atlas_volumes_path_list(condition, ga):
     if condition == 'Pathological':
@@ -52,7 +55,6 @@ def _preproces_GA(ga):
     if out < MIN_GA:
         out = MIN_GA
     return out
-
 
 def main(args):
     input_path = args.input
@@ -91,15 +93,22 @@ def main(args):
     logger.info('Backbone AI inference:\n%s' % cmd)
     os.system(cmd)
 
-     # Load the softmax prediction, img and mask
+    # Load the softmax prediction, img and mask
     img_nii = nib.load(input_path)
     img = img_nii.get_fdata().astype(np.float32)
     mask_nii = nib.load(mask_path)
     mask = mask_nii.get_fdata().astype(np.uint8)
-    f_n = os.path.split(output_path)[1]
+    # nnUNet saves outputs named after the parent folder of input_path
+    # e.g., if input_path is /input/volume.nii.gz, the base name is 'input'
+    f_n = os.path.split(os.path.dirname(input_path))[1]
     pred_softmax_path = os.path.join(output_backboneAI_path, '%s.npz' % f_n)
     volume_info_path = os.path.join(output_backboneAI_path, '%s.pkl' % f_n)  # info about the volume and preprocessing done by nnUNet
     softmax = load_softmax(pred_softmax_path, volume_info_path)
+
+    # Skip fallback and trustworthy segmentation if only backbone is requested.
+    if args.only_backbone:
+        logger.info('Only Backbone AI segmentation selected (--only_backbone). Skipping fallback and trustworthy AI segmentation.')
+        return
 
     # Fallback inference
     # Propagate the atlas volumes segmentation
@@ -166,12 +175,8 @@ def main(args):
     logger.success('Fallback segmentation has been saved in %s' % output_fallback_path)
     logger.success('Trustworthy AI segmentation has been saved in %s' % output_twai_path)
 
-    # Clean folder
-    if os.path.exists(pred_softmax_path):  # Remove the npz file (it takes a lot of space)
-        os.system('rm %s' % pred_softmax_path)
     if os.path.exists(volume_info_path):  # Delete the pkl file
         os.system('rm %s' % volume_info_path)
-
 
 if __name__ == '__main__':
     paper_ref = 'L.Fidon et al. "A Dempster-Shafer approach to trustworthy AI with application to fetal brain MRI segmentation". arXiv preprint arXiv:2204.02779 (2022).'
